@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'reevoo_sapience/version'
+require 'sapience/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "reevoo_sapience"
-  spec.version       = ReevooSapience::VERSION
+  spec.name          = "sapience"
+  spec.version       = Sapience::VERSION
   spec.authors       = ["Mikael Henriksson", "Alex Malkov"]
   spec.email         = ["mika@reevoo.com", "alex.malkov@reevoo.com"]
 
