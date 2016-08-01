@@ -4,3 +4,6 @@ source "https://rubygems.org"
 gemspec
 
 gem "pry-nav"
+gem "sentry-raven"
+gem "statsd-ruby"
+gem "semantic_logger", github: "mhenrixon/semantic_logger"
