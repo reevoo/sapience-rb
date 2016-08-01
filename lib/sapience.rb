@@ -3,7 +3,7 @@ require "ostruct"
 require "semantic_logger"
 
 module Sapience
-  DEFAULT_CONFIGURATION = {
+  DEFAULT_CONFIGURATION ||= {
     logger: {
       default_level: :trace,
       appenders: [
@@ -14,51 +14,49 @@ module Sapience
     metrics: {
       url: "udp://localhost:8125",
     },
-  }
+  }.freeze
 
-  def self.configuration
-    @configuration || reset_configuration!
-  end
+  class << self
+    attr_accessor :configuration
 
-  def self.reset_configuration!
-    @configuration = DEFAULT_CONFIGURATION.dup
-  end
-
-  def self.configure
-    yield configuration
-
-    configure_logger
-  end
-
-  def self.[](name)
-    SemanticLogger[name]
-  end
-
-  def self.default_level=(level)
-    SemanticLogger.default_level = level
-  end
-
-  def self.configure_logger
-    self.default_level = configuration[:logger][:default_level]
-
-    configuration[:logger][:appenders].each do |appender|
-      add_appender(appender)
+    def reset_configuration!
+      self.configuration = DEFAULT_CONFIGURATION.dup
     end
 
-    SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
+    def configure
+      yield configuration
+
+      configure_logger
+    end
+
+    def default_level=(level)
+      SemanticLogger.default_level = level
+    end
+
+    def configure_logger
+      self.default_level = configuration[:logger][:default_level]
+
+      configuration[:logger][:appenders].each do |appender|
+        add_appender(appender)
+      end
+
+      SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
+    end
+
+    def metrics_subscriber
+      @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration[:metrics])
+    end
+
+    def log_metrics?
+      !metrics_subscriber.nil?
+    end
+
+    def add_appender(options = {})
+      SemanticLogger.add_appender(options)
+    end
   end
 
-  def self.metrics_subscriber
-    @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration[:metrics])
-  end
-
-  def self.log_metrics?
-    !metrics_subscriber.nil?
-  end
-
-  def self.add_appender(options = {})
-    SemanticLogger.add_appender(options)
-  end
+  reset_configuration!
 end
 
 require "sapience/loggable"
