@@ -24,26 +24,30 @@ module Sapience
     configure_logger
   end
 
+  def self.[](name)
+    SemanticLogger[name]
+  end
+
   def self.default_level=(level)
     SemanticLogger.default_level = level
   end
 
   def self.configure_logger
-    self.default_level = configuration[:logging][:default_level]
+    self.default_level = configuration[:logger][:default_level]
 
-    configuration[:logging][:appenders].each do |appender|
+    configuration[:logger][:appenders].each do |appender|
       add_appender(appender)
     end
 
-    SemanticLogger.on_metric(metrics_subscriber) if metrics_subscriber
+    SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
   end
 
   def self.metrics_subscriber
-    @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration.metrics.slice(:url))
+    @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration[:metrics])
   end
 
   def self.log_metrics?
-    @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration.metrics.slice(:url))
+    !metrics_subscriber.nil?
   end
 
   def self.add_appender(options = {})
