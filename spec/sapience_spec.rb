@@ -1,6 +1,17 @@
 require "spec_helper"
 
 describe Sapience do
+  let(:custom_logger_config) do
+    {
+      default_level: :fatal,
+      appenders: [
+        appender: :sentry,
+      ],
+    }
+  end
+
+  before { described_class.reset_configuration! }
+
   it "has a version number" do
     expect(described_class::VERSION).not_to be nil
   end
@@ -23,6 +34,23 @@ describe Sapience do
           url: "udp://localhost:8125",
         )
       end
+    end
+  end
+
+  describe '.configure' do
+    it 'overrides the default settings for logger' do
+      expect(described_class).to receive(:configure_logger)
+      described_class.configure { |config| config[:logger] = custom_logger_config }
+      expect(described_class.configuration[:logger]).to eq(custom_logger_config)
+    end
+  end
+
+  describe '.reset_configuration!' do
+    specify do
+      described_class.configure { |config| config[:logger] = custom_logger_config }
+      expect { described_class.reset_configuration! }
+        .to change { described_class.configuration }
+        .to(described_class::DEFAULT_CONFIGURATION)
     end
   end
 

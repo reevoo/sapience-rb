@@ -3,19 +3,25 @@ require "ostruct"
 require "semantic_logger"
 
 module Sapience
+  DEFAULT_CONFIGURATION = {
+    logger: {
+      default_level: :trace,
+      appenders: [
+        { io: STDOUT, formatter: :json },
+        { appender: :sentry },
+      ],
+    },
+    metrics: {
+      url: "udp://localhost:8125",
+    },
+  }
+
   def self.configuration
-    @configuration ||= {
-      logger: {
-        default_level: :trace,
-        appenders: [
-          { io: STDOUT, formatter: :json },
-          { appender: :sentry },
-        ],
-      },
-      metrics: {
-        url: "udp://localhost:8125",
-      },
-    }
+    @configuration || reset_configuration!
+  end
+
+  def self.reset_configuration!
+    @configuration = DEFAULT_CONFIGURATION.dup
   end
 
   def self.configure
