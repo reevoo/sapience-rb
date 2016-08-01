@@ -1,9 +1,9 @@
-require 'simplecov'
+require "simplecov"
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "sapience"
 require "rspec/its"
-require 'pry-nav'
+require "pry-nav"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

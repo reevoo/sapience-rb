@@ -16,8 +16,8 @@ describe Sapience do
     expect(described_class::VERSION).not_to be nil
   end
 
-  describe '.configuration' do
-    describe ':logger' do
+  describe ".configuration" do
+    describe ":logger" do
       subject { described_class.configuration }
       its([:logger]) do
         is_expected.to eq(
@@ -37,15 +37,15 @@ describe Sapience do
     end
   end
 
-  describe '.configure' do
-    it 'overrides the default settings for logger' do
+  describe ".configure" do
+    it "overrides the default settings for logger" do
       expect(described_class).to receive(:configure_logger)
       described_class.configure { |config| config[:logger] = custom_logger_config }
       expect(described_class.configuration[:logger]).to eq(custom_logger_config)
     end
   end
 
-  describe '.reset_configuration!' do
+  describe ".reset_configuration!" do
     specify do
       described_class.configure { |config| config[:logger] = custom_logger_config }
       expect { described_class.reset_configuration! }
@@ -54,7 +54,7 @@ describe Sapience do
     end
   end
 
-  describe 'configure_logger' do
+  describe "configure_logger" do
     specify do
       expect { described_class.configure_logger }
         .to change { SemanticLogger.default_level }.to :trace
