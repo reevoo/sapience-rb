@@ -18,27 +18,27 @@ describe Sapience::Appender::File do
   describe "format logs into text form" do
     it "handle no message or payload" do
       @appender.debug
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File\n/)
     end
 
     it "handle message" do
       @appender.debug("hello world")
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world\n/)
     end
 
     it "handle message and payload" do
       @appender.debug("hello world", @hash)
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
     end
 
     it "handle message, payload, and exception" do
       @appender.debug("hello world", @hash, StandardError.new("StandardError"))
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str} -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str} -- Exception: StandardError: StandardError\n\n/)
     end
 
     it "logs exception with nil backtrace" do
       @appender.debug(StandardError.new("StandardError"))
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
     end
 
     it "handle nested exception" do
@@ -51,7 +51,7 @@ describe Sapience::Appender::File do
           @appender.debug(e2)
         end
       end
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name} file_spec.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: SecondError\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} file_spec.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: SecondError\n/)
 
       if Exception.instance_methods.include?(:cause)
         expect(@io.string).to match(/^Cause: StandardError: FirstError\n/)
@@ -62,7 +62,7 @@ describe Sapience::Appender::File do
       exc = StandardError.new("StandardError")
       exc.set_backtrace([])
       @appender.debug(exc)
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
     end
   end
 
@@ -71,13 +71,13 @@ describe Sapience::Appender::File do
       it "log #{level} with file_name" do
         allow(Sapience).to receive(:backtrace_level_index).and_return(0)
         @appender.send(level, "hello world", @hash)
-        expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ \w \[\d+:#{@thread_name}#{@file_name_reg_exp}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
+        expect(@io.string).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name}#{@file_name_reg_exp}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
       end
 
       it "log #{level} without file_name" do
         allow(Sapience).to receive(:backtrace_level_index).and_return(100)
         @appender.send(level, "hello world", @hash)
-        expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ \w \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
+        expect(@io.string).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
       end
     end
   end
@@ -101,7 +101,7 @@ describe Sapience::Appender::File do
 
     it "format using formatter" do
       @appender.debug
-      expect(@io.string).to match(/#{@date_format} DEBUG \[\d+:#{@thread_name}\] Sapience::Appender::File -- \n/)
+      expect(@io.string).to match(/#{TS_REGEX} DEBUG \[\d+:#{@thread_name}\] Sapience::Appender::File -- \n/)
     end
   end
 end

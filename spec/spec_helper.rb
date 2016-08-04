@@ -7,6 +7,8 @@ require "rspec/its"
 require "pry-nav"
 require_relative "support/mock_logger"
 
+TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
