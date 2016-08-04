@@ -1,10 +1,11 @@
-require "sapience/version"
+ require "sapience/version"
 require "ostruct"
 require "semantic_logger"
 
 module Sapience
   DEFAULT_CONFIGURATION ||= {
     logger: {
+      application: "Sapience Application",
       default_level: :trace,
       appenders: [
         { io: STDOUT, formatter: :json },
@@ -24,7 +25,7 @@ module Sapience
     end
 
     def configure
-      yield configuration
+      yield configuration if block_given?
 
       configure_logger
     end
@@ -33,14 +34,32 @@ module Sapience
       SemanticLogger.default_level = level
     end
 
-    def configure_logger
-      self.default_level = configuration[:logger][:default_level]
+    def application=(name)
+      SemanticLogger.application = name
+    end
 
-      configuration[:logger][:appenders].each do |appender|
+    def logger(name)
+      SemanticLogger[name]
+    end
+
+    def configure_logger
+      add_logger_defaults
+      add_logger_appenders
+      SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
+    end
+
+    def add_logger_defaults
+      self.default_level = configuration[:logger][:default_level]
+      self.application   = configuration[:logger][:application]
+    end
+
+    def add_logger_appenders
+      SemanticLogger.appenders.each do |appender|
+        SemanticLogger.remove_appender(appender)
+      end
+      configuration[:logger][:appenders].try(:each) do |appender|
         add_appender(appender)
       end
-
-      SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
     end
 
     def metrics_subscriber
@@ -48,7 +67,7 @@ module Sapience
     end
 
     def log_metrics?
-      !metrics_subscriber.nil?
+      configuration[:metrics] && !metrics_subscriber.nil?
     end
 
     def add_appender(options = {})
