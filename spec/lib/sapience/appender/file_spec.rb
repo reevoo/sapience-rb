@@ -71,7 +71,6 @@ describe Sapience::Appender::File do
       it "log #{level} with file_name" do
         allow(Sapience).to receive(:backtrace_level_index).and_return(0)
         @appender.send(level, "hello world", @hash)
-        puts @io.string
         expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ \w \[\d+:#{@thread_name}#{@file_name_reg_exp}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
       end
 
