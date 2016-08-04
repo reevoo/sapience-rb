@@ -2,7 +2,7 @@ require "simplecov"
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "sapience"
-require 'logger'
+require "logger"
 require "rspec/its"
 require "pry-nav"
 require_relative "support/mock_logger"

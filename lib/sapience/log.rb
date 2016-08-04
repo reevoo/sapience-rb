@@ -116,7 +116,7 @@ module Sapience
       file, line = file_name_and_line(true)
       file_name  = " #{file}:#{line}" if file
 
-      "#{$PROCESS_ID}:#{"%.#{thread_name_length}s" % thread_name}#{file_name}"
+      "#{$$}:#{"%.#{thread_name_length}s" % thread_name}#{file_name}"
     end
 
     CALLER_REGEXP = /^(.*):(\d+).*/
