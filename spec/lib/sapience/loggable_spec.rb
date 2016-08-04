@@ -10,7 +10,7 @@ describe Sapience::Loggable do
     end
 
     specify do
-      expect(TestClass.ancestors).to include(SemanticLogger::Loggable)
+      expect(TestClass.ancestors).to include(Sapience::Loggable)
     end
 
     describe "class methods" do

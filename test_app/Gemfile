@@ -15,8 +15,6 @@ gem "puma", "~> 3.0"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem "sapience", path: "../"
-gem "semantic_logger", github: "mhenrixon/semantic_logger"
-# gem "rails_semantic_logger"
 gem "sentry-raven"
 gem "statsd-ruby"
 

@@ -2,3 +2,4 @@ Gemfile.lock
 spec/examples.txt
 coverage/
 .DS_Store
+.idea

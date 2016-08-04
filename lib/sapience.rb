@@ -1,81 +1,42 @@
- require "sapience/version"
-require "ostruct"
-require "semantic_logger"
+require "sapience/version"
+require 'sapience/sapience'
 
+# @formatter:off
 module Sapience
-  DEFAULT_CONFIGURATION ||= {
-    logger: {
-      application: "Sapience Application",
-      default_level: :trace,
-      appenders: [
-        { io: STDOUT, formatter: :json },
-        { appender: :sentry },
-      ],
-    },
-    metrics: {
-      url: "udp://localhost:8125",
-    },
-  }.freeze
+  autoload :AnsiColors,         'sapience/ansi_colors'
+  autoload :Thread,             'sapience/core_ext/thread'
+  autoload :Base,               'sapience/base'
+  autoload :Log,                'sapience/log'
+  autoload :Logger,             'sapience/logger'
+  autoload :Loggable,           'sapience/loggable'
+  autoload :Subscriber,         'sapience/subscriber'
 
-  class << self
-    attr_accessor :configuration
-
-    def reset_configuration!
-      self.configuration = DEFAULT_CONFIGURATION.dup
-    end
-
-    def configure
-      yield configuration if block_given?
-
-      configure_logger
-    end
-
-    def default_level=(level)
-      SemanticLogger.default_level = level
-    end
-
-    def application=(name)
-      SemanticLogger.application = name
-    end
-
-    def logger(name)
-      SemanticLogger[name]
-    end
-
-    def configure_logger
-      add_logger_defaults
-      add_logger_appenders
-      SemanticLogger.on_metric(metrics_subscriber) if log_metrics?
-    end
-
-    def add_logger_defaults
-      self.default_level = configuration[:logger][:default_level]
-      self.application   = configuration[:logger][:application]
-    end
-
-    def add_logger_appenders
-      SemanticLogger.appenders.each do |appender|
-        SemanticLogger.remove_appender(appender)
-      end
-      configuration[:logger][:appenders].try(:each) do |appender|
-        add_appender(appender)
-      end
-    end
-
-    def metrics_subscriber
-      @metrics_subscriber ||= SemanticLogger::Metrics::Statsd.new(configuration[:metrics])
-    end
-
-    def log_metrics?
-      configuration[:metrics] && !metrics_subscriber.nil?
-    end
-
-    def add_appender(options = {})
-      SemanticLogger.add_appender(options)
-    end
+  module Appender
+    autoload :File,             'sapience/appender/file'
+    autoload :Sentry,           'sapience/appender/sentry'
+    autoload :Wrapper,          'sapience/appender/wrapper'
+    autoload :Statsd,           'sapience/appender/statsd'
   end
 
-  reset_configuration!
-end
+  module Concerns
+    autoload :Compatibility,    'sapience/concerns/compatibility'
+  end
 
-require "sapience/loggable"
+  module Formatters
+    autoload :Base,             'sapience/formatters/base'
+    autoload :Color,            'sapience/formatters/color'
+    autoload :Default,          'sapience/formatters/default'
+    autoload :Json,             'sapience/formatters/json'
+    autoload :Raw,              'sapience/formatters/raw'
+    autoload :Syslog,           'sapience/formatters/syslog'
+  end
+
+end
+# @formatter:on
+
+# Close and flush all appenders at exit, waiting for outstanding messages on the queue
+# to be written first
+at_exit do
+  # Cannot call #close since test frameworks use at_exit to run loaded tests
+  Sapience.flush
+end

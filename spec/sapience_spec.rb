@@ -4,7 +4,7 @@ describe Sapience do
   let(:custom_logger_config) do
     {
       default_level: :fatal,
-      appenders: [
+      appender:      [
         appender: :sentry,
       ],
     }
@@ -21,8 +21,8 @@ describe Sapience do
       subject { described_class.configuration }
       its([:logger]) do
         is_expected.to eq(
-          default_level: :trace,
-          appenders: [
+                         default_level: :trace,
+                         appender:      [
             { io: STDOUT, formatter: :json },
             { appender: :sentry },
           ],
@@ -57,7 +57,7 @@ describe Sapience do
   describe "configure_logger" do
     specify do
       expect { described_class.configure_logger }
-        .to change { SemanticLogger.default_level }.to :trace
+        .to change { Sapience.default_level }.to :trace
     end
   end
 end
