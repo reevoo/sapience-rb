@@ -7,10 +7,10 @@ module Sapience
       application:   "Sapience Application",
       default_level: :trace,
       appender:      [
-                       { io: STDOUT, formatter: :color },
-                       { appender: :sentry },
-                       { appender: :statsd },
-                     ],
+        { io: STDOUT, formatter: :color },
+        { appender: :sentry },
+        { appender: :statsd },
+      ],
     },
     metrics: {
       url: "udp://localhost:8125",
@@ -167,7 +167,8 @@ module Sapience
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
   def self.add_appender(options, deprecated_level = nil, &block)
-    options  = options.is_a?(Hash) ? options.dup : convert_old_appender_args(options, deprecated_level)
+    fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
+    options  = options.dup
     appender = appender_from_options(options, &block)
     @@appenders << appender
 
@@ -263,7 +264,7 @@ module Sapience
   #
   # Note:
   #   To only register one of the signal handlers, set the other to nil
-  def self.add_signal_handler(log_level_signal = "USR2", thread_dump_signal = "TTIN", gc_log_microseconds = 100_000)
+  def self.add_signal_handler(log_level_signal = "USR2", thread_dump_signal = "TTIN", _gc_log_microseconds = 100_000)
     Signal.trap(log_level_signal) do
       index     = (default_level == :trace) ? LEVELS.find_index(:error) : LEVELS.find_index(default_level)
       new_level = LEVELS[index - 1]
@@ -426,24 +427,6 @@ module Sapience
       end
     fail "Invalid level:#{level.inspect} being requested. Must be one of #{LEVELS.inspect}" unless index
     index
-  end
-
-  # Backward compatibility
-  def self.convert_old_appender_args(appender, level)
-    options         = {}
-    options[:level] = level if level
-
-    if appender.is_a?(String)
-      options[:file_name] = appender
-    elsif appender.is_a?(IO)
-      options[:io] = appender
-    elsif appender.is_a?(Symbol) || appender.is_a?(Subscriber)
-      options[:appender] = appender
-    else
-      options[:logger] = appender
-    end
-    warn "[DEPRECATED] Sapience.add_appender parameters have changed. Please use: #{options.inspect}" if $VERBOSE
-    options
   end
 
   # Returns [Sapience::Subscriber] appender for the supplied options

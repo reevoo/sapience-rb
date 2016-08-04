@@ -26,4 +26,3 @@ class MockLogger
     true
   end
 end
-

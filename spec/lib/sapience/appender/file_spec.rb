@@ -9,14 +9,13 @@ describe Sapience::Appender::File do
     @time                        = Time.new
     @io                          = StringIO.new
     @appender                    = Sapience.add_appender(io: @io)
-    @hash                        = { :session_id => "HSSKLEU@JDK767", :tracking_number => 12345 }
+    @hash                        = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
     @hash_str                    = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
     @thread_name                 = Thread.current.name
     @file_name_reg_exp           = " example.rb:\\d+"
   end
 
   describe "format logs into text form" do
-
     it "handle no message or payload" do
       @appender.debug
       expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ D \[\d+:#{@thread_name}\] Sapience::Appender::File\n/)
@@ -44,10 +43,10 @@ describe Sapience::Appender::File do
 
     it "handle nested exception" do
       begin
-        raise(StandardError, "FirstError")
+        fail(StandardError, "FirstError")
       rescue Exception
         begin
-          raise(StandardError, "SecondError")
+          fail(StandardError, "SecondError")
         rescue Exception => e2
           @appender.debug(e2)
         end
@@ -69,7 +68,6 @@ describe Sapience::Appender::File do
 
   describe "for each log level" do
     Sapience::LEVELS.each do |level|
-
       it "log #{level} with file_name" do
         allow(Sapience).to receive(:backtrace_level_index).and_return(0)
         @appender.send(level, "hello world", @hash)
@@ -104,7 +102,7 @@ describe Sapience::Appender::File do
 
     it "format using formatter" do
       @appender.debug
-      expect(@io.string).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ DEBUG \[\d+:#{@thread_name}\] Sapience::Appender::File -- \n/)
+      expect(@io.string).to match(/#{@date_format} DEBUG \[\d+:#{@thread_name}\] Sapience::Appender::File -- \n/)
     end
   end
 end

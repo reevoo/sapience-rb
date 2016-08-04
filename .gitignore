@@ -3,3 +3,5 @@ spec/examples.txt
 coverage/
 .DS_Store
 .idea
+
+/.bundle/

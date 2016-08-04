@@ -164,7 +164,7 @@ module Sapience
       # Header
       h               = {
         name:        name,
-        pid:         $PROCESS_ID,
+        pid:         $$,
         thread:      thread_name,
         time:        time,
         level:       level,

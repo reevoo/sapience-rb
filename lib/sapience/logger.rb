@@ -1,4 +1,4 @@
-require 'concurrent'
+require "concurrent"
 module Sapience
   # Logger stores the class name to be used for all log messages so that every
   # log message written by this instance will include the class name
@@ -26,7 +26,7 @@ module Sapience
     #    regular expression. All other messages will be ignored
     #    Proc: Only include log messages where the supplied Proc returns true
     #          The Proc must return true or false
-    def initialize(klass, level=nil, filter=nil)
+    def initialize(klass, level = nil, filter = nil)
       super
     end
 
@@ -123,9 +123,9 @@ module Sapience
       appender = block || options.delete(:appender)
 
       # Convert symbolized metrics appender to an actual object
-      appender = Sapience.constantize_symbol(appender, 'Sapience::Metrics').new(options) if appender.is_a?(Symbol)
+      appender = Sapience.constantize_symbol(appender, "Sapience::Metrics").new(options) if appender.is_a?(Symbol)
 
-      raise('When supplying a metrics appender, it must support the #call method') unless appender.is_a?(Proc) || appender.respond_to?(:call)
+      fail("When supplying a metrics appender, it must support the #call method") unless appender.is_a?(Proc) || appender.respond_to?(:call)
       (@@metric_subscribers ||= Concurrent::Array.new) << appender
     end
 
@@ -163,7 +163,7 @@ module Sapience
     def self.start_appender_thread
       return false if appender_thread_active?
       @@appender_thread = Thread.new { appender_thread }
-      raise 'Failed to start Appender Thread' unless @@appender_thread
+      fail "Failed to start Appender Thread" unless @@appender_thread
       true
     end
 
@@ -180,7 +180,7 @@ module Sapience
       #
       # Should any appender fail to log or flush, the exception is logged and
       # other appenders will still be called
-      Thread.current.name = 'Sapience::AppenderThread'
+      Thread.current.name = "Sapience::AppenderThread"
       logger.trace "V#{VERSION} Appender thread active"
       begin
         count = 0
@@ -215,7 +215,7 @@ module Sapience
               end
 
               message[:reply_queue] << true if message[:reply_queue]
-              logger.trace 'Appender thread: All appenders flushed'
+              logger.trace "Appender thread: All appenders flushed"
             when :close
               Sapience.appenders.each do |appender|
                 begin
@@ -229,7 +229,7 @@ module Sapience
               end
 
               message[:reply_queue] << true if message[:reply_queue]
-              logger.trace 'Appender thread: All appenders flushed'
+              logger.trace "Appender thread: All appenders flushed"
             else
               logger.warn "Appender thread: Ignoring unknown command: #{message[:command]}"
             end
@@ -238,7 +238,7 @@ module Sapience
       rescue Exception => exception
         # This block may be called after the file handles have been released by Ruby
         begin
-          logger.error 'Appender thread restarting due to exception', exception
+          logger.error "Appender thread restarting due to exception", exception
         rescue Exception
           nil
         end
@@ -247,7 +247,7 @@ module Sapience
         @@appender_thread = nil
         # This block may be called after the file handles have been released by Ruby
         begin
-          logger.trace 'Appender thread has stopped'
+          logger.trace "Appender thread has stopped"
         rescue Exception
           nil
         end
@@ -263,7 +263,7 @@ module Sapience
         begin
           subscriber.call(log)
         rescue Exception => exc
-          logger.error 'Exception calling metrics subscriber', exc
+          logger.error "Exception calling metrics subscriber", exc
         end
       end
     end

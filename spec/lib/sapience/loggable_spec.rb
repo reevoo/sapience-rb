@@ -9,18 +9,16 @@ describe Sapience::Loggable do
       TestClass.send(:include, described_class) unless TestClass.ancestors.include?(described_class)
     end
 
-    specify do
-      expect(TestClass.ancestors).to include(Sapience::Loggable)
-    end
-
     describe "class methods" do
       subject { TestClass }
       specify { expect(subject).to respond_to(:logger) }
+      specify { expect(subject).to respond_to(:logger=) }
     end
 
     describe "instance methods" do
       subject { TestClass.new }
       specify { expect(subject).to respond_to(:logger) }
+      specify { expect(subject).to respond_to(:logger=) }
     end
   end
 end
