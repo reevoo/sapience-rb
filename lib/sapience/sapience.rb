@@ -212,30 +212,6 @@ module Sapience
     Sapience::Logger.start_appender_thread
   end
 
-  # Supply a block to be called whenever a metric is seen during measure logging
-  #
-  #  Parameters
-  #    appender: [Symbol | Object | Proc]
-  #      [Proc] the block to call.
-  #      [Object] the block on which to call #call.
-  #      [Symbol] :new_relic, or :statsd to forward metrics to
-  #
-  #    block
-  #      The block to be called
-  #
-  # Example:
-  #   Sapience.on_metric do |log|
-  #     puts "#{log.metric} was received. Log Struct: #{log.inspect}"
-  #   end
-  #
-  # Note:
-  # * This callback is called in the logging thread.
-  # * Does not slow down the application.
-  # * Only context is what is passed in the log struct, the original thread context is not available.
-  def self.on_metric(options = {}, &block)
-    Sapience::Logger.on_metric(options, &block)
-  end
-
   # Add signal handlers for Sapience
   #
   # Two signal handlers will be registered by default:

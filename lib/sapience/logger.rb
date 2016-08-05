@@ -97,38 +97,6 @@ module Sapience
       @@logger = logger
     end
 
-    # Supply a metrics appender to be called whenever a logging metric is encountered
-    #
-    #  Parameters
-    #    appender: [Symbol | Object | Proc]
-    #      [Proc] the block to call.
-    #      [Object] the block on which to call #call.
-    #      [Symbol] :new_relic, or :statsd to forward metrics to
-    #
-    #    block
-    #      The block to be called
-    #
-    # Example:
-    #   Sapience.on_metric do |log|
-    #     puts "#{log.metric} was received. Log Struct: #{log.inspect}"
-    #   end
-    #
-    # Note:
-    # * This callback is called in the logging thread.
-    # * Does not slow down the application.
-    # * Only context is what is passed in the log struct, the original thread context is not available.
-    def self.on_metric(options = {}, &block)
-      # Backward compatibility
-      options  = options.is_a?(Hash) ? options.dup : { appender: options }
-      appender = block || options.delete(:appender)
-
-      # Convert symbolized metrics appender to an actual object
-      appender = Sapience.constantize_symbol(appender, "Sapience::Metrics").new(options) if appender.is_a?(Symbol)
-
-      fail("When supplying a metrics appender, it must support the #call method") unless appender.is_a?(Proc) || appender.respond_to?(:call)
-      (@@metric_subscribers ||= Concurrent::Array.new) << appender
-    end
-
     # Place log request on the queue for the Appender thread to write to each
     # appender in the order that they were registered
     def log(log, message = nil, progname = nil, &block)
@@ -141,7 +109,6 @@ module Sapience
 
     @@appender_thread    = nil
     @@queue              = Queue.new
-    @@metric_subscribers = nil
 
     # Queue to hold messages that need to be logged to the various appenders
     def self.queue
@@ -193,7 +160,6 @@ module Sapience
                 logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
               end
             end
-            call_metric_subscribers(message) if message.metric
             count += 1
             # Check every few log messages whether this appender thread is falling behind
             if count > lag_check_interval
@@ -250,20 +216,6 @@ module Sapience
           logger.trace "Appender thread has stopped"
         rescue Exception
           nil
-        end
-      end
-    end
-
-    # Call Metric subscribers
-    def self.call_metric_subscribers(log)
-      # If no subscribers registered, then return immediately
-      return unless @@metric_subscribers
-
-      @@metric_subscribers.each do |subscriber|
-        begin
-          subscriber.call(log)
-        rescue Exception => exc
-          logger.error "Exception calling metrics subscriber", exc
         end
       end
     end

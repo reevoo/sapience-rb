@@ -70,8 +70,6 @@ describe Sapience::Logger do
         @mock_logger = MockLogger.new
         @appender = Sapience.add_appender(logger: (@mock_logger))
         @appender.filter = filter
-        $last_metric = nil
-        Sapience.on_metric { |log| $last_metric = log.dup }
         @logger = Sapience["LoggerTest"]
         @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
         @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
@@ -191,7 +189,7 @@ describe Sapience::Logger do
               expect(@mock_logger.message).to(be_nil)
             end
 
-            it "logs metric" do
+            it "logs duration" do
               metric_name = "/my/custom/metric"
               @logger.send(level, metric: metric_name, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
@@ -199,7 +197,6 @@ describe Sapience::Logger do
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
               duration_match = "\\(123\\.5ms\\)"
               expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
-              expect(metric_name).to be_truthy
             end
           end
         end
@@ -326,17 +323,6 @@ describe Sapience::Logger do
               expect(@mock_logger.message).to match(/#{TS_REGEX} F \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
             end
 
-            it "log #{level} info with metric" do
-              metric_name = "/my/custom/metric"
-              expect(@logger.send("measure_#{level}".to_sym, "hello world", metric: metric_name) do
-                "result"
-              end,
-              ).to(eq("result"))
-              Sapience.flush
-              expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
-              expect(metric_name).to be_truthy
-            end
-
             it "log #{level} info with backtrace" do
               allow(Sapience).to receive(:backtrace_level_index).and_return(0)
               expect(@logger.send("measure_#{level}".to_sym, "hello world") { "result" }).to(eq("result"))
@@ -383,14 +369,6 @@ describe Sapience::Logger do
                 .to(raise_error(RuntimeError))
               Sapience.flush
               expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
-            end
-
-            it "log #{level} info with metric" do
-              metric_name = "/my/custom/metric"
-              expect(@logger.measure(level, "hello world", metric: metric_name) { "result" }).to(eq("result"))
-              Sapience.flush
-              expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
-              expect(metric_name).to be_truthy
             end
 
             it "log #{level} info with backtrace" do
