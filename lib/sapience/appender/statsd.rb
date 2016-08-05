@@ -9,6 +9,7 @@ end
 #   Sapience.add_appender(appender: :statsd)
 #
 class Sapience::Appender::Statsd < Sapience::Subscriber
+  attr_reader :url
   # Create Appender
   #
   # Parameters:
@@ -22,7 +23,7 @@ class Sapience::Appender::Statsd < Sapience::Subscriber
   def initialize(options = {}, &block)
     options         = options.is_a?(Hash) ? options.dup : { level: options }
     @url    = options.delete(:url) || "udp://localhost:8125"
-    options[:level] ||= :error
+    uri     = URI.parse(@url)
     fail('Statsd only supports udp. Example: "udp://localhost:8125"') if uri.scheme != "udp"
 
     @statsd           = ::Statsd.new(uri.host, uri.port)
@@ -35,18 +36,21 @@ class Sapience::Appender::Statsd < Sapience::Subscriber
   # Send an error notification to sentry
   def log(log)
     metric = log.metric
-    return false unless metric
+    return unless metric
 
     if duration = log.duration
       @statsd.timing(metric, duration)
     else
       amount = (log.metric_amount || 1).round
       if amount < 0
-        amount.times { @statsd.decrement(metric) }
+        amount.abs.times { @statsd.decrement(metric) }
       else
         amount.times { @statsd.increment(metric) }
       end
     end
     true
+
+  rescue
+    false
   end
 end

@@ -6,6 +6,7 @@ require "logger"
 require "rspec/its"
 require "pry-nav"
 require_relative "support/mock_logger"
+require_relative "support/log_factory"
 
 TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
 
