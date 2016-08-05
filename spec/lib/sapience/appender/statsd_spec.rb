@@ -47,7 +47,7 @@ describe Sapience::Appender::Statsd do
       let(:metric) { nil }
 
       it "returns nil" do
-        expect(subject.log(log)).to eq(nil)
+        expect(subject.log(log)).to eq(false)
       end
 
       it "doesn't call statsd" do

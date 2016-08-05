@@ -9,7 +9,7 @@ module Sapience
       appender:      [
         { io: STDOUT, formatter: :color },
         { appender: :sentry },
-        { appender: :statsd },
+        { appender: :statsd, url: "udp://0.0.0.0:2222" },
       ],
     },
     metrics: {

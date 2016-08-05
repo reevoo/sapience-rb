@@ -16,6 +16,14 @@ describe Sapience::Logger do
       expect(@appender.formatter).to be_a(Sapience::Formatters::Default)
     end
 
+    it "adds statsd appender" do
+      require "statsd-ruby"
+      expect(::Statsd).to receive(:new).with("0.0.0.0", 2222)
+      @appender = Sapience.add_appender(appender: :statsd, url: "udp://0.0.0.0:2222")
+      expect(@appender).to be_a(Sapience::Appender::Statsd)
+      expect(Sapience.appenders).to include(@appender)
+    end
+
     it "adds file appender with json format" do
       @appender = Sapience.add_appender(file_name: "sample.log", formatter: :json)
       expect(@appender).to be_a(Sapience::Appender::File)
