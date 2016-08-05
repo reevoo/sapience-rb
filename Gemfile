@@ -6,3 +6,5 @@ gemspec
 gem "pry-nav"
 gem "sentry-raven"
 gem "statsd-ruby"
+gem "minitest_to_rspec"
+gem "transpec"
