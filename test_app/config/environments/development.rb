@@ -46,11 +46,4 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.colorize_logging = false
   config.log_level = :debug
-  config.after_initialize do
-    Sapience.configure do |cfg|
-      cfg[:logger][:application] = Rails.application.class.parent_name
-    end
-    Sapience.add_logger_appenders
-    config.logger = Sapience.logger(Rails)
-  end
 end
