@@ -3,18 +3,13 @@ require "socket"
 
 module Sapience
   DEFAULT_CONFIGURATION = {
-    logger:  {
-      application:   "Sapience Application",
-      default_level: :trace,
-      appender:      [
-        { io: STDOUT, formatter: :color },
-        { appender: :sentry },
-        { appender: :statsd, url: "udp://0.0.0.0:2222" },
-      ],
-    },
-    metrics: {
-      url: "udp://localhost:8125",
-    },
+    application:   "Sapience Application",
+    default_level: :trace,
+    appender:      [
+      { io: STDOUT, formatter: :color },
+      { appender: :sentry },
+      { appender: :statsd, url: "udp://0.0.0.0:2222" },
+    ],
   }.freeze
 
   # Logging levels in order of most detailed to most severe
