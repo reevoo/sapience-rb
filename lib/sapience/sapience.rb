@@ -2,10 +2,15 @@ require "concurrent"
 require "socket"
 
 module Sapience
+  # 1. Have a default configuration
+  # 2. Configure Sapience (Sapience.configure { |c| c.configuration = {} })
+  # 3. Use configuration for rails
+  # 4. Use configuration for grape
   DEFAULT_CONFIGURATION = {
     application:   "Sapience Application",
     default_level: :trace,
-    appender:      [
+    ap_options: { multiline: false },
+    appenders:      [
       { io: STDOUT, formatter: :color },
       { appender: :sentry },
       { appender: :statsd, url: "udp://0.0.0.0:2222" },
@@ -14,6 +19,10 @@ module Sapience
 
   # Logging levels in order of most detailed to most severe
   LEVELS                = [:trace, :debug, :info, :warn, :error, :fatal]
+
+  def self.configuration
+    @configuration || DEFAULT_CONFIGURATION
+  end
 
   # Return a logger for the supplied class or class_name
   def self.[](klass)

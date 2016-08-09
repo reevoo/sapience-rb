@@ -1,5 +1,6 @@
 require "spec_helper"
 require "stringio"
+
 class TestAttribute
   include Sapience::Loggable
 end
