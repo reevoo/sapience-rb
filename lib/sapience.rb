@@ -2,37 +2,29 @@ require "sapience/version"
 require "sapience/sapience"
 
 # @formatter:off
-module Sapience
-  autoload :Configuration,      "sapience/configuration"
-  autoload :AnsiColors,         "sapience/ansi_colors"
-  autoload :Thread,             "sapience/core_ext/thread"
-  autoload :Base,               "sapience/base"
-  autoload :Log,                "sapience/log"
-  autoload :Logger,             "sapience/logger"
-  autoload :Loggable,           "sapience/loggable"
-  autoload :Subscriber,         "sapience/subscriber"
 
-  module Appender
-    autoload :File,             "sapience/appender/file"
-    autoload :Sentry,           "sapience/appender/sentry"
-    autoload :Wrapper,          "sapience/appender/wrapper"
-    autoload :Statsd,           "sapience/appender/statsd"
-  end
+require "sapience/concerns/compatibility"
 
-  module Concerns
-    autoload :Compatibility,    "sapience/concerns/compatibility"
-  end
+require "sapience/formatters/base"
+require "sapience/formatters/raw"
+require "sapience/formatters/default"
+require "sapience/formatters/color"
+require "sapience/formatters/json"
 
-  module Formatters
-    autoload :Base,             "sapience/formatters/base"
-    autoload :Color,            "sapience/formatters/color"
-    autoload :Default,          "sapience/formatters/default"
-    autoload :Json,             "sapience/formatters/json"
-    autoload :Raw,              "sapience/formatters/raw"
-    autoload :Syslog,           "sapience/formatters/syslog"
-  end
+require "sapience/configuration"
+require "sapience/ansi_colors"
+require "sapience/core_ext/thread"
+require "sapience/base"
+require "sapience/log"
+require "sapience/logger"
+require "sapience/loggable"
+require "sapience/subscriber"
 
-end
+require "sapience/appender/file"
+require "sapience/appender/sentry"
+require "sapience/appender/wrapper"
+require "sapience/appender/statsd"
+
 # @formatter:on
 
 # Close and flush all appenders at exit, waiting for outstanding messages on the queue

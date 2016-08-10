@@ -27,7 +27,6 @@ class Subclass < Base
 end
 
 describe Sapience::Loggable do
-  let(:called_proc) { -> description { called = true if description == "perform" } }
   describe "inheritance" do
     it "should give child classes their own logger" do
       expect(Subclass.logger.name).to eq(Subclass.name)
