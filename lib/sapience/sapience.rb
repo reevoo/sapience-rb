@@ -6,91 +6,22 @@ module Sapience
   # 2. Configure Sapience (Sapience.configure { |c| c.configuration = {} })
   # 3. Use configuration for rails
   # 4. Use configuration for grape
-  DEFAULT_CONFIGURATION = {
-    application:   "Sapience Application",
-    default_level: :trace,
-    ap_options: { multiline: false },
-    appenders:      [
-      { io: STDOUT, formatter: :color },
-      { appender: :sentry },
-      { appender: :statsd, url: "udp://0.0.0.0:2222" },
-    ],
-  }.freeze
 
   # Logging levels in order of most detailed to most severe
   LEVELS                = [:trace, :debug, :info, :warn, :error, :fatal]
 
-  def self.configuration
-    @configuration || DEFAULT_CONFIGURATION
+  def self.config
+    @@config ||= Configuration.new
+  end
+
+  def self.configure
+    yield @@config
   end
 
   # Return a logger for the supplied class or class_name
   def self.[](klass)
     Sapience::Logger.new(klass)
   end
-
-  # Sets the global default log level
-  def self.default_level=(level)
-    @@default_level       = level
-    # For performance reasons pre-calculate the level index
-    @@default_level_index = level_to_index(level)
-  end
-
-  # Returns the global default log level
-  def self.default_level
-    @@default_level
-  end
-
-  # Sets the level at which backtraces should be captured
-  # for every log message.
-  #
-  # By enabling backtrace capture the filename and line number of where
-  # message was logged can be written to the log file. Additionally, the backtrace
-  # can be forwarded to error management services such as Bugsnag.
-  #
-  # Warning:
-  #   Capturing backtraces is very expensive and should not be done all
-  #   the time. It is recommended to run it at :error level in production.
-  def self.backtrace_level=(level)
-    @@backtrace_level       = level
-    # For performance reasons pre-calculate the level index
-    @@backtrace_level_index = level.nil? ? 65_535 : level_to_index(level)
-  end
-
-  # Returns the current backtrace level
-  def self.backtrace_level
-    @@backtrace_level
-  end
-
-  # Returns the current backtrace level index
-  # For internal use only
-  def self.backtrace_level_index #:nodoc
-    @@backtrace_level_index
-  end
-
-  # Returns [String] name of this host for logging purposes
-  # Note: Not all appenders use `host`
-  def self.host
-    @@host ||= Socket.gethostname
-  end
-
-  # Override the default host name
-  def self.host=(host)
-    @@host = host
-  end
-
-  # Returns [String] name of this application for logging purposes
-  # Note: Not all appenders use `application`
-  def self.application
-    @@application
-  end
-
-  # Override the default application
-  def self.application=(application)
-    @@application = application
-  end
-
-  @@application = "Sapience"
 
   # Add a new logging appender as a new destination for all log messages
   # emitted from Sapience
@@ -126,7 +57,7 @@ module Sapience
   #
   #   level: [:trace | :debug | :info | :warn | :error | :fatal]
   #     Override the log level for this appender.
-  #     Default: Sapience.default_level
+  #     Default: Sapience.config.default_level
   #
   #   formatter: [Symbol|Object|Proc]
   #     Any of the following symbol values: :default, :color, :json
@@ -164,7 +95,7 @@ module Sapience
   #   log = Logger.new(STDOUT)
   #   log.level = Logger::DEBUG
   #
-  #   Sapience.default_level = :debug
+  #   Sapience.config.default_level = :debug
   #   Sapience.add_appender(logger: log)
   #
   #   logger = Sapience['Example']
@@ -338,7 +269,7 @@ module Sapience
   # Example:
   #
   #   # Perform trace level logging within the block when the default is higher
-  #   Sapience.default_level = :info
+  #   Sapience.config.default_level = :info
   #
   #   logger.debug 'this will _not_ be logged'
   #
@@ -364,7 +295,7 @@ module Sapience
   #   explicitly. I.e. That do not rely on the global default level
   def self.silence(new_level = :error)
     current_index                            = Thread.current[:sapience_silence]
-    Thread.current[:sapience_silence] = Sapience.level_to_index(new_level)
+    Thread.current[:sapience_silence] = Sapience.config.level_to_index(new_level)
     yield
   ensure
     Thread.current[:sapience_silence] = current_index
@@ -374,40 +305,6 @@ module Sapience
 
   @@appenders = Concurrent::Array.new
 
-  def self.default_level_index
-    Thread.current[:sapience_silence] || @@default_level_index
-  end
-
-  # Returns the symbolic level for the supplied level index
-  def self.index_to_level(level_index)
-    LEVELS[level_index]
-  end
-
-  # Internal method to return the log level as an internal index
-  # Also supports mapping the ::Logger levels to Sapience levels
-  def self.level_to_index(level)
-    return if level.nil?
-
-    index =
-      if level.is_a?(Symbol)
-        LEVELS.index(level)
-      elsif level.is_a?(String)
-        level = level.downcase.to_sym
-        LEVELS.index(level)
-      elsif level.is_a?(Integer) && defined?(::Logger::Severity)
-        # Mapping of Rails and Ruby Logger levels to Sapience levels
-        @@map_levels ||= begin
-          levels = []
-          ::Logger::Severity.constants.each do |constant|
-            levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error)
-          end
-          levels
-        end
-        @@map_levels[level]
-      end
-    fail "Invalid level:#{level.inspect} being requested. Must be one of #{LEVELS.inspect}" unless index
-    index
-  end
 
   # Returns [Sapience::Subscriber] appender for the supplied options
   def self.appender_from_options(options, &block)
@@ -447,10 +344,4 @@ module Sapience
     string.gsub!("/".freeze, "::".freeze)
     string
   end
-
-  # Initial default Level for all new instances of Sapience::Logger
-  @@default_level         = :info
-  @@default_level_index   = level_to_index(@@default_level)
-  @@backtrace_level       = :error
-  @@backtrace_level_index = level_to_index(@@backtrace_level)
 end

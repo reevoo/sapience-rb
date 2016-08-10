@@ -3,6 +3,7 @@ require "sapience/sapience"
 
 # @formatter:off
 module Sapience
+  autoload :Configuration,      "sapience/configuration"
   autoload :AnsiColors,         "sapience/ansi_colors"
   autoload :Thread,             "sapience/core_ext/thread"
   autoload :Base,               "sapience/base"

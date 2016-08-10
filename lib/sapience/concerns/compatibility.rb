@@ -38,9 +38,9 @@ module Sapience
 
       # :nodoc:
       def add(severity, message = nil, progname = nil, &block)
-        index = Sapience.send(:level_to_index, severity)
+        index = Sapience.config.level_to_index(severity)
         if level_index <= index
-          level = Sapience.send(:index_to_level, index)
+          level = Sapience.config.index_to_level(index)
           log_internal(level, index, message, progname, &block)
           true
         else

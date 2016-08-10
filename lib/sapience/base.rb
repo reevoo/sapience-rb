@@ -7,19 +7,19 @@ module Sapience
     #
     # Note: This level is only for this particular instance. It does not override
     #   the log level in any logging instance or the default log level
-    #   Sapience.default_level
+    #   Sapience.config.default_level
     #
     # Must be one of the values in Sapience::LEVELS, or
     # nil if this logger instance should use the global default level
     def level=(level)
-      @level_index = Sapience.level_to_index(level)
-      @level       = Sapience.send(:index_to_level, @level_index)
+      @level_index = Sapience.config.level_to_index(level)
+      @level       = Sapience.config.index_to_level(@level_index)
     end
 
     # Returns the current log level if set, otherwise it returns the global
     # default log level
     def level
-      @level || Sapience.default_level
+      @level || Sapience.config.default_level
     end
 
     # Implement the log level calls
@@ -48,7 +48,7 @@ module Sapience
     #    require 'sapience'
     #
     #    # Enable trace level logging
-    #    Sapience.default_level = :info
+    #    Sapience.config.default_level = :info
     #
     #    # Log to screen
     #    Sapience.add_appender(io: STDOUT, formatter: :color)
@@ -100,7 +100,7 @@ module Sapience
 
     # Dynamically supply the log level with every measurement call
     def measure(level, message, params = {}, &block)
-      index = Sapience.level_to_index(level)
+      index = Sapience.config.level_to_index(level)
       if level_index <= index
         measure_internal(level, index, message, params, &block)
       else
@@ -218,7 +218,7 @@ module Sapience
     # Returns the global default level index if the level has not been explicitly
     # set for this instance
     def level_index
-      @level_index || Sapience.default_level_index
+      @level_index || Sapience.config.default_level_index
     end
 
     # Whether to log the supplied message based on the current filter if any
@@ -268,7 +268,7 @@ module Sapience
       end
 
       # Add caller stack trace
-      backtrace = extract_backtrace if index >= Sapience.backtrace_level_index
+      backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
       log = Log.new(level, Thread.current.name, name, message, payload, Time.now, nil, tags, index, exception, nil, backtrace)
 
@@ -348,13 +348,13 @@ module Sapience
             # On exception change the log level
             if on_exception_level
               level = on_exception_level
-              index = Sapience.level_to_index(level)
+              index = Sapience.config.level_to_index(level)
             end
           when :partial
             # On exception change the log level
             if on_exception_level
               level = on_exception_level
-              index = Sapience.level_to_index(level)
+              index = Sapience.config.level_to_index(level)
             end
             message          = "#{message} -- Exception: #{exception.class}: #{exception.message}"
             logged_exception = nil
@@ -370,7 +370,7 @@ module Sapience
         elsif duration >= min_duration
           # Only log if the block took longer than 'min_duration' to complete
           # Add caller stack trace
-          backtrace = extract_backtrace if index >= Sapience.backtrace_level_index
+          backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
           log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, nil, metric, backtrace)
           self.log(log) if include_message?(log)

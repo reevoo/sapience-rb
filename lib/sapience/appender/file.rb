@@ -15,7 +15,7 @@ module Sapience
       #
       #  :level [:trace | :debug | :info | :warn | :error | :fatal]
       #    Override the log level for this appender.
-      #    Default: Sapience.default_level
+      #    Default: Sapience.config.default_level
       #
       #  :formatter: [Object|Proc]
       #    An instance of a class that implements #call, or a Proc to be used to format
@@ -32,7 +32,7 @@ module Sapience
       #    require 'sapience'
       #
       #    # Enable trace level logging
-      #    Sapience.default_level = :info
+      #    Sapience.config.default_level = :info
       #
       #    # Log to screen
       #    Sapience.add_appender(io: STDOUT, formatter: :color)
@@ -48,7 +48,7 @@ module Sapience
       #    require 'sapience'
       #
       #    # Enable trace level logging
-      #    Sapience.default_level = :trace
+      #    Sapience.config.default_level = :trace
       #
       #    # Log to screen but only display :info and above
       #    Sapience.add_appender(io: STDOUT, level: :info)

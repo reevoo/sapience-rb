@@ -73,8 +73,8 @@ describe Sapience::Logger do
   [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
     describe "filter: #{filter.class.name}" do
       before do
-        Sapience.default_level = :trace
-        Sapience.backtrace_level = nil
+        Sapience.config.default_level = :trace
+        Sapience.config.backtrace_level = nil
         @mock_logger = MockLogger.new
         @appender = Sapience.add_appender(logger: (@mock_logger))
         @appender.filter = filter
@@ -84,7 +84,7 @@ describe Sapience::Logger do
         @thread_name = Thread.current.name
         @file_name_reg_exp = " example.rb:\\d+"
         expect(@logger.tags).to(eq([]))
-        expect(Sapience.backtrace_level_index).to(eq(65_535))
+        expect(Sapience.config.backtrace_level_index).to(eq(65_535))
       end
 
       after { Sapience.remove_appender(@appender) }
@@ -119,14 +119,14 @@ describe Sapience::Logger do
           end
 
           it "logs with backtrace" do
-            allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+            allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
             @logger.send(level, "hello world", @hash) { "Calculations" }
             Sapience.flush
             expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
           end
 
           it "logs with backtrace and exception" do
-            allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+            allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
             exc = RuntimeError.new("Test")
             @logger.send(level, "hello world", exc)
             Sapience.flush
@@ -332,7 +332,7 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with backtrace" do
-              allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+              allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
               expect(@logger.send("measure_#{level}".to_sym, "hello world") { "result" }).to(eq("result"))
               Sapience.flush
               expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
@@ -380,7 +380,7 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with backtrace" do
-              allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+              allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
               expect(@logger.measure(level, "hello world") { "result" }).to(eq("result"))
               Sapience.flush
               expect(@mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
@@ -395,7 +395,7 @@ describe Sapience::Logger do
         end
 
         it "not log at a level below the silence level" do
-          Sapience.default_level = :info
+          Sapience.config.default_level = :info
           @logger.measure_info("hello world", silence: :error) do
             @logger.warn("don't log me")
           end
@@ -405,7 +405,7 @@ describe Sapience::Logger do
         end
 
         it "log at a silence level below the default level" do
-          Sapience.default_level = :info
+          Sapience.config.default_level = :info
           first_message = nil
           @logger.measure_info("hello world", silence: :trace) do
             @logger.debug("hello world", @hash) { "Calculations" }
@@ -420,9 +420,9 @@ describe Sapience::Logger do
       end
 
       describe ".default_level" do
-        before { Sapience.default_level = :debug }
+        before { Sapience.config.default_level = :debug }
         it "not log at a level below the global default" do
-          expect(Sapience.default_level).to(eq(:debug))
+          expect(Sapience.config.default_level).to(eq(:debug))
           expect(@logger.level).to(eq(:debug))
           @logger.trace("hello world", @hash) { "Calculations" }
           Sapience.flush
@@ -430,7 +430,7 @@ describe Sapience::Logger do
         end
 
         it "log at the instance level" do
-          expect(Sapience.default_level).to(eq(:debug))
+          expect(Sapience.config.default_level).to(eq(:debug))
           @logger.level = :trace
           expect(@logger.level).to(eq(:trace))
           @logger.trace("hello world", @hash) { "Calculations" }
@@ -439,7 +439,7 @@ describe Sapience::Logger do
         end
 
         it "not log at a level below the instance level" do
-          expect(Sapience.default_level).to(eq(:debug))
+          expect(Sapience.config.default_level).to(eq(:debug))
           @logger.level = :warn
           expect(@logger.level).to(eq(:warn))
           @logger.debug("hello world", @hash) { "Calculations" }
@@ -449,9 +449,9 @@ describe Sapience::Logger do
       end
 
       describe ".silence" do
-        before { Sapience.default_level = :info }
+        before { Sapience.config.default_level = :info }
         it "not log at a level below the silence level" do
-          expect(Sapience.default_level).to(eq(:info))
+          expect(Sapience.config.default_level).to(eq(:info))
           expect(@logger.level).to(eq(:info))
           @logger.silence do
             @logger.warn("hello world", @hash) { "Calculations" }
@@ -473,7 +473,7 @@ describe Sapience::Logger do
         end
 
         it "log at a silence level below the default level" do
-          expect(Sapience.default_level).to(eq(:info))
+          expect(Sapience.config.default_level).to(eq(:info))
           expect(@logger.level).to(eq(:info))
           @logger.silence(:debug) do
             @logger.debug("hello world", @hash) { "Calculations" }
@@ -486,21 +486,21 @@ describe Sapience::Logger do
 
       describe ".level?" do
         it "return true for debug? with :trace level" do
-          Sapience.default_level = :trace
+          Sapience.config.default_level = :trace
           expect(@logger.level).to(eq(:trace))
           expect(@logger.debug?).to(eq(true))
           expect(@logger.trace?).to(eq(true))
         end
 
         it "return false for debug? with global :debug level" do
-          Sapience.default_level = :debug
+          Sapience.config.default_level = :debug
           expect(@logger.level).to(eq(:debug))
           expect(@logger.debug?).to(eq(true))
           expect(@logger.trace?).to(eq(false))
         end
 
         it "return true for debug? with global :info level" do
-          Sapience.default_level = :info
+          Sapience.config.default_level = :info
           expect(@logger.level).to(eq(:info))
           expect(@logger.debug?).to(eq(false))
           expect(@logger.trace?).to(eq(false))

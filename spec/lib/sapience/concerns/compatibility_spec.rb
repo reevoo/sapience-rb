@@ -1,8 +1,8 @@
 require "spec_helper"
 describe Sapience::Logger do
   before do
-    Sapience.default_level = :trace
-    Sapience.backtrace_level = nil
+    Sapience.config.default_level = :trace
+    Sapience.config.backtrace_level = nil
     @mock_logger = MockLogger.new
     @appender = Sapience.add_appender(logger: (@mock_logger))
     @logger = Sapience["CompatibilityTest"]
@@ -30,12 +30,12 @@ describe Sapience::Logger do
   end
 
   it "#unknown? as error?" do
-    Sapience.default_level = :error
+    Sapience.config.default_level = :error
     expect(@logger.unknown?).to eq(true)
   end
 
   it "#unknown? as error? when false" do
-    Sapience.default_level = :fatal
+    Sapience.config.default_level = :fatal
     expect(@logger.unknown?).to eq(false)
   end
 

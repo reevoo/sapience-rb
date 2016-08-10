@@ -38,7 +38,7 @@ module Sapience
   #   Object supplied when measure_x was called
   #
   # backtrace [Array<String>]
-  #   The backtrace captured at source when the log level >= Sapience.backtrace_level
+  #   The backtrace captured at source when the log level >= Sapience.config.backtrace_level
   #
   # metric_amount [Numeric]
   #   Used for numeric or counter metrics.
@@ -160,7 +160,7 @@ module Sapience
     end
 
     # Returns [Hash] representation of this log entry
-    def to_h(host = Sapience.host, application = Sapience.application)
+    def to_h(host = Sapience.config.host, application = Sapience.config.application)
       # Header
       h               = {
         name:        name,

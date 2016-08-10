@@ -29,12 +29,12 @@ module Sapience
 
     # Allow application name to be set globally or per subscriber
     def application
-      @application || Sapience.application
+      @application || Sapience.config.application
     end
 
     # Allow host name to be set globally or per subscriber
     def host
-      @host || Sapience.host
+      @host || Sapience.config.host
     end
 
     private
@@ -59,11 +59,11 @@ module Sapience
     #
     #   host: [String]
     #     Name of this host to appear in log messages.
-    #     Default: Sapience.host
+    #     Default: Sapience.config.host
     #
     #   application: [String]
     #     Name of this application to appear in log messages.
-    #     Default: Sapience.application
+    #     Default: Sapience.config.application
     def initialize(options = {}, &block)
       # Backward compatibility
       options      = { level: options } unless options.is_a?(Hash)

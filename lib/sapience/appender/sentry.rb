@@ -30,11 +30,11 @@ class Sapience::Appender::Sentry < Sapience::Subscriber
   #
   #   host: [String]
   #     Name of this host to appear in log messages.
-  #     Default: Sapience.host
+  #     Default: Sapience.config.host
   #
   #   application: [String]
   #     Name of this application to appear in log messages.
-  #     Default: Sapience.application
+  #     Default: Sapience.config.application
   def initialize(options = {}, &block)
     options         = options.is_a?(Hash) ? options.dup : { level: options }
     options[:level] ||= :error

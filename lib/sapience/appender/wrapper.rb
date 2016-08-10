@@ -15,7 +15,7 @@ module Sapience
       #
       #   level: [:trace | :debug | :info | :warn | :error | :fatal]
       #     Override the log level for this appender.
-      #     Default: Sapience.default_level
+      #     Default: Sapience.config.default_level
       #
       #   formatter: [Object|Proc]
       #     An instance of a class that implements #call, or a Proc to be used to format

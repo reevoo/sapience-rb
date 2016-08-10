@@ -19,7 +19,7 @@ module Sapience
     #
     #  level
     #    The initial log level to start with for this logger instance
-    #    Default: Sapience.default_level
+    #    Default: Sapience.config.default_level
     #
     #  filter [Regexp|Proc]
     #    RegExp: Only include log messages where the class name matches the supplied

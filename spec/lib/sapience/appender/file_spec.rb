@@ -5,7 +5,7 @@ describe Sapience::Appender::File do
   before do
     # TODO: Make sure we have always started an appender thread (Sapience::Logger.start_appender_thread)
     # Sapience::Logger.start_appender_thread
-    Sapience.default_level = :trace
+    Sapience.config.default_level = :trace
     @time                        = Time.new
     @io                          = StringIO.new
     @appender                    = Sapience.add_appender(io: @io)
@@ -69,13 +69,13 @@ describe Sapience::Appender::File do
   describe "for each log level" do
     Sapience::LEVELS.each do |level|
       it "log #{level} with file_name" do
-        allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+        allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
         @appender.send(level, "hello world", @hash)
         expect(@io.string).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name}#{@file_name_reg_exp}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
       end
 
       it "log #{level} without file_name" do
-        allow(Sapience).to receive(:backtrace_level_index).and_return(100)
+        allow(Sapience.config).to receive(:backtrace_level_index).and_return(100)
         @appender.send(level, "hello world", @hash)
         expect(@io.string).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
       end

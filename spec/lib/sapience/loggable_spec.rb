@@ -67,7 +67,7 @@ describe Sapience::Loggable do
       @time = Time.new
       @io = StringIO.new
       @appender = Sapience::Appender::File.new(@io)
-      Sapience.default_level = :trace
+      Sapience.config.default_level = :trace
       @mock_logger = MockLogger.new
       @appender = Sapience.add_appender(logger: (@mock_logger))
       @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12345 }
@@ -80,7 +80,7 @@ describe Sapience::Loggable do
     describe "for each log level" do
       Sapience::LEVELS.each do |level|
         it "log #{level} information with class attribute" do
-          allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+          allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
           allow(Sapience).to receive(:appenders).and_return([@appender])
           TestAttribute.logger.send(level, "hello #{level}", @hash)
           Sapience.flush
@@ -88,7 +88,7 @@ describe Sapience::Loggable do
         end
 
         it "log #{level} information with instance attribute" do
-          allow(Sapience).to receive(:backtrace_level_index).and_return(0)
+          allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
           allow(Sapience).to receive(:appenders).and_return([@appender])
           TestAttribute.new.logger.send(level, "hello #{level}", @hash)
           Sapience.flush
