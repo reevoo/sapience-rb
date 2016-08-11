@@ -13,8 +13,6 @@ module Sapience
           @sapience = logger
         end
 
-        attr_writer :logger
-
         # Returns [Sapience::Logger] instance level logger
         def logger
           @sapience ||= self.class.logger
