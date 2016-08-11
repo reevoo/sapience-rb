@@ -6,7 +6,7 @@ rescue LoadError
 end
 
 # Example:
-#   Sapience.add_appender(appender: :statsd)
+#   Sapience.add_appender(:statsd, {url: "udp://localhost:2222"})
 #
 class Sapience::Appender::Statsd < Sapience::Subscriber
   # Create Appender

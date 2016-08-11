@@ -92,14 +92,14 @@ module Sapience
   # Examples:
   #
   #   # Send all logging output to Standard Out (Screen)
-  #   Sapience.add_appender(io: STDOUT)
+  #   Sapience.add_appender(:file, io: STDOUT)
   #
   #   # Send all logging output to a file
-  #   Sapience.add_appender(file_name: 'logfile.log')
+  #   Sapience.add_appender(:file, file_name: 'logfile.log')
   #
   #   # Send all logging output to a file and only :info and above to standard output
-  #   Sapience.add_appender(file_name: 'logfile.log')
-  #   Sapience.add_appender(io: STDOUT, level: :info)
+  #   Sapience.add_appender(:file, file_name: 'logfile.log')
+  #   Sapience.add_appender(:file, io: STDOUT, level: :info)
   #
   # Log to log4r, Logger, etc.:
   #
@@ -112,7 +112,7 @@ module Sapience
   #   log.level = Logger::DEBUG
   #
   #   Sapience.config.default_level = :debug
-  #   Sapience.add_appender(logger: log)
+  #   Sapience.add_appender(:wrapper, logger: log)
   #
   #   logger = Sapience['Example']
   #   logger.info "Hello World"

@@ -69,7 +69,7 @@ describe Sapience::Loggable do
       @appender = Sapience::Appender::File.new(@io)
       Sapience.config.default_level = :trace
       @mock_logger = MockLogger.new
-      @appender = Sapience.add_appender(logger: (@mock_logger))
+      @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
       @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
       @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
       @thread_name = Thread.current.name

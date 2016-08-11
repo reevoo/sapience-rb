@@ -51,10 +51,10 @@ module Sapience
     #    Sapience.config.default_level = :info
     #
     #    # Log to screen
-    #    Sapience.add_appender(io: STDOUT, formatter: :color)
+    #    Sapience.add_appender(:file, io: STDOUT, formatter: :color)
     #
     #    # And log to a file at the same time
-    #    Sapience.add_appender(file_name: 'application.log', formatter: :color)
+    #    Sapience.add_appender(:file, file_name: 'application.log', formatter: :color)
     #
     #    logger = Sapience['MyApplication']
     #    logger.debug("Only display this if log level is set to Debug or lower")

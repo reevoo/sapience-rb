@@ -2,74 +2,6 @@ require "spec_helper"
 
 # rubocop:disable LineLength
 describe Sapience::Logger do
-  describe ".add_appender" do
-    before { @appender = nil }
-
-    after do
-      Sapience.remove_appender(@appender)
-      File.delete("sample.log") if File.exist?("sample.log")
-    end
-
-    it "adds file appender" do
-      @appender = Sapience.add_appender(file_name: "sample.log")
-      expect(@appender).to be_a(Sapience::Appender::File)
-      expect(Sapience.appenders).to include(@appender)
-      expect(@appender.formatter).to be_a(Sapience::Formatters::Default)
-    end
-
-    it "adds statsd appender" do
-      require "statsd-ruby"
-      expect(::Statsd).to receive(:new).with("0.0.0.0", 2222)
-      @appender = Sapience.add_appender(appender: :statsd, url: "udp://0.0.0.0:2222")
-      expect(@appender).to be_a(Sapience::Appender::Statsd)
-      expect(Sapience.appenders).to include(@appender)
-    end
-
-    it "adds file appender with json format" do
-      @appender = Sapience.add_appender(file_name: "sample.log", formatter: :json)
-      expect(@appender).to be_a(Sapience::Appender::File)
-      expect(Sapience.appenders).to include(@appender)
-      expect(@appender.formatter).to be_a(Sapience::Formatters::Json)
-    end
-
-    it "adds stream appender" do
-      @appender = Sapience.add_appender(io: (STDOUT))
-      expect(@appender).to be_a(Sapience::Appender::File)
-      expect(Sapience.appenders).to include(@appender)
-    end
-
-    it "adds symbol appender" do
-      @appender = Sapience.add_appender(appender: :wrapper, logger: Logger.new(STDOUT))
-      expect(@appender).to be_a(Sapience::Appender::Wrapper)
-      expect(Sapience.appenders).to include(@appender)
-    end
-
-    it "adds logger wrapper appender" do
-      @appender = Sapience.add_appender(logger: ::Logger.new(STDOUT))
-      expect(@appender).to be_a(Sapience::Appender::Wrapper)
-      expect(@appender.logger).to be_a(::Logger)
-      expect(Sapience.appenders).to include(@appender)
-      expect(@appender.formatter).to be_a(Sapience::Formatters::Default)
-    end
-
-    it "adds logger wrapper appender with color formatter" do
-      @appender = Sapience.add_appender(logger: ::Logger.new(STDOUT), formatter: :color)
-      expect(@appender).to be_a(Sapience::Appender::Wrapper)
-      expect(@appender.logger).to be_a(::Logger)
-      expect(Sapience.appenders).to include(@appender)
-      expect(@appender.formatter).to be_a(Sapience::Formatters::Color)
-    end
-
-    it "adds appender" do
-      @appender = Sapience.add_appender(appender: Sapience::Appender::File.new(io: (STDOUT)))
-      expect(@appender).to be_a(Sapience::Appender::File)
-      expect(Sapience.appenders).to include(@appender)
-    end
-
-    it "fails to add invalid logger appender" do
-      expect { || Sapience.add_appender(logger: "blah") }.to raise_error(ArgumentError)
-    end
-  end
 
   [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
     describe "filter: #{filter.class.name}" do
@@ -77,7 +9,7 @@ describe Sapience::Logger do
         Sapience.config.default_level = :trace
         Sapience.config.backtrace_level = nil
         @mock_logger = MockLogger.new
-        @appender = Sapience.add_appender(logger: (@mock_logger))
+        @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
         @appender.filter = filter
         @logger = Sapience["LoggerTest"]
         @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }

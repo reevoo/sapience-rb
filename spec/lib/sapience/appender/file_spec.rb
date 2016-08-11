@@ -9,7 +9,7 @@ describe Sapience::Appender::File do
     Sapience.config.default_level = :trace
     @time                        = Time.new
     @io                          = StringIO.new
-    @appender                    = Sapience.add_appender(io: @io)
+    @appender                    = Sapience.add_appender(:file, io: @io)
     @hash                        = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
     @hash_str                    = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
     @thread_name                 = Thread.current.name

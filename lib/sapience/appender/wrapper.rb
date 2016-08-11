@@ -33,7 +33,7 @@ module Sapience
       #    require 'sapience'
       #
       #    ruby_logger = Logger.new(STDOUT)
-      #    Sapience.add_appender(logger: ruby_logger)
+      #    Sapience.add_appender(:wrapper, logger: ruby_logger)
       #
       #    logger =  Sapience['test']
       #    logger.info('Hello World', some: :payload)

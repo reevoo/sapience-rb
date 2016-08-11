@@ -22,7 +22,7 @@ module Sapience
 
       # Adds color to the default log formatter
       # Example:
-      #   Sapience.add_appender(io: $stdout, formatter: :color)
+      #   Sapience.add_appender(:file, io: $stdout, formatter: :color)
       def call(log, _logger) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
         colors      = Sapience::AnsiColors
         level_color = colors::LEVEL_MAP[log.level]

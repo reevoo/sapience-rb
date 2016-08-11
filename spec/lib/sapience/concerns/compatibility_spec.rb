@@ -6,7 +6,7 @@ describe Sapience::Logger do
     Sapience.config.default_level = :trace
     Sapience.config.backtrace_level = nil
     @mock_logger = MockLogger.new
-    @appender = Sapience.add_appender(logger: (@mock_logger))
+    @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
     @logger = Sapience["CompatibilityTest"]
     @thread_name = Thread.current.name
   end

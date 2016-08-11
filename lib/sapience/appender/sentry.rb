@@ -7,7 +7,7 @@ end
 # Send log messages to sentry
 #
 # Example:
-#   Sapience.add_appender(appender: :sentry)
+#   Sapience.add_appender(:sentry, {})
 #
 class Sapience::Appender::Sentry < Sapience::Subscriber
   # Create Appender

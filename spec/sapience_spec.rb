@@ -47,6 +47,10 @@ describe Sapience do
   describe ".add_appender" do
     subject(:add_appender) { described_class.add_appender(appender, options) }
 
+    after do
+      Sapience.remove_appender(subject) if options.is_a?(Hash)
+    end
+
     context "when options is not a Hash" do
       let(:appender) { :file }
       let(:options) { 1 }
