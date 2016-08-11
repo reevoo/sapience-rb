@@ -46,7 +46,7 @@ module Sapience
   Log = Struct.new(:level, :thread_name, :name, :message, :payload, :time, :duration, :tags, :level_index, :exception, :metric, :backtrace, :metric_amount) do
     MAX_EXCEPTIONS_TO_UNWRAP = 5
     # Call the block for exception and any nested exception
-    def each_exception
+    def each_exception # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       # With thanks to https://github.com/bugsnag/bugsnag-ruby/blob/6348306e44323eee347896843d16c690cd7c4362/lib/bugsnag/notification.rb#L81
       depth      = 0
       exceptions = []
@@ -88,7 +88,7 @@ module Sapience
     end
 
     # Returns [String] the duration in human readable form
-    def duration_human
+    def duration_human # rubocop:disable AbcSize
       return nil unless duration
       seconds = duration / 1000
       if seconds >= 86_400.0 # 1 day
@@ -130,10 +130,9 @@ module Sapience
     # Returns [String, String] the file_name and line_number from the backtrace supplied
     # in either the backtrace or exception
     def file_name_and_line(short_name = false)
-      if backtrace || (exception && exception.backtrace)
-        stack = backtrace || exception.backtrace
-        extract_file_and_line(stack, short_name) if stack && stack.size > 0
-      end
+      return unless backtrace || (exception && exception.backtrace)
+      stack = backtrace || exception.backtrace
+      extract_file_and_line(stack, short_name) if stack && stack.size > 0
     end
 
     # Strip the standard Rails colorizing from the logged message
@@ -160,7 +159,7 @@ module Sapience
     end
 
     # Returns [Hash] representation of this log entry
-    def to_h(host = Sapience.config.host, application = Sapience.config.application)
+    def to_h(host = Sapience.config.host, application = Sapience.config.application) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity, LineLength
       # Header
       h               = {
         name:        name,

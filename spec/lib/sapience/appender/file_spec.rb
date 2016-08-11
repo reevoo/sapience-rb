@@ -1,6 +1,7 @@
 require "spec_helper"
 require "stringio"
 
+# rubocop:disable LineLength
 describe Sapience::Appender::File do
   before do
     # TODO: Make sure we have always started an appender thread (Sapience::Logger.start_appender_thread)
@@ -44,10 +45,10 @@ describe Sapience::Appender::File do
     it "handle nested exception" do
       begin
         fail(StandardError, "FirstError")
-      rescue Exception
+      rescue Exception # rubocop:disable RescueException
         begin
           fail(StandardError, "SecondError")
-        rescue Exception => e2
+        rescue Exception => e2 # rubocop:disable RescueException
           @appender.debug(e2)
         end
       end
@@ -105,3 +106,4 @@ describe Sapience::Appender::File do
     end
   end
 end
+# rubocop:enable LineLength

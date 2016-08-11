@@ -26,6 +26,7 @@ class Subclass < Base
   include Process
 end
 
+# rubocop:disable LineLength
 describe Sapience::Loggable do
   describe "inheritance" do
     it "should give child classes their own logger" do
@@ -97,3 +98,4 @@ describe Sapience::Loggable do
     end
   end
 end
+# rubocop:enable LineLength

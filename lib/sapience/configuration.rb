@@ -30,7 +30,7 @@ module Sapience
 
     # Internal method to return the log level as an internal index
     # Also supports mapping the ::Logger levels to Sapience levels
-    def level_to_index(level)
+    def level_to_index(level) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       return if level.nil?
 
       index =

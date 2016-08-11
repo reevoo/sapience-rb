@@ -303,7 +303,7 @@ module Sapience
     end
 
     # Measure the supplied block and log the message
-    def measure_internal(level, index, message, params)
+    def measure_internal(level, index, message, params) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       start     = Time.now
       exception = nil
       begin
@@ -319,7 +319,7 @@ module Sapience
           exception = params[:exception]
           result
         end
-      rescue Exception => exc
+      rescue Exception => exc # rubocop:disable RescueException
         exception = exc
       ensure
         end_time           = Time.now
@@ -333,7 +333,7 @@ module Sapience
           if block_given?
             1000.0 * (end_time - start)
           else
-            params[:duration] || raise('Mandatory block missing when :duration option is not supplied')
+            params[:duration] || fail('Mandatory block missing when :duration option is not supplied')
           end
 
         # Add scoped payload

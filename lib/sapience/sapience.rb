@@ -1,6 +1,7 @@
 require "concurrent"
 require "socket"
 
+# rubocop:disable ClassVars
 module Sapience
   # 1. Have a default configuration
   # 2. Configure Sapience (Sapience.configure { |c| c.configuration = {} })
@@ -175,6 +176,7 @@ module Sapience
   #
   # Note:
   #   To only register one of the signal handlers, set the other to nil
+  # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
   def self.add_signal_handler(log_level_signal = "USR2", thread_dump_signal = "TTIN", _gc_log_microseconds = 100_000)
     Signal.trap(log_level_signal) do
       index     = (default_level == :trace) ? LEVELS.find_index(:error) : LEVELS.find_index(default_level)
@@ -188,7 +190,7 @@ module Sapience
       Thread.list.each do |thread|
         next if thread == Thread.current
         message = thread.name
-        if backtrace = thread.backtrace
+        if (backtrace = thread.backtrace)
           message += "\n"
           message << backtrace.join("\n")
         end
@@ -200,6 +202,7 @@ module Sapience
 
     true
   end
+  # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
   # If the tag being supplied is definitely a string then this fast
   # tag api can be used for short lived tags
@@ -307,16 +310,16 @@ module Sapience
 
 
   # Returns [Sapience::Subscriber] appender for the supplied options
-  def self.appender_from_options(options, &block)
+  def self.appender_from_options(options, &block) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
     if options[:io] || options[:file_name]
       Sapience::Appender::File.new(options, &block)
-    elsif appender = options.delete(:appender)
+    elsif (appender = options.delete(:appender))
       if appender.is_a?(Symbol)
         constantize_symbol(appender).new(options)
       elsif appender.is_a?(Subscriber)
         appender
       else
-        fail(ArgumentError, "Parameter :appender must be either a Symbol or an object derived from Sapience::Subscriber, not: #{appender.inspect}")
+        fail(ArgumentError, "Parameter :appender must be either a Symbol or an object derived from Sapience::Subscriber, not: #{appender.inspect}") # rubocop:disable LineLength
       end
     elsif options[:logger]
       Sapience::Appender::Wrapper.new(options, &block)
@@ -329,7 +332,7 @@ module Sapience
       if RUBY_VERSION.to_i >= 2
         Object.const_get(klass)
       else
-        klass.split("::").inject(Object) { |o, name| o.const_get(name) }
+        klass.split("::").inject(Object) { |o, name| o.const_get(name) } # rubocop:disable SingleLineBlockParams
       end
     rescue NameError
       raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{klass}")
@@ -337,7 +340,7 @@ module Sapience
   end
 
   # Borrow from Rails, when not running Rails
-  def self.camelize(term)
+  def self.camelize(term) # rubocop:disable AbcSize, LineLength
     string = term.to_s
     string = string.sub(/^[a-z\d]*/) { |match| match.capitalize }
     string.gsub!(/(?:_|(\/))([a-z\d]*)/i) { "#{Regexp.last_match[1]}#{inflections.acronyms[Regexp.last_match[2]] || Regexp.last_match[2].capitalize}" }

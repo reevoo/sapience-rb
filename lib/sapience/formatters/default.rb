@@ -4,7 +4,7 @@ module Sapience
       # Default text log format
       #  Generates logs of the form:
       #    2011-07-19 14:36:15.660235 D [1149:ScriptThreadProcess] Rails -- Hello World
-      def call(log, _logger)
+      def call(log, _logger) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
         # Date & time
         message = time_format.nil? ? "" : "#{format_time(log.time)} "
 

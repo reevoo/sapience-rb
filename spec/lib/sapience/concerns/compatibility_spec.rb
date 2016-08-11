@@ -1,4 +1,6 @@
 require "spec_helper"
+
+# rubocop:disable LineLength
 describe Sapience::Logger do
   before do
     Sapience.config.default_level = :trace
@@ -99,3 +101,4 @@ describe Sapience::Logger do
     expect(@mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
   end
 end
+# rubocop:enable LineLength

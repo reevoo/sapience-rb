@@ -1,4 +1,5 @@
 module Sapience
+  # rubocop:disable TrivialAccessors
   module Loggable
     def self.included(base)
       base.class_eval do
@@ -12,6 +13,8 @@ module Sapience
           @sapience = logger
         end
 
+        attr_writer :logger
+
         # Returns [Sapience::Logger] instance level logger
         def logger
           @sapience ||= self.class.logger
@@ -24,4 +27,5 @@ module Sapience
       end
     end
   end
+  # rubocop:enable TrivialAccessors
 end

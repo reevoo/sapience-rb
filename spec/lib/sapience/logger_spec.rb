@@ -1,5 +1,6 @@
 require "spec_helper"
 
+# rubocop:disable LineLength
 describe Sapience::Logger do
   describe ".add_appender" do
     before { @appender = nil }
@@ -312,7 +313,7 @@ describe Sapience::Logger do
             it "log #{level} info with an exception" do
               expect do ||
                 @logger.send("measure_#{level}", "hello world", payload: (@hash)) do
-                  fail(RuntimeError, "Test")
+                  fail("Test")
                 end
               end
                 .to(raise_error(RuntimeError))
@@ -321,12 +322,11 @@ describe Sapience::Logger do
             end
 
             it "change log #{level} info with an exception" do
-              expect do ||
+              expect do
                 @logger.send("measure_#{level}", "hello world", payload: (@hash), on_exception_level: :fatal) do
-                  fail(RuntimeError, "Test")
+                  fail("Test")
                 end
-              end
-                .to(raise_error(RuntimeError))
+              end.to(raise_error(RuntimeError))
               Sapience.flush
               expect(@mock_logger.message).to match(/#{TS_REGEX} F \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
             end
@@ -371,7 +371,7 @@ describe Sapience::Logger do
             it "log #{level} info with an exception" do
               expect do ||
                 @logger.measure(level, "hello world", payload: (@hash)) do
-                  fail(RuntimeError, "Test")
+                  fail("Test")
                 end
               end
                 .to(raise_error(RuntimeError))
@@ -528,3 +528,4 @@ describe Sapience::Logger do
     "Bad"
   end
 end
+# rubocop:enable LineLength
