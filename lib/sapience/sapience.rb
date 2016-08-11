@@ -1,6 +1,21 @@
 require "concurrent"
 require "socket"
 
+# Example:
+#
+# Sapience.config do |config|
+#   config.default_level   = ENV.fetch('SAPIENCE_DEFAULT_LEVEL') { :info }.to_sym
+#   config.backtrace_level = ENV.fetch('SAPIENCE_BACKTRACE_LEVEL') { :info }.to_sym
+#   config.application     = 'TestApplication'
+#   config.host            = ENV.fetch('SAPIENCE_HOST', nil)
+#   config.ap_options      = { multiline: false }
+#   config.appenders       = [
+#     { file: { io: STDOUT, formatter: :color } },
+#     { statsd: { url: 'udp://localhost:2222' } },
+#     { sentry: { dsn: 'ASDFASDF' } },
+#   ]
+# end
+
 # rubocop:disable ClassVars
 module Sapience
   # 1. Have a default configuration
@@ -9,7 +24,7 @@ module Sapience
   # 4. Use configuration for grape
 
   # Logging levels in order of most detailed to most severe
-  LEVELS                = [:trace, :debug, :info, :warn, :error, :fatal]
+  LEVELS = [:trace, :debug, :info, :warn, :error, :fatal]
 
   def self.config
     @@config ||= Configuration.new
@@ -202,6 +217,7 @@ module Sapience
 
     true
   end
+
   # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
   # If the tag being supplied is definitely a string then this fast
@@ -248,8 +264,8 @@ module Sapience
   # Returns the list of tags pushed after flattening them out and removing blanks
   def self.push_tags(*tags)
     # Need to flatten and reject empties to support calls from Rails 4
-    new_tags                              = tags.flatten.collect(&:to_s).reject(&:empty?)
-    t                                     = Thread.current[:sapience_tags]
+    new_tags                       = tags.flatten.collect(&:to_s).reject(&:empty?)
+    t                              = Thread.current[:sapience_tags]
     Thread.current[:sapience_tags] = t.nil? ? new_tags : t.concat(new_tags)
     new_tags
   end
@@ -297,7 +313,7 @@ module Sapience
   #   #silence does not affect any loggers which have had their log level set
   #   explicitly. I.e. That do not rely on the global default level
   def self.silence(new_level = :error)
-    current_index                            = Thread.current[:sapience_silence]
+    current_index                     = Thread.current[:sapience_silence]
     Thread.current[:sapience_silence] = Sapience.config.level_to_index(new_level)
     yield
   ensure
