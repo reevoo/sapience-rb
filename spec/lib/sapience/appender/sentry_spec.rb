@@ -27,7 +27,7 @@ describe Sapience::Appender::Sentry do
               line: 254,
             },
             backtrace: a_kind_of(Array),
-          )
+          ),
         )
       @appender.send(level, @message)
     end
@@ -48,7 +48,7 @@ describe Sapience::Appender::Sentry do
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
             application: Sapience.config.application,
-          )
+          ),
         )
       @appender.send(level, @message, error)
     end
@@ -72,8 +72,8 @@ describe Sapience::Appender::Sentry do
               level_index: a_kind_of(Integer),
               host: Sapience.config.host,
               application: Sapience.config.application,
-            }
-          )
+            },
+          ),
         )
       @appender.send(level, @message)
     end
@@ -94,43 +94,43 @@ describe Sapience::Appender::Sentry do
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
             application: Sapience.config.application,
-          )
+          ),
         )
       @appender.send(level, @message, error)
     end
   end
 
-  context 'when level is debug' do
+  context "when level is debug" do
     let(:level) { :debug }
 
     it_behaves_like "capture without backtrace"
   end
 
-  context 'when level is :trace' do
+  context "when level is :trace" do
     let(:level) { :trace }
 
     it_behaves_like "capture without backtrace"
   end
 
-  context 'when level is :info' do
+  context "when level is :info" do
     let(:level) { :info }
 
     it_behaves_like "capture without backtrace"
   end
 
-  context 'when level is :warn' do
+  context "when level is :warn" do
     let(:level) { :warn }
 
     it_behaves_like "capture without backtrace"
   end
 
-  context 'when level is :error' do
+  context "when level is :error" do
     let(:level) { :error }
 
     it_behaves_like "capturing backtrace"
   end
 
-  context 'when level is :fatal' do
+  context "when level is :fatal" do
     let(:level) { :fatal }
 
     it_behaves_like "capturing backtrace"

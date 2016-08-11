@@ -116,7 +116,7 @@ module Sapience
       file, line = file_name_and_line(true)
       file_name  = " #{file}:#{line}" if file
 
-      "#{$$}:#{"%.#{thread_name_length}s" % thread_name}#{file_name}"
+      "#{$PROCESS_ID}:#{"%.#{thread_name_length}s" % thread_name}#{file_name}"
     end
 
     CALLER_REGEXP = /^(.*):(\d+).*/
@@ -164,7 +164,7 @@ module Sapience
       # Header
       h               = {
         name:        name,
-        pid:         $$,
+        pid:         $PROCESS_ID,
         thread:      thread_name,
         time:        time,
         level:       level,

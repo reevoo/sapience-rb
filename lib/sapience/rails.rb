@@ -24,9 +24,9 @@ module Sapience
 
         logger = Sapience[::Rails]
         logger.warn(
-          "Rails Error: Unable to access log file. " +
+          "Rails Error: Unable to access log file. " \
             "The log level has been raised to WARN and the output directed to STDERR until the problem is fixed.",
-          exc
+          exc,
         )
         logger
       end
@@ -35,7 +35,7 @@ module Sapience
       [:active_record, :action_controller, :action_mailer, :action_view].each do |name|
         ActiveSupport.on_load(name) { include Sapience::Loggable }
       end
-      ActiveSupport.on_load(:action_cable) { self.logger = Sapience['ActionCable'] }
+      ActiveSupport.on_load(:action_cable) { self.logger = Sapience["ActionCable"] }
     end
   end
 end

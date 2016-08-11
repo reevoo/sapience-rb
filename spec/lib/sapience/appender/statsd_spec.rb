@@ -103,6 +103,5 @@ describe Sapience::Appender::Statsd do
         end
       end
     end
-
   end
 end

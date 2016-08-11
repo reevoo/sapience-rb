@@ -4,7 +4,7 @@ describe Sapience::Appender::Wrapper do
     @time = Time.new
     @mock_logger = MockLogger.new
     @appender = Sapience::Appender::Wrapper.new(@mock_logger)
-    @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12345 }
+    @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
     @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
   end
 

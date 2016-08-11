@@ -101,7 +101,7 @@ module Sapience
   #   logger = Sapience['Example']
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
-  def self.add_appender(options, deprecated_level = nil, &block)
+  def self.add_appender(options, _deprecated_level = nil, &block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
     options  = options.dup
     appender = appender_from_options(options, &block)

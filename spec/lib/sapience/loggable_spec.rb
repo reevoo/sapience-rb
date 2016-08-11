@@ -69,7 +69,7 @@ describe Sapience::Loggable do
       Sapience.config.default_level = :trace
       @mock_logger = MockLogger.new
       @appender = Sapience.add_appender(logger: (@mock_logger))
-      @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12345 }
+      @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
       @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
       @thread_name = Thread.current.name
     end
@@ -92,7 +92,6 @@ describe Sapience::Loggable do
           TestAttribute.new.logger.send(level, "hello #{level}", @hash)
           Sapience.flush
           expect(@mock_logger.message).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name} example.rb:\d+\] TestAttribute -- hello #{level} -- #{@hash_str}/)
-
         end
       end
     end

@@ -95,7 +95,7 @@ describe Sapience::Appender::File do
           ((message << " -- ") << "#{log.exception.class}: #{log.exception.message}\n#{(log.exception.backtrace or []).join("\n")}")
         end
         duration_str = log.duration ? (" (#{("%.1f" % log.duration)}ms)") : ("")
-        "#{log.formatted_time} #{log.level.to_s.upcase} [#{$$}:#{log.thread_name}] #{tags}#{log.name} -- #{message}#{duration_str}"
+        "#{log.formatted_time} #{log.level.to_s.upcase} [#{$PROCESS_ID}:#{log.thread_name}] #{tags}#{log.name} -- #{message}#{duration_str}"
       end
     end
 
