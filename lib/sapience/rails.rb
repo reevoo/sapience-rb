@@ -10,9 +10,10 @@ module Sapience
       # Existing loggers are ignored because servers like trinidad supply their
       # own file loggers which would result in duplicate logging to the same log file
       ::Rails.logger = config.logger = begin
-        Sapience.config.appenders.each do |appender|
-          Sapience.add_appender(appender)
+        Sapience.config.appenders.each do |appender, options|
+          Sapience.add_appender(appender, options)
         end
+        # TODO: Should not use .first
         Sapience::Logger.logger = Sapience.appenders.first
         Sapience[::Rails]
       rescue StandardError => exc
