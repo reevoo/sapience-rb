@@ -41,6 +41,7 @@ describe Sapience::Appender::Statsd do
 
     before do
       allow(::Statsd).to receive(:new).and_return(statsd)
+      allow(statsd).to receive(:batch).and_yield
     end
 
     context "without metric" do

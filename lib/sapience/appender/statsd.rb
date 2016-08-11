@@ -55,13 +55,13 @@ class Sapience::Appender::Statsd < Sapience::Subscriber
   end
 
   def increment(metric, amount)
-    @stats.batch do
+    @statsd.batch do
       amount.times { @statsd.increment(metric) }
     end
   end
 
   def decrement(metric, amount)
-    @stats.batch do
+    @statsd.batch do
       amount.abs.times { @statsd.decrement(metric) }
     end
   end
