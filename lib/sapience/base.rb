@@ -198,7 +198,7 @@ module Sapience
     #    regular expression. All other messages will be ignored
     #    Proc: Only include log messages where the supplied Proc returns true
     #          The Proc must return true or false
-    def initialize(klass, level=nil, filter=nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+    def initialize(klass, level = nil, filter = nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       # Support filtering all messages to this logger using a Regular Expression
       # or Proc
       raise ':filter must be a Regexp or Proc' unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
