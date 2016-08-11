@@ -45,7 +45,7 @@ module Sapience
         message << " -- #{log.message}" if log.message
 
         # Payload: Colorize the payload if the AwesomePrint gem is loaded
-        if log.has_payload?
+        if log.payload?
           payload = log.payload
           message << " -- " <<
             if defined?(AwesomePrint) && payload.respond_to?(:ai)

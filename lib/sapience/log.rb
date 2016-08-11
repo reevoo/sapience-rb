@@ -143,11 +143,11 @@ module Sapience
     # Return the payload in text form
     # Returns nil if payload is missing or empty
     def payload_to_s
-      payload.inspect if has_payload?
+      payload.inspect if payload?
     end
 
     # Returns [true|false] whether the log entry has a payload
-    def has_payload?
+    def payload?
       !(payload.nil? || (payload.respond_to?(:empty?) && payload.empty?))
     end
 
