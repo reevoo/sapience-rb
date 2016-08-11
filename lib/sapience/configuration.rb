@@ -13,7 +13,7 @@ module Sapience
       self.application     = "Sapience"
       self.host            = nil
       self.ap_options      = { multiline: false }
-      self.appenders       = [ {io: STDOUT, formatter: :color } ]
+      self.appenders       = [ { file: {io: STDOUT, formatter: :color } } ]
     end
 
     # Sets the global default log level

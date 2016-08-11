@@ -43,4 +43,67 @@ describe Sapience do
     # end
     # end
   end
+
+  describe ".add_appender" do
+    subject(:add_appender) { described_class.add_appender(appender, options) }
+
+    context "when options is not a Hash" do
+      let(:appender) { :file }
+      let(:options) { 1 }
+      specify { expect { add_appender }.to raise_error(ArgumentError, "options should be a hash") }
+    end
+
+
+
+    context "when appender is :file" do
+      let(:appender) { :file }
+
+      context "and options has :io key present" do
+        let(:options) do
+          {
+            io:        STDOUT,
+            formatter: :color,
+          }
+        end
+
+        it { is_expected.to be_a(Sapience::Appender::File) }
+        its(:formatter) { is_expected.to be_a(Sapience::Formatters::Color) }
+      end
+
+      context "and options has :file_name key present" do
+        let(:options) do
+          {
+            file_name: "sapience.log",
+            formatter: :json,
+          }
+        end
+
+        it { is_expected.to be_a(Sapience::Appender::File) }
+        its(:formatter) { is_expected.to be_a(Sapience::Formatters::Json) }
+
+      end
+    end
+
+    context "when :statsd key is present" do
+      let(:appender) { :statsd }
+      let(:options) do
+        {
+          url: "udp://localhost:2222",
+        }
+      end
+
+      it { is_expected.to be_a(Sapience::Appender::Statsd) }
+    end
+
+    context "when :sentry key is present" do
+      let(:appender) { :sentry }
+      let(:options) do
+        {
+          level: :info,
+        }
+      end
+
+      it { is_expected.to be_a(Sapience::Appender::Sentry) }
+    end
+  end
 end

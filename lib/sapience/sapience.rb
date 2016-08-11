@@ -117,10 +117,10 @@ module Sapience
   #   logger = Sapience['Example']
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
-  def self.add_appender(options, _deprecated_level = nil, &block)
+  def self.add_appender(appender, options, _deprecated_level = nil, &block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
-    options  = options.dup
-    appender = appender_from_options(options, &block)
+    appender_class = constantize_symbol(appender)
+    appender       = appender_class.new(options)
     @@appenders << appender
 
     # Start appender thread if it is not already running
@@ -323,24 +323,6 @@ module Sapience
   private
 
   @@appenders = Concurrent::Array.new
-
-
-  # Returns [Sapience::Subscriber] appender for the supplied options
-  def self.appender_from_options(options, &block) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
-    if options[:io] || options[:file_name]
-      Sapience::Appender::File.new(options, &block)
-    elsif (appender = options.delete(:appender))
-      if appender.is_a?(Symbol)
-        constantize_symbol(appender).new(options)
-      elsif appender.is_a?(Subscriber)
-        appender
-      else
-        fail(ArgumentError, "Parameter :appender must be either a Symbol or an object derived from Sapience::Subscriber, not: #{appender.inspect}") # rubocop:disable LineLength
-      end
-    elsif options[:logger]
-      Sapience::Appender::Wrapper.new(options, &block)
-    end
-  end
 
   def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
     klass = "#{namespace}::#{camelize(symbol.to_s)}"
