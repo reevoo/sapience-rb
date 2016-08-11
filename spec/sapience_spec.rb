@@ -73,7 +73,7 @@ describe Sapience do
       context "and options has :file_name key present" do
         let(:options) do
           {
-            file_name: "sapience.log",
+            file_name: "log/sapience.log",
             formatter: :json,
           }
         end

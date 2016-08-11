@@ -96,6 +96,7 @@ module Sapience
       #       If :io was supplied, it will need to be re-opened manually.
       def reopen
         return unless @file_name
+        ensure_folder_exist
 
         @log      = open(@file_name, (::File::WRONLY | ::File::APPEND | ::File::CREAT))
         # Force all log entries to write immediately without buffering
@@ -103,6 +104,14 @@ module Sapience
         @log.sync = true
         @log.set_encoding(Encoding::BINARY) if @log.respond_to?(:set_encoding)
         @log
+      end
+
+      def ensure_folder_exist
+        return if ::File.exist?(@file_name)
+
+        dir_name = ::File.dirname(@file_name)
+
+        FileUtils.mkdir_p(dir_name)
       end
 
       # Pass log calls to the underlying Rails, log4j or Ruby logger
