@@ -340,10 +340,12 @@ module Sapience
   end
 
   # Borrow from Rails, when not running Rails
-  def self.camelize(term) # rubocop:disable AbcSize, LineLength
+  def self.camelize(term) # rubocop:disable AbcSize
     string = term.to_s
     string = string.sub(/^[a-z\d]*/) { |match| match.capitalize }
-    string.gsub!(/(?:_|(\/))([a-z\d]*)/i) { "#{Regexp.last_match[1]}#{inflections.acronyms[Regexp.last_match[2]] || Regexp.last_match[2].capitalize}" }
+    string.gsub!(/(?:_|(\/))([a-z\d]*)/i) do
+      "#{Regexp.last_match[1]}#{inflections.acronyms[Regexp.last_match[2]] || Regexp.last_match[2].capitalize}"
+    end
     string.gsub!("/".freeze, "::".freeze)
     string
   end
