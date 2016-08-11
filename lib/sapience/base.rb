@@ -198,7 +198,7 @@ module Sapience
     #    regular expression. All other messages will be ignored
     #    Proc: Only include log messages where the supplied Proc returns true
     #          The Proc must return true or false
-    def initialize(klass, level=nil, filter=nil)
+    def initialize(klass, level=nil, filter=nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       # Support filtering all messages to this logger using a Regular Expression
       # or Proc
       raise ':filter must be a Regexp or Proc' unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
@@ -239,7 +239,7 @@ module Sapience
     end
 
     # Log message at the specified level
-    def log_internal(level, index, message=nil, payload=nil, exception=nil)
+    def log_internal(level, index, message = nil, payload = nil, exception = nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       # Exception being logged?
       if exception.nil? && payload.nil? && message.respond_to?(:backtrace) && message.respond_to?(:message)
         exception = message
