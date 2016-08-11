@@ -2,13 +2,6 @@ require 'ostruct'
 
 module Sapience
   class Configuration
-
-    DEFAULT_APPENDERS = [
-      { file: { io: STDOUT, formatter: :color } },
-      { sentry: {} },
-      { statsd: { url: "udp://0.0.0.0:2222" } },
-    ]
-
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
     attr_accessor :application, :ap_options, :appenders
@@ -20,7 +13,7 @@ module Sapience
       self.application     = "Sapience"
       self.host            = nil
       self.ap_options      = { multiline: false }
-      self.appenders       = DEFAULT_APPENDERS
+      self.appenders       = { file: { io: STDOUT, formatter: :color } }
     end
 
     # Sets the global default log level
