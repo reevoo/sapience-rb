@@ -3,7 +3,7 @@ require "socket"
 
 # Example:
 #
-# Sapience.config do |config|
+# Sapience.configure do |config|
 #   config.default_level   = ENV.fetch('SAPIENCE_DEFAULT_LEVEL') { :info }.to_sym
 #   config.backtrace_level = ENV.fetch('SAPIENCE_BACKTRACE_LEVEL') { :info }.to_sym
 #   config.application     = 'TestApplication'
@@ -32,6 +32,12 @@ module Sapience
 
   def self.configure
     yield @@config
+
+    config.appenders.each do |appender|
+      appender.each do |name, options|
+        add_appender(name, options)
+      end
+    end
   end
 
   # Return a logger for the supplied class or class_name
@@ -125,6 +131,7 @@ module Sapience
 
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
+    Sapience::Logger.logger = appender if appender.is_a?(Sapience::Appender::File)
     appender
   end
 

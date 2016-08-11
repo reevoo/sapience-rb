@@ -37,16 +37,32 @@ class Sapience::Appender::Statsd < Sapience::Subscriber
     metric = log.metric
     return false unless metric
 
-    if duration = log.duration
-      @statsd.timing(metric, duration)
+    if log.duration
+      timing(metric, log.duration)
     else
       amount = (log.metric_amount || 1).round
       if amount < 0
-        amount.abs.times { @statsd.decrement(metric) }
+        decrement(metric, amount)
       else
-        amount.times { @statsd.increment(metric) }
+        increment(metric, amount)
       end
     end
     true
+  end
+
+  def timing(metric, duration)
+    @statsd.timing(metric, duration)
+  end
+
+  def increment(metric, amount)
+    @stats.batch do
+      amount.times { @statsd.increment(metric) }
+    end
+  end
+
+  def decrement(metric, amount)
+    @stats.batch do
+      amount.abs.times { @statsd.decrement(metric) }
+    end
   end
 end
