@@ -5,7 +5,7 @@ module Sapience
     initializer :initialize_logger, group: :all do
       config = ::Rails.application.config
       # Set the default log level based on the Rails config
-      Sapience.default_level = config.log_level
+      Sapience.config.default_level = config.log_level
 
       # Existing loggers are ignored because servers like trinidad supply their
       # own file loggers which would result in duplicate logging to the same log file
@@ -17,7 +17,7 @@ module Sapience
         Sapience[::Rails]
       rescue StandardError => exc
         # If not able to log to file, log to standard error with warning level only
-        Sapience.default_level = :warn
+        Sapience.config.default_level = :warn
 
         Sapience::Logger.logger = Sapience::Appender::File.new(io: STDERR)
         Sapience.add_appender(io: STDERR)
