@@ -1,4 +1,6 @@
 require "simplecov-json"
+require "coveralls"
+Coveralls.wear!
 
 SimpleCov.refuse_coverage_drop
 
