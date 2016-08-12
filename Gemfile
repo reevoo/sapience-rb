@@ -9,4 +9,4 @@ gem "statsd-ruby"
 gem "minitest_to_rspec"
 gem "transpec"
 gem "codeclimate", require: false
-gem 'coveralls', require: false
+gem "coveralls", require: false

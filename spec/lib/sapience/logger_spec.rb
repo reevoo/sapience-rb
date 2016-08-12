@@ -2,7 +2,6 @@ require "spec_helper"
 
 # rubocop:disable LineLength
 describe Sapience::Logger do
-
   [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
     describe "filter: #{filter.class.name}" do
       before do

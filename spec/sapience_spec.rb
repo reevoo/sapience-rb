@@ -84,7 +84,6 @@ describe Sapience do
 
         it { is_expected.to be_a(Sapience::Appender::File) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Json) }
-
       end
     end
 
