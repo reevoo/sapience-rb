@@ -1,6 +1,7 @@
 require "simplecov-json"
 require 'codeclimate-test-reporter'
 require "coveralls"
+CodeClimate::TestReporter.start
 
 SimpleCov.refuse_coverage_drop
 
