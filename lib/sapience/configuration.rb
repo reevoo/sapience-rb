@@ -1,6 +1,7 @@
 require "ostruct"
 
 module Sapience
+  # rubocop:disable ClassVars
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
@@ -44,7 +45,7 @@ module Sapience
           @@map_levels ||= begin
             levels = []
             ::Logger::Severity.constants.each do |constant|
-              levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error)
+              levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error) # rubocop:disable LineLength
             end
             levels
           end

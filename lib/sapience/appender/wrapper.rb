@@ -38,6 +38,7 @@ module Sapience
       #    logger =  Sapience['test']
       #    logger.info('Hello World', some: :payload)
       #
+      # rubocop:disable LineLength
       def initialize(options, &block)
         # Backward compatibility
         options = { logger: options } unless options.is_a?(Hash)
@@ -45,13 +46,14 @@ module Sapience
         @logger = options.delete(:logger)
 
         # Check if the custom appender responds to all the log levels. For example Ruby ::Logger
-        if does_not_implement = LEVELS[1..-1].find { |i| !@logger.respond_to?(i) }
-          fail(ArgumentError, "Supplied logger does not implement:#{does_not_implement}. It must implement all of #{LEVELS[1..-1].inspect}")
+        if (does_not_implement = LEVELS[1..-1].find { |i| !@logger.respond_to?(i) })
+          fail ArgumentError, "Supplied logger does not implement:#{does_not_implement}. It must implement all of #{LEVELS[1..-1].inspect}"
         end
 
-        fail "Sapience::Appender::Wrapper missing mandatory parameter :logger" unless @logger
+        fail ArgumentError, "Sapience::Appender::Wrapper missing mandatory parameter :logger" unless @logger
         super(options, &block)
       end
+      # rubocop:enable LineLength
 
       # Pass log calls to the underlying Rails, log4j or Ruby logger
       #  trace entries are mapped to debug since :trace is not supported by the

@@ -107,8 +107,6 @@ module Sapience
       self.class.queue << log if @@appender_thread
     end
 
-    private
-
     @@appender_thread    = nil
     @@queue              = Queue.new
 

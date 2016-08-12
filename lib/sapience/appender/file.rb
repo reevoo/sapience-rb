@@ -58,6 +58,7 @@ module Sapience
       #
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
+      # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, deprecated_level = nil, deprecated_filter = nil, &block)
         # Old style arguments: (file_name, level=nil, filter=nil, &block)
         options =
@@ -76,7 +77,7 @@ module Sapience
             opts
           end
 
-        if io = options.delete(:io)
+        if (io = options.delete(:io))
           @log = io
         else
           @file_name = options.delete(:file_name)
@@ -87,6 +88,7 @@ module Sapience
         # Set the log level and formatter if supplied
         super(options, &block)
       end
+      # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
       # After forking an active process call #reopen to re-open
       # open the file handles etc to resources

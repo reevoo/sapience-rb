@@ -1,7 +1,7 @@
 # Load AwesomePrint if available
 begin
   require "awesome_print"
-rescue LoadError
+rescue LoadError # rubocop:disable Lint/HandleExceptions
 end
 
 module Sapience
@@ -33,7 +33,7 @@ module Sapience
         message << "#{level_color}#{log.level_to_s}#{colors::CLEAR} [#{log.process_info}]"
 
         # Tags
-        message << " " << log.tags.collect { |tag| "[#{level_color}#{tag}#{colors::CLEAR}]" }.join(" ") if log.tags && (log.tags.size > 0)
+        message << " " << log.tags.collect { |tag| "[#{level_color}#{tag}#{colors::CLEAR}]" }.join(" ") if log.tags && (log.tags.size > 0) # rubocop:disable LineLength
 
         # Duration
         message << " (#{colors::BOLD}#{log.duration_human}#{colors::CLEAR})" if log.duration
@@ -49,7 +49,7 @@ module Sapience
           payload = log.payload
           message << " -- " <<
             if defined?(AwesomePrint) && payload.respond_to?(:ai)
-              payload.ai(@ai_options) rescue payload.inspect
+              payload.ai(@ai_options) rescue payload.inspect # rubocop:disable RescueModifier
             else
               payload.inspect
             end

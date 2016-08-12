@@ -1,4 +1,5 @@
 module Sapience
+  # rubocop:disable ClassLength
   class Base
     # Class name to be logged
     attr_accessor :name, :filter
@@ -176,7 +177,7 @@ module Sapience
 
     # Write log data to underlying data storage
     def log(_log_)
-      raise NotImplementedError.new('Logging Appender must implement #log(log)')
+      fail NotImplementedError, "Logging Appender must implement #log(log)"
     end
 
     private
@@ -198,10 +199,11 @@ module Sapience
     #    regular expression. All other messages will be ignored
     #    Proc: Only include log messages where the supplied Proc returns true
     #          The Proc must return true or false
-    def initialize(klass, level = nil, filter = nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+    # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
+    def initialize(klass, level = nil, filter = nil)
       # Support filtering all messages to this logger using a Regular Expression
       # or Proc
-      raise ':filter must be a Regexp or Proc' unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
+      fail ArgumentError, ":filter must be a Regexp or Proc" unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
 
       @filter = filter.is_a?(Regexp) ? filter.freeze : filter
       @name   = klass.is_a?(String) ? klass : klass.name
@@ -213,6 +215,7 @@ module Sapience
         self.level = level
       end
     end
+    # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
 
     # Return the level index for fast comparisons
     # Returns the global default level index if the level has not been explicitly
@@ -226,7 +229,7 @@ module Sapience
       return true if @filter.nil?
 
       if @filter.is_a?(Regexp)
-        (@filter =~ log.name) != nil
+        !(@filter =~ log.name).nil?
       elsif @filter.is_a?(Proc)
         @filter.call(log) == true
       end
@@ -239,7 +242,8 @@ module Sapience
     end
 
     # Log message at the specified level
-    def log_internal(level, index, message = nil, payload = nil, exception = nil) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+    # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
+    def log_internal(level, index, message = nil, payload = nil, exception = nil)
       # Exception being logged?
       if exception.nil? && payload.nil? && message.respond_to?(:backtrace) && message.respond_to?(:message)
         exception = message
@@ -281,7 +285,7 @@ module Sapience
         log.message       = payload.delete(:message)
         log.metric        = payload.delete(:metric)
         log.metric_amount = payload.delete(:metric_amount) || 1
-        if duration = payload.delete(:duration)
+        if (duration = payload.delete(:duration))
           return false if duration <= min_duration
           log.duration = duration
         end
@@ -290,8 +294,9 @@ module Sapience
 
       self.log(log) if include_message?(log)
     end
+    # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
 
-    SELF_PATTERN = File.join('lib', 'sapience')
+    SELF_PATTERN = File.join("lib", "sapience")
 
     # Extract the callers backtrace leaving out Sapience
     def extract_backtrace
@@ -303,13 +308,14 @@ module Sapience
     end
 
     # Measure the supplied block and log the message
-    def measure_internal(level, index, message, params) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+    # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
+    def measure_internal(level, index, message, params)
       start     = Time.now
       exception = nil
       begin
         if block_given?
           result    =
-            if silence_level = params[:silence]
+            if (silence_level = params[:silence])
               # In case someone accidentally sets `silence: true` instead of `silence: :error`
               silence_level = :error if silence_level == true
               silence(silence_level) { yield(params) }
@@ -333,7 +339,7 @@ module Sapience
           if block_given?
             1000.0 * (end_time - start)
           else
-            params[:duration] || fail('Mandatory block missing when :duration option is not supplied')
+            params[:duration] || fail("Mandatory block missing when :duration option is not supplied")
           end
 
         # Add scoped payload
@@ -364,18 +370,20 @@ module Sapience
             logged_exception = nil
             backtrace        = exception.backtrace
           end
-          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, logged_exception, metric, backtrace)
+          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, logged_exception, metric, backtrace) # rubocop:disable LineLength
           self.log(log) if include_message?(log)
-          raise exception
+          fail exception
         elsif duration >= min_duration
           # Only log if the block took longer than 'min_duration' to complete
           # Add caller stack trace
           backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
-          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, nil, metric, backtrace)
+          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, nil, metric, backtrace) # rubocop:disable LineLength
           self.log(log) if include_message?(log)
         end
       end
     end
+    # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
   end
+  # rubocop:enable ClassLength
 end

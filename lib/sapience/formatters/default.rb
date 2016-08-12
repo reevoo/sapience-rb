@@ -24,7 +24,7 @@ module Sapience
         message << " -- #{log.message}" if log.message
 
         # Payload
-        if payload = log.payload_to_s
+        if (payload = log.payload_to_s)
           message << " -- " << payload
         end
 

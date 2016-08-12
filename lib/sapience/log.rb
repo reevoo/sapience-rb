@@ -43,6 +43,8 @@ module Sapience
   # metric_amount [Numeric]
   #   Used for numeric or counter metrics.
   #   For example, the number of inquiries or, the amount purchased etc.
+
+  # rubocop:disable LineLength
   Log = Struct.new(:level, :thread_name, :name, :message, :payload, :time, :duration, :tags, :level_index, :exception, :metric, :backtrace, :metric_amount) do
     MAX_EXCEPTIONS_TO_UNWRAP = 5
     # Call the block for exception and any nested exception
@@ -84,7 +86,7 @@ module Sapience
     # Returns nil if their is no duration
     def duration_to_s
       return unless duration
-      duration < 10.0 ? "#{"%.3f" % duration}ms" : "#{"%.1f" % duration}ms"
+      format((duration < 10.0 ? "%.3fms" : "%.1fms"), duration)
     end
 
     # Returns [String] the duration in human readable form
@@ -98,7 +100,7 @@ module Sapience
       elsif seconds >= 60.0 # 1 minute
         Time.at(seconds).strftime("%-Mm %-Ss")
       elsif seconds >= 1.0 # 1 second
-        "#{"%.3f" % seconds}s"
+        format "%.3fs", seconds
       else
         duration_to_s
       end
@@ -116,7 +118,7 @@ module Sapience
       file, line = file_name_and_line(true)
       file_name  = " #{file}:#{line}" if file
 
-      "#{$PROCESS_ID}:#{"%.#{thread_name_length}s" % thread_name}#{file_name}"
+      format "#{$PROCESS_ID}:%.#{thread_name_length}s#{file_name}", thread_name
     end
 
     CALLER_REGEXP = /^(.*):(\d+).*/
@@ -129,7 +131,7 @@ module Sapience
 
     # Returns [String, String] the file_name and line_number from the backtrace supplied
     # in either the backtrace or exception
-    def file_name_and_line(short_name = false)
+    def file_name_and_line(short_name = false) # rubocop:disable CyclomaticComplexity
       return unless backtrace || (exception && exception.backtrace)
       stack = backtrace || exception.backtrace
       extract_file_and_line(stack, short_name) if stack && stack.size > 0
@@ -155,7 +157,7 @@ module Sapience
     # Ruby MRI supports micro seconds
     # DEPRECATED
     def formatted_time
-      "#{time.strftime("%Y-%m-%d %H:%M:%S")}.#{"%06d" % (time.usec)}"
+      format("#{time.strftime("%Y-%m-%d %H:%M:%S")}.%06d", time.usec)
     end
 
     # Returns [Hash] representation of this log entry
@@ -217,5 +219,5 @@ module Sapience
       h
     end
   end
-
+  # rubocop:enable LineLength
 end
