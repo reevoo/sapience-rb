@@ -8,3 +8,5 @@ log/
 /.bundle/
 
 **/*.sqlite3
+
+**/examples.txt
