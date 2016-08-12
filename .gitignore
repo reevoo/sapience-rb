@@ -10,3 +10,4 @@ log/
 **/*.sqlite3
 
 **/examples.txt
+**/*.gem
