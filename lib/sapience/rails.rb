@@ -1,6 +1,20 @@
 module Sapience
   class Rails < ::Rails::Engine
+    ENV['RAILS_ENV']
+    Rails.env
+    Sapience.configure do |c|
+      c.default_level           = config.log_level
+      c.default_backtrace_level = config.log_level
+      c.application             = ::Rails.application.class.name
+      c.appenders               = [
+        { file: { io: STDOUT, formatter: ENV['SAPIENCE_FORMATTER'] } },
+        { statsd: { url: ENV['STATSD_URL'] } },
+        { sentry: { dsn: ENV['RAVEN_DSN'] } },
+      ]
+     c.appenders << {  }
+    end
 
+    ::Rails.logger = Sapience.logger
     ::Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }
     initializer :initialize_logger, group: :all do
       config = ::Rails.application.config
@@ -10,8 +24,10 @@ module Sapience
       # Existing loggers are ignored because servers like trinidad supply their
       # own file loggers which would result in duplicate logging to the same log file
       ::Rails.logger = config.logger = begin
-        Sapience.config.appenders.each do |appender, options|
-          Sapience.add_appender(appender, options)
+        Sapience.config.appenders.each do |appenders|
+          appenders.each do |appender, options|
+            Sapience.add_appender(appender, options)
+          end
         end
         # TODO: Should not use .first
         Sapience::Logger.logger = Sapience.appenders.first
@@ -21,7 +37,7 @@ module Sapience
         Sapience.config.default_level = :warn
 
         Sapience::Logger.logger = Sapience::Appender::File.new(io: STDERR)
-        Sapience.add_appender(io: STDERR)
+        Sapience.add_appender(:file, io: STDERR)
 
         logger = Sapience[::Rails]
         logger.warn(
