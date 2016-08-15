@@ -120,7 +120,7 @@ module Sapience
     #   By default logs to STDERR
     def self.logger
       @@logger ||= begin
-        l      = Sapience::Appender::File.new(STDERR, :warn)
+        l      = Sapience::Appender::File.new(io: STDERR, level: :warn)
         l.name = name
         l
       end
