@@ -59,34 +59,21 @@ module Sapience
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
-      def initialize(options = {}, deprecated_level = nil, deprecated_filter = nil, &block)
-        # Old style arguments: (file_name, level=nil, filter=nil, &block)
-        options =
-          if options.is_a?(Hash)
-            options.dup
-          else
-            file_name = options
-            opts      = {}
-            if file_name.respond_to?(:write) && file_name.respond_to?(:close)
-              opts[:io] = file_name
-            else
-              opts[:file_name] = file_name
-            end
-            opts[:level]  = deprecated_level if deprecated_level
-            opts[:filter] = deprecated_filter if deprecated_filter
-            opts
-          end
+      def initialize(options = {}, &block)
+        unless options[:io] || options[:file_name]
+          fail "Sapience::Appender::File missing mandatory parameter :file_name or :io"
+        end
 
-        if (io = options.delete(:io))
-          @log = io
+        opts = options.dup
+        if (io = opts.delete(:io))
+          @log = Sapience.constantize(io)
         else
-          @file_name = options.delete(:file_name)
-          fail "Sapience::Appender::File missing mandatory parameter :file_name or :io" unless @file_name
+          @file_name = opts.delete(:file_name)
           reopen
         end
 
         # Set the log level and formatter if supplied
-        super(options, &block)
+        super(opts, &block)
       end
       # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
 

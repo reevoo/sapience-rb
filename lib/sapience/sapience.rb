@@ -31,7 +31,7 @@ module Sapience
   end
 
   def self.configure
-    yield @@config
+    yield config
 
     config.appenders.each do |appender|
       appender.each do |name, options|
@@ -125,6 +125,7 @@ module Sapience
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
   def self.add_appender(appender, options, _deprecated_level = nil, &_block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
+    options.deep_symbolize_keys!
     appender_class = constantize_symbol(appender)
     appender       = appender_class.new(options)
     @@appenders << appender
@@ -327,20 +328,20 @@ module Sapience
     Thread.current[:sapience_silence] = current_index
   end
 
-  private
-
   @@appenders = Concurrent::Array.new
 
   def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
     klass = "#{namespace}::#{camelize(symbol.to_s)}"
-    begin
-      if RUBY_VERSION.to_i >= 2
-        Object.const_get(klass)
-      else
-        klass.split("::").inject(Object) { |o, name| o.const_get(name) } # rubocop:disable SingleLineBlockParams
-      end
-    rescue NameError
-      raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{klass}")
+    constantize(klass)
+  rescue NameError
+    raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{class_name}")
+  end
+
+  def self.constantize(class_name)
+    if RUBY_VERSION.to_i >= 2
+      Object.const_get(class_name)
+    else
+      class_name.split("::").inject(Object) { |o, name| o.const_get(name) } # rubocop:disable SingleLineBlockParams
     end
   end
 

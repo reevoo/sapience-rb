@@ -100,6 +100,8 @@ module Sapience
       case
       when formatter.is_a?(Symbol)
         Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
+      when formatter.is_a?(String)
+        Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
       when formatter.is_a?(Hash) && formatter.size > 0
         fmt, options = formatter.first
         Sapience.constantize_symbol(fmt.to_sym, "Sapience::Formatters").new(options)

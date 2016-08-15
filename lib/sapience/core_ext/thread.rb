@@ -5,10 +5,10 @@ class Thread
   #    String representation of this thread's object_id
   def name
     @name ||= object_id.to_s
-  end unless defined?(:name)
+  end
 
   # Set the name of this thread
   def name=(name)
     @name = name.to_s
-  end unless defined?(:name=)
+  end
 end
