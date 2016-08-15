@@ -1,1 +1,13 @@
 Gemfile.lock
+spec/examples.txt
+coverage/
+.DS_Store
+.idea
+log/
+
+/.bundle/
+
+**/*.sqlite3
+
+**/examples.txt
+**/*.gem
