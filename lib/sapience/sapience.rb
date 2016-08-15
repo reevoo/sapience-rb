@@ -334,10 +334,11 @@ module Sapience
     klass = "#{namespace}::#{camelize(symbol.to_s)}"
     constantize(klass)
   rescue NameError
-    raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{class_name}")
+    raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{klass}")
   end
 
   def self.constantize(class_name)
+    return class_name unless class_name.is_a?(String)
     if RUBY_VERSION.to_i >= 2
       Object.const_get(class_name)
     else

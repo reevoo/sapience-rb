@@ -85,7 +85,7 @@ describe Sapience::Appender::File do
 
   describe "custom formatter" do
     before do
-      @appender = Sapience::Appender::File.new(@io) do |log|
+      @appender = Sapience::Appender::File.new(io: @io) do |log|
         if log.tags and (log.tags.size > 0)
           tags = (log.tags.collect { |tag| "[#{tag}]" }.join(" ") + " ")
         end

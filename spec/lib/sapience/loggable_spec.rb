@@ -66,7 +66,7 @@ describe Sapience::Loggable do
     before do
       @time = Time.new
       @io = StringIO.new
-      @appender = Sapience::Appender::File.new(@io)
+      @appender = Sapience::Appender::File.new(io: @io)
       Sapience.config.default_level = :trace
       @mock_logger = MockLogger.new
       @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))

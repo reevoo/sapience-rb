@@ -13,6 +13,7 @@ require "sapience/formatters/json"
 
 require "sapience/configuration"
 require "sapience/ansi_colors"
+require "sapience/core_ext/hash"
 require "sapience/core_ext/thread"
 require "sapience/base"
 require "sapience/log"
