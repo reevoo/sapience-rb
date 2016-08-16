@@ -118,4 +118,14 @@ describe Sapience::Appender::Datadog do
       end
     end
   end
+
+  describe "#timing" do
+    let(:duration) { 200 }
+
+    it "calls timing" do
+      expect(statsd).to receive(:timing).with(metric, duration)
+      subject.timing(metric, duration)
+    end
+  end
+
 end
