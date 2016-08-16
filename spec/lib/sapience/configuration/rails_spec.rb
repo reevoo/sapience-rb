@@ -29,7 +29,7 @@ describe Sapience::Configuration::Rails do
       require "action_controller/metal/live"
     end
 
-    context 'when rails is loaded' do
+    context "when rails is loaded" do
       # TODO: This spec is a little flaky
       it "requires rails extensions" do
         expect(Kernel).to receive(:require).with("sapience/extensions/action_cable/tagged_logger_proxy")
@@ -48,12 +48,14 @@ describe Sapience::Configuration::Rails do
       end
     end
 
-    context 'when rails is not loaded' do
+    context "when rails is not loaded" do
       before(:all) do
         Object.send(:remove_const, "ActionCable") if defined?(ActionCable)
         ActionController.send(:remove_const, "Live") if defined?(ActionController::Live)
         ActionDispatch.send(:remove_const, "DebugExceptions") if defined?(ActionDispatch::DebugExceptions)
-        ActionView::StreamingTemplateRenderer.send(:remove_const, "Body") if defined?(ActionView::StreamingTemplateRenderer::Body)
+        if defined?(ActionView::StreamingTemplateRenderer::Body)
+          ActionView::StreamingTemplateRenderer.send(:remove_const, "Body")
+        end
         Object.send(:remove_const, "ActiveJob") if defined?(ActiveJob)
         Object.send(:remove_const, "ActiveModelSerializers") if defined?(ActiveModelSerializers)
         Rails::Rack.send(:remove_const, "Logger") if defined?(Rails::Rack::Logger)
@@ -63,7 +65,7 @@ describe Sapience::Configuration::Rails do
         ActionView.send(:remove_const, "LogSubscriber") if defined?(ActionView::LogSubscriber)
       end
 
-      it 'does not require rails extensions' do
+      it "does not require rails extensions" do
         expect(Kernel).not_to receive(:require).with("sapience/extensions/action_cable/tagged_logger_proxy")
         expect(Kernel).not_to receive(:require).with("sapience/extensions/action_controller/live")
         expect(Kernel).not_to receive(:require).with("sapience/extensions/action_dispatch/debug_exceptions")
