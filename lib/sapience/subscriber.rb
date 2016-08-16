@@ -96,7 +96,8 @@ module Sapience
     # - Any object that responds to :call
     # - If none of the above apply, then the supplied block is returned as the formatter.
     # - Otherwise an instance of the default formatter is returned.
-    def extract_formatter(formatter, &block) # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable CyclomaticComplexity, AbcSize, PerceivedComplexity
+    def extract_formatter(formatter, &block)
       case
       when formatter.is_a?(Symbol)
         Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
@@ -115,6 +116,7 @@ module Sapience
         default_formatter
       end
     end
+    # rubocop:enable CyclomaticComplexity, AbcSize, PerceivedComplexity
 
     SUBSCRIBER_OPTIONS = [:level, :formatter, :filter, :application, :host].freeze
 

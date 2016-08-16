@@ -17,7 +17,7 @@ class Hash
       end
       object
     when Array
-      object.map! { |e| _deep_transform_keys_in_object!(e, &block)}
+      object.map! { |e| _deep_transform_keys_in_object!(e, &block) }
     else
       object
     end
