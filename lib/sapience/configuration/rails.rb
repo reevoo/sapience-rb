@@ -14,10 +14,10 @@ module Sapience
         Kernel.require "sapience/extensions/action_view/streaming_template_renderer" if defined?(ActionView::StreamingTemplateRenderer::Body)
         Kernel.require "sapience/extensions/active_job/logging" if defined?(ActiveJob)
         Kernel.require "sapience/extensions/active_model_serializers/logging" if defined?(ActiveModelSerializers)
-        Kernel.require "sapience/extensions/rack/logger" if defined?(Rails::Rack::Logger)
         Kernel.require "sapience/extensions/action_controller/log_subscriber" if defined?(ActionController)
         Kernel.require "sapience/extensions/active_record/log_subscriber" if defined?(ActiveRecord::LogSubscriber)
-        Kernel.require "sapience/extensions/rack/logger_info_as_debug" if defined?(Rails::Rack::Logger)
+        Kernel.require "sapience/extensions/rails/rack/logger" if defined?(::Rails::Rack::Logger)
+        Kernel.require "sapience/extensions/rails/rack/logger_info_as_debug" if defined?(::Rails::Rack::Logger)
         Kernel.require "sapience/extensions/action_view/log_subscriber" if defined?(ActionView::LogSubscriber)
         Kernel.require "sapience/extensions/action_controller/log_subscriber_processing" if defined?(ActionView::LogSubscriber)
       end

@@ -1,6 +1,8 @@
 require "action_controller/log_subscriber"
 
 class ActionController::LogSubscriber # rubocop:disable ClassAndModuleChildren
+  alias_method :start_processing_original, :start_processing
+  alias_method :start_processing_original, :controller_logger
   # Log as info to show Processing messages in production
   def start_processing(event)
     controller_logger(event).info { "Processing ##{event.payload[:action]}" }
