@@ -12,6 +12,8 @@ require "sapience/formatters/color"
 require "sapience/formatters/json"
 
 require "sapience/configuration"
+require "sapience/configuration/rails"
+require "sapience/configuration/grape"
 require "sapience/ansi_colors"
 require "sapience/core_ext/hash"
 require "sapience/core_ext/thread"
