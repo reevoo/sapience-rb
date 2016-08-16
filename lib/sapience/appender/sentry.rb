@@ -41,7 +41,9 @@ module Sapience
       def initialize(options = {}, &block)
         options         = options.is_a?(Hash) ? options.dup : { level: options }
         options[:level] ||= :error
-
+        Raven.configure do |config|
+          config.dsn = options.delete(:dsn)
+        end
         super(options, &block)
       end
 
