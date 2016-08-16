@@ -6,9 +6,17 @@ describe Sapience::Appender::Datadog do
   let(:tags) { nil }
   let(:options) do
     {
-      url: url,
+      url:  url,
       tags: tags,
     }
+  end
+
+  let(:statsd) { instance_spy(::Statsd) }
+  let(:metric) { "my/own/metric" }
+
+  before do
+    allow(::Statsd).to receive(:new).and_return(statsd)
+    allow(statsd).to receive(:batch).and_yield
   end
 
   describe "#provider" do
@@ -38,22 +46,15 @@ describe Sapience::Appender::Datadog do
   end
 
   describe "#log" do
-    let(:metric) { "my/own/metric" }
     let(:duration) { nil }
     let(:metric_amount) { nil }
 
     let(:log) do
       LogFactory.build(
-        metric: metric,
-        duration: duration,
+        metric:        metric,
+        duration:      duration,
         metric_amount: metric_amount,
       )
-    end
-    let(:statsd) { instance_spy(::Statsd) }
-
-    before do
-      allow(::Statsd).to receive(:new).and_return(statsd)
-      allow(statsd).to receive(:batch).and_yield
     end
 
     context "without metric" do
@@ -64,9 +65,9 @@ describe Sapience::Appender::Datadog do
       end
 
       it "doesn't call statsd" do
-        expect(statsd).not_to receive(:timing)
-        expect(statsd).not_to receive(:decrement)
-        expect(statsd).not_to receive(:increment)
+        expect(subject).not_to receive(:timing)
+        expect(subject).not_to receive(:decrement)
+        expect(subject).not_to receive(:increment)
         subject.log(log)
       end
     end
@@ -75,13 +76,13 @@ describe Sapience::Appender::Datadog do
       let(:duration) { 200 }
 
       it "calls timing" do
-        expect(statsd).to receive(:timing).with(metric, duration)
+        expect(subject).to receive(:timing).with(metric, duration)
         expect(subject.log(log)).to eq(true)
       end
 
       it "doesn't increment or decrement" do
-        expect(statsd).not_to receive(:decrement)
-        expect(statsd).not_to receive(:increment)
+        expect(subject).not_to receive(:decrement)
+        expect(subject).not_to receive(:increment)
         subject.log(log)
       end
 
@@ -93,7 +94,7 @@ describe Sapience::Appender::Datadog do
     context "without duration" do
       context "without metric_amount" do
         it "increment by 1" do
-          expect(statsd).to receive(:increment).with(metric).once
+          expect(subject).to receive(:increment).with(metric, 1)
           expect(subject.log(log)).to eq(true)
         end
       end
@@ -102,7 +103,7 @@ describe Sapience::Appender::Datadog do
         let(:metric_amount) { -2 }
 
         it "decrement by 2" do
-          expect(statsd).to receive(:decrement).with(metric).twice
+          expect(subject).to receive(:decrement).with(metric, 2)
           expect(subject.log(log)).to eq(true)
         end
       end
@@ -111,7 +112,7 @@ describe Sapience::Appender::Datadog do
         let(:metric_amount) { 3 }
 
         it "increment by 3" do
-          expect(statsd).to receive(:increment).with(metric).exactly(3).times
+          expect(subject).to receive(:increment).with(metric, metric_amount)
           expect(subject.log(log)).to eq(true)
         end
       end

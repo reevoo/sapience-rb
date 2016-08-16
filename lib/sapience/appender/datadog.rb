@@ -56,7 +56,7 @@ module Sapience
         else
           amount = (log.metric_amount || 1).round
           if amount < 0
-            decrement(metric, amount)
+            decrement(metric, amount.abs)
           else
             increment(metric, amount)
           end
@@ -68,15 +68,15 @@ module Sapience
         provider.timing(metric, duration)
       end
 
-      def increment(metric, amount)
+      def increment(metric, amount = 1)
         provider.batch do
           amount.times { provider.increment(metric) }
         end
       end
 
-      def decrement(metric, amount)
+      def decrement(metric, amount = 1)
         provider.batch do
-          amount.abs.times { provider.decrement(metric) }
+          amount.times { provider.decrement(metric) }
         end
       end
 
