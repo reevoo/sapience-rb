@@ -9,19 +9,21 @@ describe Sapience::Appender::Statsd do
     }
   end
 
-  context "without url" do
-    let(:url) { nil }
+  describe "#provider" do
+    context "without url" do
+      let(:url) { nil }
 
-    it "sets the default url" do
-      expect(::Statsd).to receive(:new).with("localhost", 8125)
-      subject
+      it "sets the default url" do
+        expect(::Statsd).to receive(:new).with("localhost", 8125)
+        subject.provider
+      end
     end
-  end
 
-  context "with url provided" do
-    it "sets the url" do
-      expect(::Statsd).to receive(:new).with("0.0.0.0", 2222)
-      subject
+    context "with url provided" do
+      it "sets the url" do
+        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222)
+        subject.provider
+      end
     end
   end
 

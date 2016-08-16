@@ -24,7 +24,7 @@ module Sapience
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, &block)
         options = options.is_a?(Hash) ? options.dup : { level: options }
-        url     = options.delete(:url) { "udp://localhost:8125" }
+        url     = options.delete(:url) || "udp://localhost:8125"
         @uri    = URI.parse(url)
         fail('Statsd only supports udp. Example: "udp://localhost:8125"') if @uri.scheme != "udp"
 
