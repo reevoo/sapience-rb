@@ -128,4 +128,22 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#increment" do
+    context "without metric_amount" do
+      it "increment by 1" do
+        expect(statsd).to receive(:increment).with(metric).once
+        subject.increment(metric)
+      end
+    end
+
+    context "with metric_amount" do
+      let(:metric_amount) { 2 }
+
+      it "increment by 1" do
+        expect(statsd).to receive(:increment).with(metric).twice
+        subject.increment(metric, metric_amount)
+      end
+    end
+  end
+
 end
