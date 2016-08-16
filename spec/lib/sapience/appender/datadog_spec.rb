@@ -146,4 +146,22 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#decrement" do
+    context "without metric_amount" do
+      it "decrement by 1" do
+        expect(statsd).to receive(:decrement).with(metric).once
+        subject.decrement(metric)
+      end
+    end
+
+    context "with metric_amoun" do
+      let(:metric_amount) { 2 }
+
+      it "decrement by 2" do
+        expect(statsd).to receive(:decrement).with(metric).twice
+        subject.decrement(metric, metric_amount)
+      end
+    end
+  end
+
 end
