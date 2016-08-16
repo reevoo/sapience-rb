@@ -88,14 +88,14 @@ describe Sapience do
     end
 
     context "when :statsd key is present" do
-      let(:appender) { :statsd }
+      let(:appender) { :datadog }
       let(:options) do
         {
           url: "udp://localhost:2222",
         }
       end
 
-      it { is_expected.to be_a(Sapience::Appender::Statsd) }
+      it { is_expected.to be_a(Sapience::Appender::Datadog) }
     end
 
     context "when :sentry key is present" do
@@ -103,6 +103,7 @@ describe Sapience do
       let(:options) do
         {
           level: :info,
+          dsn: "foobar",
         }
       end
 
