@@ -14,11 +14,9 @@ module Sapience
         require("sapience/extensions/action_view/streaming_template_renderer") if defined?(ActionView::StreamingTemplateRenderer::Body)
         require("sapience/extensions/active_job/logging") if defined?(ActiveJob)
         require("sapience/extensions/active_model_serializers/logging") if defined?(ActiveModelSerializers)
-
         require("sapience/extensions/rack/logger") if defined?(Rails::Rack::Logger)
         require("sapience/extensions/action_controller/log_subscriber") if defined?(ActionController)
         require("sapience/extensions/active_record/log_subscriber") if defined?(ActiveRecord::LogSubscriber)
-
         require("sapience/extensions/rack/logger_info_as_debug") if defined?(Rails::Rack::Logger)
         require("sapience/extensions/action_view/log_subscriber") if defined?(ActionView::LogSubscriber)
         require("sapience/extensions/action_controller/log_subscriber_processing") if defined?(ActionView::LogSubscriber)
