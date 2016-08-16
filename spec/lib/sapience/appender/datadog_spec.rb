@@ -188,4 +188,22 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#batch" do
+    let(:metric_amount) { 444 }
+    let(:hash) do
+      {
+        foo: "bar",
+      }
+    end
+
+    it "calls batch" do
+      expect(statsd).to receive(:gauge).with(metric, metric_amount, hash)
+      expect(statsd).to receive(:increment).with(metric)
+
+      subject.batch do |s|
+        s.gauge(metric, metric_amount, hash)
+        s.increment(metric)
+      end
+    end
+  end
 end

@@ -88,6 +88,10 @@ module Sapience
         provider.gauge(metric, amount, hash)
       end
 
+      def batch(&block)
+        yield self
+      end
+
     end
   end
 end
