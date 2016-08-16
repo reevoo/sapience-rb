@@ -95,7 +95,8 @@ describe Sapience::Appender::File do
         if log.exception
           ((message << " -- ") << "#{log.exception.class}: #{log.exception.message}\n#{(log.exception.backtrace or []).join("\n")}")
         end
-        duration_str = format((log.duration ? " (%.1fms)" : ""), log.duration)
+        duration_str = "" unless log.duration
+        duration_str ||= format(" (%.1fms)", log.duration)
         "#{log.formatted_time} #{log.level.to_s.upcase} [#{$PROCESS_ID}:#{log.thread_name}] #{tags}#{log.name} -- #{message}#{duration_str}"
       end
     end
