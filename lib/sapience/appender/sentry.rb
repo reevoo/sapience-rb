@@ -39,7 +39,7 @@ module Sapience
       #     Name of this application to appear in log messages.
       #     Default: Sapience.config.application
       def initialize(options = {}, &block)
-        fail('Options should be a Hash') unless options.is_a?(Hash)
+        fail("Options should be a Hash") unless options.is_a?(Hash)
         options[:level] ||= :error
         Raven.configure do |config|
           config.dsn = options.delete(:dsn)

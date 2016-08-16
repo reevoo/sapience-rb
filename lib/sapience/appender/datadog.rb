@@ -28,7 +28,7 @@ module Sapience
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
       def initialize(options = {}, &block)
-        fail('Options should be a Hash') unless options.is_a?(Hash)
+        fail("Options should be a Hash") unless options.is_a?(Hash)
         url   = options.delete(:url) || "udp://localhost:8125"
         @tags = options.delete(:tags)
         @uri  = URI.parse(url)
@@ -88,8 +88,8 @@ module Sapience
         provider.gauge(metric, amount, hash)
       end
 
-      def batch(&block)
-        yield self
+      def batch
+        yield provider
       end
 
     end
