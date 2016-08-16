@@ -164,4 +164,13 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#histogram" do
+    let(:metric_amount) { 444 }
+
+    it "calls timing" do
+      expect(statsd).to receive(:histogram).with(metric, metric_amount)
+      subject.histogram(metric, metric_amount)
+    end
+  end
+
 end
