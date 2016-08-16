@@ -173,4 +173,19 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#gauge" do
+    let(:metric_amount) { 444 }
+    let(:hash) do
+      {
+        foo: "bar",
+      }
+    end
+
+    it "calls gauge" do
+      expect(statsd).to receive(:gauge).with(metric, metric_amount, hash)
+
+      subject.gauge(metric, metric_amount, hash)
+    end
+  end
+
 end

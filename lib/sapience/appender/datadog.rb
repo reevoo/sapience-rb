@@ -84,6 +84,10 @@ module Sapience
         provider.histogram(metric, amount)
       end
 
+      def gauge(metric, amount, hash)
+        provider.gauge(metric, amount, hash)
+      end
+
     end
   end
 end
