@@ -1,11 +1,13 @@
 require "spec_helper"
-describe Sapience::Appender::Statsd do
+describe Sapience::Appender::Datadog do
   subject { described_class.new(options) }
 
   let(:url) { "udp://0.0.0.0:2222" }
+  let(:tags) { nil }
   let(:options) do
     {
       url: url,
+      tags: tags,
     }
   end
 
@@ -14,14 +16,22 @@ describe Sapience::Appender::Statsd do
       let(:url) { nil }
 
       it "sets the default url" do
-        expect(::Statsd).to receive(:new).with("localhost", 8125)
+        expect(::Statsd).to receive(:new).with("localhost", 8125, tags: nil)
         subject.provider
       end
     end
 
     context "with url provided" do
       it "sets the url" do
-        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222)
+        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: nil)
+        subject.provider
+      end
+    end
+
+    context "with tags provided" do
+      let(:tags) { "tag1:true" }
+      it "sets the url" do
+        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: "tag1:true")
         subject.provider
       end
     end

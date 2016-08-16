@@ -5,7 +5,7 @@ gemspec
 
 gem "pry-nav"
 gem "sentry-raven"
-gem "statsd-ruby"
+gem "dogstatsd-ruby"
 gem "rails", "~> 5.0.0.1"
 gem "grape"
 gem "active_model_serializers", "~> 0.10.0"

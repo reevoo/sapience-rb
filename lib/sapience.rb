@@ -26,7 +26,7 @@ require "sapience/subscriber"
 require "sapience/appender/file"
 require "sapience/appender/sentry"
 require "sapience/appender/wrapper"
-require "sapience/appender/statsd"
+require "sapience/appender/datadog"
 
 # @formatter:on
 
