@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "sapience"
 require "logger"
 require "rspec/its"
+require "rspec/wait"
 require "pry-nav"
 require_relative "support/mock_logger"
 require_relative "support/log_factory"
@@ -34,5 +35,9 @@ RSpec.configure do |config|
 
   config.before(:each) do |_test|
     Sapience.remove_appenders
+  end
+
+  RSpec.configure do |config|
+    config.wait_timeout = 2 # seconds
   end
 end

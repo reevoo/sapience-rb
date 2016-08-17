@@ -83,16 +83,14 @@ describe Sapience::Loggable do
           allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
           allow(Sapience).to receive(:appenders).and_return([@appender])
           TestAttribute.logger.send(level, "hello #{level}", @hash)
-          Sapience.flush
-          expect(@mock_logger.message).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name} example.rb:\d+\] TestAttribute -- hello #{level} -- #{@hash_str}/)
+          wait_for { @mock_logger.message }.to match(/#{TS_REGEX} \w \[\d+:#{@thread_name} example.rb:\d+\] TestAttribute -- hello #{level} -- #{@hash_str}/)
         end
 
         it "log #{level} information with instance attribute" do
           allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
           allow(Sapience).to receive(:appenders).and_return([@appender])
           TestAttribute.new.logger.send(level, "hello #{level}", @hash)
-          Sapience.flush
-          expect(@mock_logger.message).to match(/#{TS_REGEX} \w \[\d+:#{@thread_name} example.rb:\d+\] TestAttribute -- hello #{level} -- #{@hash_str}/)
+          wait_for { @mock_logger.message }.to match(/#{TS_REGEX} \w \[\d+:#{@thread_name} example.rb:\d+\] TestAttribute -- hello #{level} -- #{@hash_str}/)
         end
       end
     end
