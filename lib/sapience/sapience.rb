@@ -133,6 +133,7 @@ module Sapience
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
     Sapience.logger = appender if appender.is_a?(Sapience::Appender::File)
+    Sapience.metrix = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
   end
 
@@ -158,6 +159,14 @@ module Sapience
   # to manipulate the active appenders list
   def self.appenders
     @@appenders.clone
+  end
+
+  def self.metrix=(metrix)
+    @@metrix = metrix
+  end
+
+  def self.metrix
+    @@metrix ||= Sapience.add_appender(:datadog)
   end
 
   def self.logger=(logger)
