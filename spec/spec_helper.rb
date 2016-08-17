@@ -32,7 +32,7 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
-  config.before(:each) do |test|
+  config.before(:each) do |_test|
     Sapience.remove_appenders
   end
 end
