@@ -136,10 +136,20 @@ module Sapience
     appender
   end
 
+
   # Remove an existing appender
   # Currently only supports appender instances
+  # TODO: Make it possible to remove appenders by type
+  # Maybe create a concurrent collection that allows this by inheriting from concurrent array.
   def self.remove_appender(appender)
     @@appenders.delete(appender)
+  end
+
+  # Remove specific appenders or all existing
+  def self.remove_appenders(appenders = @@appenders)
+    appenders.each do |appender|
+      remove_appender(appender)
+    end
   end
 
   # Returns [Sapience::Subscriber] a copy of the list of active
