@@ -31,4 +31,8 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  config.before(:each) do |test|
+    Sapience.remove_appenders
+  end
 end

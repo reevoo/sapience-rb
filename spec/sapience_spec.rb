@@ -103,7 +103,7 @@ describe Sapience do
       let(:options) do
         {
           level: :info,
-          dsn: "foobar",
+          dsn: "https://foobar:443",
         }
       end
 

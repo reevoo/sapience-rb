@@ -1,7 +1,7 @@
 require "spec_helper"
 describe Sapience::Appender::Sentry do
   before do
-    @appender = Sapience::Appender::Sentry.new(level: :trace, dsn: "foobar")
+    @appender = Sapience::Appender::Sentry.new(level: :trace, dsn: "https://foobar:443")
     @message = "AppenderRavenTest log message"
     Sapience.config.backtrace_level = :error
   end

@@ -12,7 +12,7 @@ require "socket"
 #   config.appenders       = [
 #     { file: { io: STDOUT, formatter: :color } },
 #     { statsd: { url: 'udp://localhost:2222' } },
-#     { sentry: { dsn: 'ASDFASDF' } },
+#     { sentry: { dsn: 'https://foobar:443' } },
 #   ]
 # end
 
