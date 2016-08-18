@@ -11,7 +11,7 @@ test:
   appenders:
     - file:
         file_name: log/test.log
-        formatter: json
+        formatter: color
 
 development:
   log_level: debug
