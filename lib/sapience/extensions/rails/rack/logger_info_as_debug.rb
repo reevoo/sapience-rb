@@ -3,25 +3,22 @@ class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
 
   private
 
-  module Inclusions
-    module Extensions
-      def info(*args, &block)
-        debug(*args, &block)
-      end
-
-      def info?
-        debug?
-      end
+  module Extensions
+    def info(*args, &block)
+      debug(*args, &block)
     end
 
-    def logger
-      @logger ||= begin
-        logger = Sapience["Rails"]
-        logger.extend(Extensions)
-        logger
-      end
+    def info?
+      debug?
     end
   end
 
-  include Inclusions
+  def logger
+    @logger ||= begin
+      logger = Sapience["Rails"]
+      logger.extend(Extensions)
+      logger
+    end
+  end
+
 end

@@ -2,14 +2,10 @@
 
 class ActionView::StreamingTemplateRenderer # rubocop:disable ClassAndModuleChildren
   class Body
-    module Inclusions
-      private
+    private
 
-      def log_error(exception) #:nodoc:
-        ActionView::Base.logger.fatal(exception)
-      end
+    def log_error(exception) #:nodoc:
+      ActionView::Base.logger.fatal(exception)
     end
-
-    include Inclusions
   end
 end
