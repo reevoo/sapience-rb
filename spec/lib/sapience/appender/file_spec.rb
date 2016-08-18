@@ -19,27 +19,27 @@ describe Sapience::Appender::File do
   describe "format logs into text form" do
     it "handle no message or payload" do
       @appender.debug
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File\n/)
     end
 
     it "handle message" do
       @appender.debug("hello world")
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- hello world\n/)
     end
 
     it "handle message and payload" do
       @appender.debug("hello world", @hash)
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- hello world -- #{@hash_str}\n/)
     end
 
     it "handle message, payload, and exception" do
       @appender.debug("hello world", @hash, StandardError.new("StandardError"))
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- hello world -- #{@hash_str} -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- hello world -- #{@hash_str} -- Exception: StandardError: StandardError\n\n/)
     end
 
     it "logs exception with nil backtrace" do
       @appender.debug(StandardError.new("StandardError"))
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
     end
 
     it "handle nested exception" do
@@ -52,7 +52,7 @@ describe Sapience::Appender::File do
           @appender.debug(e2)
         end
       end
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} file_spec.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: SecondError\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: SecondError\n/)
 
       if Exception.instance_methods.include?(:cause)
         expect(@io.string).to match(/^Cause: StandardError: FirstError\n/)
@@ -63,7 +63,7 @@ describe Sapience::Appender::File do
       exc = StandardError.new("StandardError")
       exc.set_backtrace([])
       @appender.debug(exc)
-      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
+      expect(@io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} example.rb:\d+\] Sapience::Appender::File -- Exception: StandardError: StandardError\n\n/)
     end
   end
 

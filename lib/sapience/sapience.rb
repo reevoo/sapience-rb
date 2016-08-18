@@ -38,6 +38,17 @@ module Sapience
     end
   end
 
+  def self.reset!
+    @@config = nil
+    @@logger = nil
+    @@metrix = nil
+    reset_appenders!
+  end
+
+  def self.reset_appenders!
+    @@appenders = Concurrent::Array.new
+  end
+
   def self.environment
     @@environment ||=
       ENV.fetch("RAILS_ENV") do
@@ -374,7 +385,7 @@ module Sapience
     Thread.current[:sapience_silence] = current_index
   end
 
-  @@appenders = Concurrent::Array.new
+  reset_appenders!
 
   def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
     klass = "#{namespace}::#{camelize(symbol.to_s)}"

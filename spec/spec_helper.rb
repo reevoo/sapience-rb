@@ -34,8 +34,8 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
-  config.before(:each) do |_test|
-    Sapience.remove_appenders
+  config.before(:each) do |_example|
+    Sapience.reset!
   end
 
   config.wait_timeout = 2 # seconds
