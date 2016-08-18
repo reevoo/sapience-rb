@@ -48,13 +48,15 @@ module Sapience
   end
 
   def self.configure
-    yield config
+    yield config if block_given?
 
     config.appenders.each do |appender|
       appender.each do |name, options|
         add_appender(name, options)
       end
     end
+
+    config
   end
 
   # Return a logger for the supplied class or class_name

@@ -1,3 +1,5 @@
+require "sapience"
+
 module Sapience
   class Engine < ::Rails::Engine
 
@@ -5,6 +7,7 @@ module Sapience
     Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }
 
     initializer :initialize_logger, group: :all do
+      Sapience.configure
       ::Rails.logger = Sapience[::Rails]
       [:active_record, :action_controller, :action_mailer, :action_view].each do |name|
         ActiveSupport.on_load(name) { include Sapience::Loggable }
