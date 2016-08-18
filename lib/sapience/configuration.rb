@@ -7,14 +7,25 @@ module Sapience
     attr_writer :host
     attr_accessor :application, :ap_options, :appenders
 
-    def initialize
+    DEFAULT = {
+      default_level:   :info,
+      backtrace_level: :info,
+      application:     "Sapience",
+      host:            nil,
+      ap_options:      { multiline: false },
+      appenders:       [{ file: { io: STDOUT, formatter: :color } }],
+    }
+
+    def initialize(options)
       # Initial default Level for all new instances of Sapience::Logger
-      self.default_level   = :info
-      self.backtrace_level = :info
-      self.application     = "Sapience"
-      self.host            = nil
-      self.ap_options      = { multiline: false }
-      self.appenders       = [{ file: { io: STDOUT, formatter: :color } }]
+      @options             = DEFAULT.merge(options)
+
+      self.default_level   = @options[:default_level]
+      self.backtrace_level = @options[:backtrace_level]
+      self.application     = @options[:application]
+      self.host            = @options[:host]
+      self.ap_options      = @options[:ap_options]
+      self.appenders       = @options[:appenders]
     end
 
     # Sets the global default log level
