@@ -50,12 +50,11 @@ module Sapience
   end
 
   def self.environment
-    @@environment ||=
-      ENV.fetch("RAILS_ENV") do
-        ENV.fetch("RACK_ENV") do
-          ::Rails.env if defined?(::Rails)
-        end
+    ENV.fetch("RAILS_ENV") do
+      ENV.fetch("RACK_ENV") do
+        ::Rails.env if defined?(::Rails) && ::Rails.respond_to?(:env)
       end
+    end
   end
 
   def self.configure
