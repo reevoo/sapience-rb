@@ -34,7 +34,8 @@ module Sapience
 
     # Flush all queued log entries disk, database, etc.
     #  All queued log messages are written and then each appender is flushed in turn
-    def self.flush
+    def self.flush # rubocop:disable AbcSize
+      return unless appender_thread
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
           begin
@@ -51,6 +52,7 @@ module Sapience
 
     # Close all appenders and flush any outstanding messages
     def self.close
+      return unless appender_thread
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
           begin
