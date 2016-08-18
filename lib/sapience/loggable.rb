@@ -7,23 +7,23 @@ module Sapience
 
     # Returns [Sapience::Logger] instance level logger
     def logger
-      @sapience ||= self.class.logger
+      @logger ||= self.class.logger
     end
 
     # Replace instance level logger
     def logger=(logger)
-      @sapience = logger
+      @logger = logger
     end
 
     module Extensions
       # Returns [Sapience::Logger] class level logger
       def logger
-        @sapience ||= Sapience[self]
+        @logger ||= Sapience[self]
       end
 
       # Replace instance class level logger
       def logger=(logger)
-        @sapience = logger
+        @logger = logger
       end
     end
   end
