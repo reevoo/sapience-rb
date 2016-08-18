@@ -1,5 +1,7 @@
-class ActiveRecord::LogSubscriber # rubocop:disable ClassAndModuleChildren
-  module Inclusions
+ActiveRecord::LogSubscriber # rubocop:disable ClassAndModuleChildren
+
+module ActiveRecord
+  class LogSubscriber
     def sql(event) # rubocop:disable AbcSize
       self.class.runtime += event.duration
 
@@ -32,6 +34,4 @@ class ActiveRecord::LogSubscriber # rubocop:disable ClassAndModuleChildren
       debug(log)
     end
   end
-
-  include Inclusions
 end
