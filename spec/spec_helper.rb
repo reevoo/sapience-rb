@@ -8,6 +8,7 @@ require "rspec/wait"
 require "pry-nav"
 require_relative "support/mock_logger"
 require_relative "support/log_factory"
+require_relative "support/file_helper"
 
 TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
 

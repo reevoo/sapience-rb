@@ -27,7 +27,11 @@ module Sapience
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal]
 
   def self.config
-    @@config ||= Configuration.new
+    @@config ||= begin
+      config = ConfigLoader.load_from_file
+      binding.pry
+      Configuration.new(config)
+    end
   end
 
   def self.configure

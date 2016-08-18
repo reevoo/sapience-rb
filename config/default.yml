@@ -1,0 +1,29 @@
+---
+defaults: &defaults
+  log_level: info
+  appenders:
+    - file:
+        file_name: log/development.log
+        formatter: color
+
+test:
+  log_level: warn
+  appenders:
+    - file:
+        file_name: log/test.log
+        formatter: color
+
+development:
+  log_level: debug
+  appenders:
+    - file:
+        file_name: log/development.log
+        formatter: color
+
+production:
+  log_level: warn
+  appenders:
+    - file:
+        file_name: log/production.log
+        formatter: json
+
