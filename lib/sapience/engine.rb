@@ -44,7 +44,9 @@ module Sapience
       Kernel.require "sapience/extensions/action_cable/tagged_logger_proxy" if defined?(ActionCable)
       Kernel.require "sapience/extensions/action_controller/live" if defined?(ActionController::Live)
       Kernel.require "sapience/extensions/action_dispatch/debug_exceptions" if defined?(ActionDispatch::DebugExceptions)
-      Kernel.require "sapience/extensions/action_view/streaming_template_renderer" if defined?(ActionView::StreamingTemplateRenderer::Body)
+      if defined?(ActionView::StreamingTemplateRenderer::Body)
+        Kernel.require "sapience/extensions/action_view/streaming_template_renderer"
+      end
       Kernel.require "sapience/extensions/active_job/logging" if defined?(ActiveJob)
       Kernel.require "sapience/extensions/active_model_serializers/logging" if defined?(ActiveModelSerializers)
       Kernel.require "sapience/extensions/action_controller/log_subscriber" if defined?(ActionController)
@@ -52,7 +54,9 @@ module Sapience
       Kernel.require "sapience/extensions/rails/rack/logger" if defined?(::Rails::Rack::Logger)
       Kernel.require "sapience/extensions/rails/rack/logger_info_as_debug" if defined?(::Rails::Rack::Logger)
       Kernel.require "sapience/extensions/action_view/log_subscriber" if defined?(ActionView::LogSubscriber)
-      Kernel.require "sapience/extensions/action_controller/log_subscriber_processing" if defined?(ActionView::LogSubscriber)
+      if defined?(ActionView::LogSubscriber)
+        Kernel.require "sapience/extensions/action_controller/log_subscriber_processing"
+      end
     end
 
     # Before any initializers run, but after the gems have been loaded

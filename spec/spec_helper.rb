@@ -38,7 +38,5 @@ RSpec.configure do |config|
     Sapience.remove_appenders
   end
 
-  RSpec.configure do |config|
-    config.wait_timeout = 2 # seconds
-  end
+  config.wait_timeout = 2 # seconds
 end

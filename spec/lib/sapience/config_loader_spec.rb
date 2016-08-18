@@ -53,31 +53,29 @@ describe Sapience::ConfigLoader do
 
     context "when sapience.yml file defined in the application" do
       before do
-              create_file('config/sapience.yml',
-                          ['development:',
-                           '  log_level: debug',
-                           '  appenders:',
-                           '    - file:',
-                           '        io: STDOUT',
-                           '        formatter: json'])
-
+        create_file("config/sapience.yml",
+          ["development:",
+           "  log_level: debug",
+           "  appenders:",
+           "    - file:",
+           "        io: STDOUT",
+           "        formatter: json"])
       end
 
-      after { delete_file('config/sapience.yml') }
+      after { delete_file("config/sapience.yml") }
 
       it "uses the default configuration" do
         expect(load_from_file).to eq(
           "development" => {
             "log_level" => "debug",
             "appenders" => [{
-                              "file" => {
-                                "io" => "STDOUT",
-                                "formatter" => "json",
-                              },
-                            }]
+              "file" => {
+                "io" => "STDOUT",
+                "formatter" => "json",
+              },
+            }],
           })
       end
     end
   end
-
 end

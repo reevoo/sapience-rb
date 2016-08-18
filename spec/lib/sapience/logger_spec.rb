@@ -304,7 +304,6 @@ describe Sapience::Logger do
 
         it "log at a silence level below the default level" do
           Sapience.config.default_level = :info
-          first_message = nil
           @logger.measure_info("hello world", silence: :trace) do
             @logger.debug("hello world", @hash) { "Calculations" }
             wait_for { @mock_logger.message }.to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
