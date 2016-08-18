@@ -8,20 +8,18 @@ module Sapience
     attr_accessor :application, :ap_options, :appenders
 
     DEFAULT = {
-      default_level:   :info,
-      backtrace_level: :info,
+      log_level:   :info,
       application:     "Sapience",
       host:            nil,
       ap_options:      { multiline: false },
       appenders:       [{ file: { io: STDOUT, formatter: :color } }],
     }
 
-    def initialize(options)
-      # Initial default Level for all new instances of Sapience::Logger
-      @options             = DEFAULT.merge(options)
-
-      self.default_level   = @options[:default_level]
-      self.backtrace_level = @options[:backtrace_level]
+    # Initial default Level for all new instances of Sapience::Logger
+    def initialize(options) # rubocop:disable AbcSize
+      @options             = DEFAULT.merge(options.deep_symbolize_keys!)
+      self.default_level   = @options[:log_level].to_sym
+      self.backtrace_level = @options[:log_level].to_sym
       self.application     = @options[:application]
       self.host            = @options[:host]
       self.ap_options      = @options[:ap_options]

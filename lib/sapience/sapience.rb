@@ -29,8 +29,22 @@ module Sapience
   def self.config
     @@config ||= begin
       config = ConfigLoader.load_from_file
-      Configuration.new(config)
+      env = config[environment]
+      unless env
+        puts "Missing configuration for #{environment} environment. Sapience is going to use default configuration"
+        env = config.fetch("default")
+      end
+      Configuration.new(env)
     end
+  end
+
+  def self.environment
+    @@environment ||=
+      ENV.fetch("RAILS_ENV") do
+        ENV.fetch("RACK_ENV") do
+          ::Rails.env if defined?(::Rails)
+        end
+      end
   end
 
   def self.configure

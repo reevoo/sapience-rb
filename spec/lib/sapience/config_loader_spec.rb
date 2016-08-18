@@ -12,7 +12,7 @@ describe Sapience::ConfigLoader do
     context "no file in the application config directory" do
       it "uses the default configuration" do
         expect(load_from_file).to eq(
-        "defaults"    => {
+        "default"    => {
           "log_level" => "info",
           "appenders" => [{
             "file" => {
