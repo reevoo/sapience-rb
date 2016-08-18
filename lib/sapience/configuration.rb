@@ -9,14 +9,14 @@ module Sapience
 
     DEFAULT = {
       log_level:   :info,
-      application:     "Sapience",
-      host:            nil,
-      ap_options:      { multiline: false },
-      appenders:       [{ file: { io: STDOUT, formatter: :color } }],
-    }
+      application: "Sapience",
+      host:        nil,
+      ap_options:  { multiline: false },
+      appenders:   [{ file: { io: STDOUT, formatter: :color } }],
+    }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
-    def initialize(options) # rubocop:disable AbcSize
+    def initialize(options = {}) # rubocop:disable AbcSize
       @options             = DEFAULT.merge(options.deep_symbolize_keys!)
       self.default_level   = @options[:log_level].to_sym
       self.backtrace_level = @options[:log_level].to_sym
@@ -44,22 +44,22 @@ module Sapience
       return if level.nil?
 
       index =
-        if level.is_a?(Symbol)
-          LEVELS.index(level)
-        elsif level.is_a?(String)
-          level = level.downcase.to_sym
-          LEVELS.index(level)
-        elsif level.is_a?(Integer) && defined?(::Logger::Severity)
-          # Mapping of Rails and Ruby Logger levels to Sapience levels
-          @@map_levels ||= begin
-            levels = []
-            ::Logger::Severity.constants.each do |constant|
-              levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error) # rubocop:disable LineLength
-            end
-            levels
+      if level.is_a?(Symbol)
+        LEVELS.index(level)
+      elsif level.is_a?(String)
+        level = level.downcase.to_sym
+        LEVELS.index(level)
+      elsif level.is_a?(Integer) && defined?(::Logger::Severity)
+        # Mapping of Rails and Ruby Logger levels to Sapience levels
+        @@map_levels ||= begin
+          levels = []
+          ::Logger::Severity.constants.each do |constant|
+            levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error) # rubocop:disable LineLength
           end
-          @@map_levels[level]
+          levels
         end
+        @@map_levels[level]
+      end
       fail "Invalid level:#{level.inspect} being requested. Must be one of #{LEVELS.inspect}" unless index
       index
     end
