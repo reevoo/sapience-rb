@@ -29,7 +29,6 @@ module Sapience
   def self.config
     @@config ||= begin
       config = ConfigLoader.load_from_file
-      binding.pry
       Configuration.new(config)
     end
   end
