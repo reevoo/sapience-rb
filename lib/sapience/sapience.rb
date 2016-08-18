@@ -227,63 +227,6 @@ module Sapience
     Sapience::Logger.start_appender_thread
   end
 
-  # Add signal handlers for Sapience
-  #
-  # Two signal handlers will be registered by default:
-  #
-  # 1. Changing the log_level:
-  #
-  #   The log level can be changed without restarting the process by sending the
-  #   log_level_signal, which by default is 'USR2'
-  #
-  #   When the log_level_signal is raised on this process, the global default log level
-  #   rotates through the following log levels in the following order, starting
-  #   from the current global default level:
-  #     :warn, :info, :debug, :trace
-  #
-  #   If the current level is :trace it wraps around back to :warn
-  #
-  # 2. Logging a Ruby thread dump
-  #
-  #   When the signal is raised on this process, Sapience will write the list
-  #   of threads to the log file, along with their back-traces when available
-  #
-  #   It is recommended to name any threads you create in the application, by
-  #   calling the following from within the thread itself:
-  #      Thread.current.name = 'My Worker'
-  #
-  #
-  # Note:
-  #   To only register one of the signal handlers, set the other to nil
-  # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
-  def self.add_signal_handler(log_level_signal = "USR2", thread_dump_signal = "TTIN", _gc_log_microseconds = 100_000)
-    Signal.trap(log_level_signal) do
-      index     = (default_level == :trace) ? LEVELS.find_index(:error) : LEVELS.find_index(default_level)
-      new_level = LEVELS[index - 1]
-      self["Sapience"].warn "Changed global default log level to #{new_level.inspect}"
-      self.default_level = new_level
-    end if log_level_signal
-
-    Signal.trap(thread_dump_signal) do
-      logger = Sapience["Thread Dump"]
-      Thread.list.each do |thread|
-        next if thread == Thread.current
-        message = thread.name
-        if (backtrace = thread.backtrace)
-          message += "\n"
-          message << backtrace.join("\n")
-        end
-        tags = thread[:sapience_tags]
-        tags = tags.nil? ? [] : tags.clone
-        logger.tagged(tags) { logger.warn(message) }
-      end
-    end if thread_dump_signal
-
-    true
-  end
-
-  # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
-
   # If the tag being supplied is definitely a string then this fast
   # tag api can be used for short lived tags
   def self.fast_tag(tag)
