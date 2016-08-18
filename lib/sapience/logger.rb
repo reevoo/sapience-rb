@@ -40,7 +40,7 @@ module Sapience
           begin
             logger.trace "Appender thread: Flushing appender: #{appender.name}"
             appender.flush
-          rescue Exception => exc
+          rescue StandardError => exc
             logger.error "Appender thread: Failed to flush appender: #{appender.inspect}", exc
           end
         end
@@ -54,17 +54,21 @@ module Sapience
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
           begin
-            logger.trace "Appender thread: Closing appender: #{appender.name}"
-            appender.flush
-            appender.close
-            Sapience.remove_appender(appender)
-          rescue Exception => exc
+            close_appender(appender)
+          rescue StandardError => exc
             logger.error "Appender thread: Failed to close appender: #{appender.inspect}", exc
           end
         end
 
         logger.trace "Appender thread: All appenders flushed"
       end
+    end
+
+    def self.close_appender(appender)
+      logger.trace "Appender thread: Closing appender: #{appender.name}"
+      appender.flush
+      appender.close
+      Sapience.remove_appender(appender)
     end
 
     @@lag_check_interval = 5000
@@ -101,11 +105,11 @@ module Sapience
     def log(log, message = nil, progname = nil, &block)
       # Compatibility with ::Logger
       return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
-      @@appender_thread.post(log) do |message|
+      @@appender_thread.post(log) do |log_message|
         Sapience.appenders.each do |appender|
           begin
-            appender.log(message)
-          rescue Exception => exc
+            appender.log(log_message)
+          rescue StandardError => exc
             logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
           end
         end
