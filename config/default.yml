@@ -3,7 +3,7 @@ default:
   log_level: info
   appenders:
     - file:
-        file_name: log/development.log
+        io: STDOUT
         formatter: color
 
 test:
@@ -11,7 +11,7 @@ test:
   appenders:
     - file:
         file_name: log/test.log
-        formatter: color
+        formatter: json
 
 development:
   log_level: debug
