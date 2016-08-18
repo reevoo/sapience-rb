@@ -16,7 +16,7 @@ describe Sapience::ConfigLoader do
           "log_level" => "info",
           "appenders" => [{
             "file" => {
-              "file_name" => "log/development.log",
+              "io" => "STDOUT",
               "formatter" => "color",
             },
           }],
