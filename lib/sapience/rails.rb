@@ -4,7 +4,7 @@ module Sapience
   class Rails < ::Rails::Engine
 
     # Replace Rails logger initializer
-    Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }
+    ::Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }
 
     initializer :initialize_logger, group: :all do
       Sapience.configure
