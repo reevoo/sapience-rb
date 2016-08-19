@@ -1,10 +1,8 @@
-sudo: false
+sudo: required
 language: ruby
-cache: bundler
 script:
-  - if [[ "${STYLE}" = "true" ]]; then bundle exec rake reevoocop; fi;
-  - bundle install -j8 -r3 && bundle exec rspec spec --format progress
-  - cd test_app/ && bundle install -j8 -r3 && bundle exec rspec spec --format progress
+  - docker-compose run rspec
+  - docker-compose run test_app
 env:
   - STYLE=false
 
