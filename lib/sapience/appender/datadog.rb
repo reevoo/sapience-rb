@@ -92,6 +92,9 @@ module Sapience
         yield provider
       end
 
+      def event(title, text, options = {})
+        provider.event(title, text, options)
+      end
     end
   end
 end
