@@ -28,7 +28,7 @@ RSpec.configure do |config|
   config.before(:suite, :integration) do
     FileUtils.cp(
       Rails.root.join("spec/fixtures/sapience.yml"),
-      Rails.root.join("config/sapience.yml")
+      Rails.root.join("config/sapience.yml"),
     )
   end
 

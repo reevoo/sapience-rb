@@ -10,4 +10,5 @@ begin
   end
 rescue LoadError # rubocop:disable Lint/HandleExceptions
 end
-task default: [:reevocop, :spec]
+
+task default: [:reevoocop, :spec]
