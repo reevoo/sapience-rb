@@ -1,0 +1,14 @@
+---
+default:
+  log_level: error
+  appenders:
+    - file:
+        file_name: log/error.log
+        formatter: default
+
+test:
+  log_level: fatal
+  appenders:
+    - file:
+        file_name: log/fatal.log
+        formatter: json
