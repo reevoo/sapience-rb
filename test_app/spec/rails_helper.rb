@@ -25,14 +25,14 @@ RSpec.configure do |config|
     Sapience.reset!
   end
 
-  config.before(:suite, :integration) do
+  config.before(:suite) do
     FileUtils.cp(
       Rails.root.join("spec/fixtures/sapience.yml"),
       Rails.root.join("config/sapience.yml"),
     )
   end
 
-  config.after(:suite, :integration) do
+  config.after(:suite) do
     FileUtils.rm(Rails.root.join("config/sapience.yml"))
   end
 end
