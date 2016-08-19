@@ -85,7 +85,6 @@ describe Sapience do
     context "when RAILS_ENV is set" do
       let(:env) { "integration" }
       before do
-        p ENV
         allow(ENV).to receive(:fetch).with("RAILS_ENV").and_return(env)
       end
 
@@ -97,8 +96,7 @@ describe Sapience do
     context "when RACK_ENV is set" do
       let(:env) { "ci" }
       before do
-        p ENV
-        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_call_original
+        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
         allow(ENV).to receive(:fetch).with("RACK_ENV").and_return(env)
       end
 
@@ -110,7 +108,8 @@ describe Sapience do
     context "when Rails respond to .env " do
       let(:env) { "fudge" }
       before do
-        p ENV
+        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
+        allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
         allow(Rails).to receive(:env).and_return(env)
       end
 
