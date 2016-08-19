@@ -1,7 +1,7 @@
 require "sapience"
 
 module Sapience
-  class Engine < ::Rails::Engine
+  class Rails < ::Rails::Engine
 
     # Replace Rails logger initializer
     Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }

@@ -14,7 +14,7 @@ gem "puma", "~> 3.0"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-gem "sapience", path: "../", require: "sapience/engine"
+gem "sapience", path: "../", require: "sapience/rails"
 gem "sentry-raven"
 gem "statsd-ruby"
 
