@@ -63,11 +63,11 @@ describe Sapience::Loggable do
   end
 
   describe "logger" do
+    force_config(default_level: :trace)
     before do
       @time = Time.new
       @io = StringIO.new
       @appender = Sapience::Appender::File.new(io: @io)
-      Sapience.config.default_level = :trace
       @mock_logger = MockLogger.new
       @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
       @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
@@ -75,7 +75,7 @@ describe Sapience::Loggable do
       @thread_name = Thread.current.name
     end
 
-    after { Sapience.remove_appender(@appender) }
+    after { Sapience.remove_appenders }
 
     describe "for each log level" do
       Sapience::LEVELS.each do |level|

@@ -1,10 +1,10 @@
 require "spec_helper"
 describe Sapience::Appender::Sentry do
-  before do
-    @appender = Sapience::Appender::Sentry.new(level: :trace, dsn: "https://foobar:443")
-    @message = "AppenderRavenTest log message"
-    Sapience.config.backtrace_level = :error
-  end
+  let(:appender) { Sapience.add_appender(:sentry, level: :trace, dsn: "https://foobar:443") }
+  let(:message) { "AppenderRavenTest log message" }
+  force_config(backtrace_level: :error)
+
+  after { Sapience.remove_appenders }
 
   shared_examples "capturing backtrace" do
     it "sends message" do
@@ -29,7 +29,7 @@ describe Sapience::Appender::Sentry do
             backtrace: a_kind_of(Array),
           ),
         )
-      @appender.send(level, @message)
+      appender.send(level, message)
     end
 
     it "sends exceptions" do
@@ -50,7 +50,7 @@ describe Sapience::Appender::Sentry do
             application: Sapience.config.application,
           ),
         )
-      @appender.send(level, @message, error)
+      appender.send(level, message, error)
     end
   end
 
@@ -75,7 +75,7 @@ describe Sapience::Appender::Sentry do
             },
           ),
         )
-      @appender.send(level, @message)
+      appender.send(level, message)
     end
 
     it "sends exceptions" do
@@ -96,7 +96,7 @@ describe Sapience::Appender::Sentry do
             application: Sapience.config.application,
           ),
         )
-      @appender.send(level, @message, error)
+      appender.send(level, message, error)
     end
   end
 

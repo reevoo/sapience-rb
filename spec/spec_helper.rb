@@ -9,6 +9,7 @@ require "pry-nav"
 require_relative "support/mock_logger"
 require_relative "support/log_factory"
 require_relative "support/file_helper"
+require_relative "support/config_helper"
 
 TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
 
@@ -39,4 +40,6 @@ RSpec.configure do |config|
   end
 
   config.wait_timeout = 2 # seconds
+  config.extend ConfigHelper
+  config.include ConfigHelper
 end
