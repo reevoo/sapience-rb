@@ -1,36 +1,167 @@
 # Sapience
 
+**Hasslefree autoconfiguration for logging, metrics and exception collection.**
+
 [![Build Status](https://travis-ci.org/reevoo/sapience-rb.svg?branch=TECH-4%2FConfiguration-DSL)](https://travis-ci.org/reevoo/sapience-rb)[![Code Climate](https://codeclimate.com/github/reevoo/sapience-rb/badges/gpa.svg)](https://codeclimate.com/github/reevoo/sapience-rb)[![Test Coverage](https://codeclimate.com/github/reevoo/sapience-rb/badges/coverage.svg)](https://codeclimate.com/github/reevoo/sapience-rb/coverage)[![Issue Count](https://codeclimate.com/github/reevoo/sapience-rb/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/sapience-rb)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sapience`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Background
 
-TODO: Delete this and the text above, and describe your gem
+We searched long and hard for a way to control our logging, error collection and metrics from a single place. The closest we could find that does everything we need is [Semantic Logger](https://github.com/rocketjob/semantic_logger). Unfortunately we couldn't find a good way to control the settings for our projects and would have had to spread our configuration over different initializers and rails configurations for each project. There was no easy way to gain that top level control over the configuration.
 
-## Installation
+This project aims to make it easier to centralize the configuration of these three areas by handling the configuration a little differently.
 
-Add this line to your application's Gemfile:
+We have taken a hug deal of inspiration from the amazing [Semantic Logger](https://github.com/rocketjob/semantic_logger) and implemented something similar to [Rubocop](https://github.com/bbatsov/rubocop) for handling and overriding how to find configuration. If you want some inspiration for how we do something similar for our projects for Rubocop check: [Reevoocop](https://github.com/reevoo/reevoocop).
+
+## Setup
+
+First of all we need to require the right file for the project. There are currently two frameworks supported (rails and grape).
+
+### Rails  
 
 ```ruby
-gem 'sapience'
+gem "sapience-rb", require: "sapience/rails"
 ```
 
-And then execute:
+### Grape 
 
-    $ bundle
+```ruby
+gem "sapience-rb", require: "sapience/grape"
+```
 
-Or install it yourself as:
 
-    $ gem install sapience
+### Configuration
 
-## Usage
+The sapience configuration can be controlled by a `config/sapience.yml` file or if you like us have many projects that use the same configuration you can create your own gem with a shared config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb)
 
-TODO: Write usage instructions here
+```ruby 
+Sapience.configure do |config|
+  config.default_level   = :info
+  config.backtrace_level = :error
+  config.application     = "my-app"
+  config.appenders       = [
+    { file: { io: STDOUT, formatter: :color } },
+    { sentry: { dsn: "https://username:password@app.getsentry.com/00000" } },
+    { datadog: { url: "udp://localhost:8125" } },
+  ]
+end
+```
 
-## Development
+Sapience provides a default configuration that will be used unless another file or configuration is specified. You can provide a custom 
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```yaml
+---
+default:
+  log_level: info
+  appenders:
+    - file:
+        io: STDOUT
+        formatter: color
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+test:
+  log_level: warn
+  appenders:
+    - file:
+        file_name: log/test.log
+        formatter: color
+
+development:
+  log_level: debug
+  appenders:
+    - file:
+        file_name: log/development.log
+        formatter: color
+
+production:
+  log_level: warn
+  appenders:
+    - file:
+        file_name: log/production.log
+        formatter: json
+```
+
+## Appenders
+
+One of the things that did not suite us so well with the Semantic Logger approach was that they made a distinction between metrics and appenders. In our view anything that should potentially log something somewhere should be treated as an appender.
+
+There are a number of appenders that all listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
+
+
+### File
+
+File appenders are basically a log stream. You can add as many file appenders as you like logging to different locations. 
+
+```ruby
+Sapience.add_appender(:file, file_name: "log/sapience.log", formatter: :json)
+Sapience.add_appender(:file, io: STDOUT, formatter: :color, level: :trace)
+```
+
+### Sentry
+
+The sentry appender handles sending errors to sentry. It's backtrace and log level can be configured by for instance `level: :info` and `backtrace_level: :debug`. The `level` configuration tells sentry to log starting at that level while the `backtrace_level` tells sentry to only collect backtrace starting at that level.
+
+```ruby
+Sapience.add_appender(
+  :sentry, 
+  dsn: "https://username:password@app.getsentry.com/00000", 
+  level: :error, 
+  backtrace_level: :error
+)
+```
+
+### Datadog
+
+Datadog is a slightly modified version of statsd. On top of the standard statsd API it has support for events.
+
+```ruby
+Sapience.add_appender(:datadog, url: "udp://localhost:8125")
+```
+
+The appender will then be listening to anything that is logged with a `metric: "company/project/metric-name"` key. Details about the API can be found in [dogstatsd-ruby](https://github.com/DataDog/dogstatsd-ruby).
+
+The appender can also be used directly through: `Sapience.metrix`
+
+```ruby
+metrix = Sapience.metrix
+metrix.timing("company/project/metric-name", 100)
+metrix.increment("company/project/metric-name", 10)
+metrix.decrement("company/project/metric-name", 5)
+metrix.histogram("company/project/metric-name", 2_500)
+metrix.gauge("company/project/metric-name", 1_000, {})
+metrix.event("company/project/metric-name", "description about event", {})
+metrix.batch do 
+  metrix.event("company/project/metric-name", "description about event", {})
+  metrix.increment("company/project/another-metric-name", 2)
+end
+```
+
+
+### Wrapper
+
+The wrapper is useful when you already have a logger you want to use but want to use Sapience. The wrapper appender will when called use the logger provided to store the log data.
+
+```ruby
+Sapience.add_appender(:wrapper, logger: Logger.new(STDOUT))
+```
+
+## Formatters
+
+Formatters can be specified by using the key `formatter: :camelized_formatter_name`. **Note**: Only the File appender supports custom formatters.
+
+### Color
+
+`formatter: :color` - gives colorized output. Useful for `test` and `development` environments.
+
+### Default 
+
+`formatter: :default` - logs a string. Inspired by how access logs for Nginx are logged.
+
+### JSON 
+
+`formatter: :json` - logs are saved as a single line json. Useful for production like environments.
+
+### RAW 
+
+`formatter: :raw` - logs are saved as a single line ruby hash. Useful for production like environments and is used internally for the Sentry appender.
 
 ## Contributing
 

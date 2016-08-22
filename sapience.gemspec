@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Mikael Henriksson", "Alex Malkov"]
   spec.email         = ["mika@reevoo.com", "alex.malkov@reevoo.com"]
 
-  spec.summary       = "Write a short summary, because Rubygems requires one."
-  spec.description   = "Write a longer description or delete this line."
-  spec.homepage      = "https://sapience.github.io"
+  spec.summary       = "Hasslefree autoconfiguration for logging, metrics and exception collection."
+  spec.description   = "Hasslefree autoconfiguration for logging, metrics and exception collection."
+  spec.homepage      = "https://github.com/reevoo/sapience"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
