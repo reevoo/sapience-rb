@@ -1,6 +1,6 @@
 require "uri"
 begin
-  require "dogstatsd-ruby"
+  require "statsd"
 rescue LoadError
   raise 'Gem dogstatsd-ruby is required for logging metrics. Please add the gem "dogstatsd-ruby" to your Gemfile.'
 end
