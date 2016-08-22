@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "codeclimate-test-reporter"
   spec.add_development_dependency "coveralls"
+  spec.add_development_dependency "gem-release"
 end
