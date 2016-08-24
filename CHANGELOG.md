@@ -1,3 +1,8 @@
+## v0.1.5
+
+- Add missing `#time` method for datadog
+- Adds coverage for previous release
+
 ## v0.1.4
 
 - Add missing `#count` method for datadog

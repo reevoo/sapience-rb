@@ -84,12 +84,16 @@ module Sapience
         provider.histogram(metric, amount)
       end
 
-      def gauge(metric, amount, hash)
+      def gauge(metric, amount, hash = {})
         provider.gauge(metric, amount, hash)
       end
 
-      def count(metric, amount, hash)
+      def count(metric, amount, hash = {})
         provider.count(metric, amount, hash)
+      end
+
+      def time(metric, &block)
+        provider.time(metric, &block)
       end
 
       def batch

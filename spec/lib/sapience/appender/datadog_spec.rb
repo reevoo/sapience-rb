@@ -173,6 +173,24 @@ describe Sapience::Appender::Datadog do
     end
   end
 
+  describe "#count" do
+    let(:metric_amount) { 33 }
+
+    it "calls count" do
+      expect(statsd).to receive(:count).with(metric, metric_amount, {})
+      subject.count(metric, metric_amount)
+    end
+  end
+
+  describe "#time" do
+    it "calls count" do
+      expect(statsd).to receive(:time).with(metric).and_yield
+      subject.time(metric) do
+        sleep 0.5
+      end
+    end
+  end
+
   describe "#gauge" do
     let(:metric_amount) { 444 }
     let(:hash) do
