@@ -120,7 +120,7 @@ describe Sapience do
   end
 
   describe ".configure" do
-    context 'when configure(force: false)' do
+    context "when configure(force: false)" do
       let(:config) do
         instance_spy(Sapience::Configuration)
       end
@@ -163,7 +163,7 @@ describe Sapience do
       end
     end
 
-    context 'when configure(force: true)' do
+    context "when configure(force: true)" do
       before { Sapience.configure }
       specify do
         expect do
@@ -173,7 +173,7 @@ describe Sapience do
             config.appenders = [
               { file: { io: STDOUT, level: :info } },
               { file: { io: STDERR, level: :error } },
-              { file: { io: STDOUT, level: :fatal } }
+              { file: { io: STDOUT, level: :fatal } },
             ]
           end
         end.to change { Sapience.appenders.size }.by(3)
