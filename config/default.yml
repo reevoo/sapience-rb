@@ -26,4 +26,3 @@ production:
     - file:
         file_name: log/production.log
         formatter: json
-
