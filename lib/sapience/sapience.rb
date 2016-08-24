@@ -18,10 +18,7 @@ require "socket"
 
 # rubocop:disable ClassVars
 module Sapience
-  # 1. Have a default configuration
-  # 2. Configure Sapience (Sapience.configure { |c| c.configuration = {} })
-  # 3. Use configuration for rails
-  # 4. Use configuration for grape
+  @@configured = nil
 
   # Logging levels in order of most detailed to most severe
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal]
@@ -38,10 +35,15 @@ module Sapience
     end
   end
 
+  def self.configured?
+    @@configured
+  end
+
   def self.reset!
     @@config = nil
     @@logger = nil
     @@metrix = nil
+    @@configured = nil
     reset_appenders!
   end
 
@@ -57,14 +59,11 @@ module Sapience
     end
   end
 
-  def self.configure
+  def self.configure(force: false)
     yield config if block_given?
-
-    config.appenders.each do |appender|
-      appender.each do |name, options|
-        add_appender(name, options)
-      end
-    end
+    return config if configured? && force == false
+    add_appenders(*config.appenders)
+    @@configured = true
 
     config
   end
@@ -166,6 +165,18 @@ module Sapience
     appender
   end
 
+  # Examples:
+  #   Sapience.add_appenders(
+  #     { file: { io: STDOUT } },
+  #     { sentry: { dsn: "https://app.getsentry.com/" } },
+  #   )
+  def self.add_appenders(*appenders)
+    appenders.flatten.compact.each do |appender|
+      appender.each do |name, options|
+        add_appender(name, options)
+      end
+    end
+  end
 
   # Remove an existing appender
   # Currently only supports appender instances

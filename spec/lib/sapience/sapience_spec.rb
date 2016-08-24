@@ -120,37 +120,63 @@ describe Sapience do
   end
 
   describe ".configure" do
-    let(:file_options) do
-      { io: STDOUT }
-    end
-    let(:file_appender) do
-      { file: file_options }
-    end
-    let(:sentry_options) do
-      { dsn: "https://getsentry.com:443" }
-    end
-    let(:sentry_appender) do
-      { sentry: sentry_options }
-    end
-    let(:appenders) { [file_appender, sentry_appender] }
+    context 'when configure(force: false)' do
+      let(:config) do
+        instance_spy(Sapience::Configuration)
+      end
+      let(:file_options) do
+        { io: STDOUT }
+      end
+      let(:file_appender) do
+        { file: file_options }
+      end
+      let(:sentry_options) do
+        { dsn: "https://getsentry.com:443" }
+      end
+      let(:sentry_appender) do
+        { sentry: sentry_options }
+      end
+      let(:appenders) { [file_appender, sentry_appender] }
 
-    before do
-      allow(described_class.config).to receive(:appenders).and_return(appenders)
-      expect(described_class).to receive(:add_appender).with(:file, file_options)
-      expect(described_class).to receive(:add_appender).with(:sentry, sentry_options)
-    end
+      before do
+        allow(config).to receive(:appenders).and_return(appenders)
+        allow(described_class).to receive(:config).and_return(config)
+        expect(described_class).to receive(:add_appender).with(:file, file_options).and_call_original
+        expect(described_class).to receive(:add_appender).with(:sentry, sentry_options).and_call_original
+      end
 
-    context "when provided a block" do
-      it "adds all configured appenders" do
-        described_class.configure do |config|
-          expect(config).to be_a(Sapience::Configuration)
+      context "when provided a block" do
+        it "adds all configured appenders" do
+          described_class.configure(force: false) do |c|
+            expect(c).to eq(config)
+          end
+          expect(described_class.appenders.size).to eq(2)
+        end
+      end
+
+      context "when no block given" do
+        it "adds all configured appenders" do
+          described_class.configure(force: false)
+          expect(described_class.configure).to eq(config)
+          expect(described_class.appenders.size).to eq(2)
         end
       end
     end
 
-    context "when no block given" do
-      it "adds all configured appenders" do
-        expect(described_class.configure).to be_a(Sapience::Configuration)
+    context 'when configure(force: true)' do
+      before { Sapience.configure }
+      specify do
+        expect do
+          Sapience.configure(force: true) do |config|
+            config.default_level = :fatal
+            config.backtrace_level = :error
+            config.appenders = [
+              { file: { io: STDOUT, level: :info } },
+              { file: { io: STDERR, level: :error } },
+              { file: { io: STDOUT, level: :fatal } }
+            ]
+          end
+        end.to change { Sapience.appenders.size }.by(3)
       end
     end
   end
