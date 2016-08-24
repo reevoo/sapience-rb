@@ -1,3 +1,7 @@
+## v0.1.6
+
+- Prevent configuring twice (adds double appenders)
+
 ## v0.1.5
 
 - Add missing `#time` method for datadog
