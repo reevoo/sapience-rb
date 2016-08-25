@@ -72,7 +72,7 @@ describe Sapience do
     it { is_expected.to be_a(Sapience::Configuration) }
 
     context "returns 'default' when no environment is provided" do
-      before { allow(described_class).to receive(:environment).and_return(nil) }
+      before { allow(described_class).to receive(:environment).and_return(described_class::DEFAULT_ENV) }
       its(:default_level) do
         is_expected.to eq(:info)
       end
@@ -105,12 +105,25 @@ describe Sapience do
       end
     end
 
-    context "when Rails respond to .env " do
+    context "when Rails respond to .env" do
       let(:env) { "fudge" }
       before do
         allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
         allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
         allow(Rails).to receive(:env).and_return(env)
+      end
+
+      its(:environment) do
+        is_expected.to eq(env)
+      end
+    end
+
+    context "when no other environment is found" do
+      let(:env) { "default" }
+      before do
+        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
+        allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
+        stub_const("Rails", double(:Rails, sub: 'fuck'))
       end
 
       its(:environment) do

@@ -21,17 +21,13 @@ module Sapience
   @@configured = nil
 
   # Logging levels in order of most detailed to most severe
-  LEVELS = [:trace, :debug, :info, :warn, :error, :fatal]
+  LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
+  DEFAULT_ENV = "default".freeze
 
   def self.config
     @@config ||= begin
       config = ConfigLoader.load_from_file
-      env = config[environment]
-      unless env
-        puts "Missing configuration for #{environment} environment. Sapience is going to use default configuration"
-        env = config.fetch("default")
-      end
-      Configuration.new(env)
+      Configuration.new(config[environment])
     end
   end
 
@@ -54,7 +50,12 @@ module Sapience
   def self.environment
     ENV.fetch("RAILS_ENV") do
       ENV.fetch("RACK_ENV") do
-        ::Rails.env if defined?(::Rails) && ::Rails.respond_to?(:env)
+        if defined?(::Rails) && ::Rails.respond_to?(:env)
+          ::Rails.env
+        else
+          puts "Sapience is going to use default configuration"
+          DEFAULT_ENV
+        end
       end
     end
   end
