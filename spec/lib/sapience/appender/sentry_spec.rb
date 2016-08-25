@@ -1,10 +1,21 @@
 require "spec_helper"
 describe Sapience::Appender::Sentry do
-  let(:appender) { Sapience.add_appender(:sentry, level: :trace, dsn: "https://foobar:443") }
+  let(:level) { :trace }
+  let(:dsn) { "https://foobar:443" }
+  let(:appender) { add_appender(options) }
   let(:message) { "AppenderRavenTest log message" }
   force_config(backtrace_level: :error)
+  let(:options) do
+    {
+      level: level, dsn: dsn
+    }
+  end
 
   after { Sapience.remove_appenders }
+
+  def add_appender(options = {})
+    Sapience.add_appender(:sentry, options)
+  end
 
   shared_examples "capturing backtrace" do
     it "sends message" do
@@ -134,5 +145,19 @@ describe Sapience::Appender::Sentry do
     let(:level) { :fatal }
 
     it_behaves_like "capturing backtrace"
+  end
+
+  context "when dsn is missing" do
+    specify do
+      expect { add_appender }
+        .to raise_error(ArgumentError, "Options need to have the key :dsn")
+    end
+  end
+
+  context "when dsn is invalid uri" do
+    specify do
+      expect { add_appender(dsn: "poop") }
+        .to raise_error(ArgumentError, "The :dsn key is not a valid URI")
+    end
   end
 end

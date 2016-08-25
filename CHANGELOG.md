@@ -1,3 +1,7 @@
+## v0.1.8
+
+- Validate the sentry/raven dsn when creating the appender
+
 ## v0.1.7
 
 - Add support for sneakers

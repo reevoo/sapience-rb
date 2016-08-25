@@ -39,12 +39,19 @@ module Sapience
       #     Name of this application to appear in log messages.
       #     Default: Sapience.config.application
       def initialize(options = {}, &block)
-        fail("Options should be a Hash") unless options.is_a?(Hash)
+        validate_options!(options)
+
         options[:level] ||= :error
         Raven.configure do |config|
           config.dsn = options.delete(:dsn)
         end
         super(options, &block)
+      end
+
+      def validate_options!(options = {})
+        fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
+        fail ArgumentError, "Options need to have the key :dsn" unless options.key?(:dsn)
+        fail ArgumentError, "The :dsn key is not a valid URI" unless options[:dsn] =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
       end
 
       # Send an error notification to sentry
