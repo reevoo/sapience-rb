@@ -1,3 +1,7 @@
+## v0.1.7
+
+- Add support for sneakers
+
 ## v0.1.6
 
 - Prevent configuring twice (adds double appenders)
