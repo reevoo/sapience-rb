@@ -1,3 +1,7 @@
+## v0.1.10
+
+- Set tags to `{ environment: Sapience.environment }` for sentry
+
 ## v0.1.9
 
 - Support sneakers timing implementation
