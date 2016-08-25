@@ -43,15 +43,16 @@ module Sapience
 
         options[:level] ||= :error
         Raven.configure do |config|
-          config.dsn = options.delete(:dsn)
+          config.dsn  = options.delete(:dsn)
+          config.tags = { environment: Sapience.environment }
         end
+
         super(options, &block)
       end
 
       def validate_options!(options = {})
         fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
-        fail ArgumentError, "Options need to have the key :dsn" unless options.key?(:dsn)
-        dsn_valid = options[:dsn] =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
+        dsn_valid = options[:dsn].to_s =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
         fail ArgumentError, "The :dsn key (#{options[:dsn]}) is not a valid URI" unless dsn_valid
       end
 

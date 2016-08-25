@@ -17,6 +17,15 @@ describe Sapience::Appender::Sentry do
     Sapience.add_appender(:sentry, options)
   end
 
+  it 'configures tags for Raven' do
+    config = double(:config)
+    expect(Raven).to receive(:configure).and_yield(config)
+    expect(config).to receive(:dsn=).with(dsn)
+    expect(config).to receive(:tags=).with(environment: 'development')
+
+    add_appender(options)
+  end
+
   shared_examples "capturing backtrace" do
     it "sends message" do
       expect(Raven)
@@ -145,13 +154,6 @@ describe Sapience::Appender::Sentry do
     let(:level) { :fatal }
 
     it_behaves_like "capturing backtrace"
-  end
-
-  context "when dsn is missing" do
-    specify do
-      expect { add_appender }
-        .to raise_error(ArgumentError, "Options need to have the key :dsn")
-    end
   end
 
   context "when dsn is invalid uri" do
