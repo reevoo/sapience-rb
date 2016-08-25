@@ -17,11 +17,11 @@ describe Sapience::Appender::Sentry do
     Sapience.add_appender(:sentry, options)
   end
 
-  it 'configures tags for Raven' do
+  it "configures tags for Raven" do
     config = double(:config)
     expect(Raven).to receive(:configure).and_yield(config)
     expect(config).to receive(:dsn=).with(dsn)
-    expect(config).to receive(:tags=).with(environment: 'development')
+    expect(config).to receive(:tags=).with(environment: "development")
 
     add_appender(options)
   end

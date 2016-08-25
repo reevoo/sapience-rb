@@ -127,9 +127,9 @@ describe Sapience::Appender::Datadog do
       subject.timing(metric, duration)
     end
 
-    context 'when provided a block' do
-      it 'calls timing' do
-        expect(statsd).to receive(:timing) do |metric, duration|
+    context "when provided a block" do
+      it "calls timing" do
+        expect(statsd).to receive(:timing) do |_metric, duration|
           expect(duration).to be >= 500
         end
 

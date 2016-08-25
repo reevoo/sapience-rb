@@ -68,7 +68,7 @@ module Sapience
         if block_given?
           start = Time.now
           yield
-          provider.timing(metric, ((Time.now - start)*1000).floor)
+          provider.timing(metric, ((Time.now - start) * 1000).floor)
         else
           provider.timing(metric, duration)
         end

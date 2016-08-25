@@ -123,7 +123,7 @@ describe Sapience do
       before do
         allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
         allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
-        stub_const("Rails", double(:Rails, sub: 'fuck'))
+        stub_const("Rails", double(:Rails, sub: "fuck"))
       end
 
       its(:environment) do
