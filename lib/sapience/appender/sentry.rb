@@ -51,7 +51,8 @@ module Sapience
       def validate_options!(options = {})
         fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
         fail ArgumentError, "Options need to have the key :dsn" unless options.key?(:dsn)
-        fail ArgumentError, "The :dsn key is not a valid URI" unless options[:dsn] =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
+        dsn_valid = options[:dsn] =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
+        fail ArgumentError, "The :dsn key is not a valid URI" unless dsn_valid
       end
 
       # Send an error notification to sentry
