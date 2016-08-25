@@ -126,6 +126,18 @@ describe Sapience::Appender::Datadog do
       expect(statsd).to receive(:timing).with(metric, duration)
       subject.timing(metric, duration)
     end
+
+    context 'when provided a block' do
+      it 'calls timing' do
+        expect(statsd).to receive(:timing) do |metric, duration|
+          expect(duration).to be >= 500
+        end
+
+        subject.timing(metric) do
+          sleep 0.5
+        end
+      end
+    end
   end
 
   describe "#increment" do

@@ -1,3 +1,7 @@
+## v0.1.9
+
+- Support sneakers timing implementation
+
 ## v0.1.8
 
 - Validate the sentry/raven dsn when creating the appender

@@ -64,8 +64,14 @@ module Sapience
         true
       end
 
-      def timing(metric, duration)
-        provider.timing(metric, duration)
+      def timing(metric, duration = 0)
+        if block_given?
+          start = Time.now
+          yield
+          provider.timing(metric, ((Time.now - start)*1000).floor)
+        else
+          provider.timing(metric, duration)
+        end
       end
 
       def increment(metric, amount = 1)
