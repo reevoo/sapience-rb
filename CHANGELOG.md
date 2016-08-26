@@ -1,3 +1,7 @@
+## v0.1.12
+
+- Add missing bang to `.deep_symbolize_keys!`
+
 ## v0.1.11
 
 - Make sure the default environment is loaded in case all else fails. Warn about this.
