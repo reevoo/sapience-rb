@@ -26,13 +26,20 @@ module Sapience
 
   def self.config
     @@config ||= begin
-      config = ConfigLoader.load_from_file
-      Configuration.new(config[environment])
+      config    = ConfigLoader.load_from_file
+      options   = config[environment]
+      options ||= default_options(config)
+      Configuration.new(options)
     end
   end
 
   def self.configured?
     @@configured
+  end
+
+  def self.default_options(options = {})
+    warn "No configuration for environment #{environment}. Using 'default'"
+    options[DEFAULT_ENV]
   end
 
   def self.reset!

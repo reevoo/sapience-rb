@@ -17,7 +17,8 @@ module Sapience
 
     # Initial default Level for all new instances of Sapience::Logger
     def initialize(options = {}) # rubocop:disable AbcSize
-      @options             = DEFAULT.merge(options.deep_symbolize_keys!)
+      fail ArgumentError, "options need to be a hash" unless options.is_a?(Hash)
+      @options             = DEFAULT.merge(options.deep_symbolize_keys)
       self.default_level   = @options[:log_level].to_sym
       self.backtrace_level = @options[:log_level].to_sym
       self.application     = @options[:application]

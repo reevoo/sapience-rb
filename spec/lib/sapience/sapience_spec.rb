@@ -72,7 +72,7 @@ describe Sapience do
     it { is_expected.to be_a(Sapience::Configuration) }
 
     context "returns 'default' when no environment is provided" do
-      before { allow(described_class).to receive(:environment).and_return(described_class::DEFAULT_ENV) }
+      before { allow(described_class).to receive(:environment).and_return("unknown") }
       its(:default_level) do
         is_expected.to eq(:info)
       end

@@ -1,3 +1,7 @@
+## v0.1.11
+
+- Make sure the default environment is loaded in case all else fails. Warn about this.
+
 ## v0.1.10
 
 - Set tags to `{ environment: Sapience.environment }` for sentry
