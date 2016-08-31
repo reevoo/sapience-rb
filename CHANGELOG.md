@@ -1,3 +1,7 @@
+## v0.2.0
+
+- Rename Appender::File to Appender::Stream. Accept option stream instead of file in `sapience.yml`  
+
 ## v0.1.12
 
 - Add missing bang to `.deep_symbolize_keys!`
