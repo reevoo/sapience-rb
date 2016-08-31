@@ -67,7 +67,7 @@ describe Sapience::Loggable do
     before do
       @time = Time.new
       @io = StringIO.new
-      @appender = Sapience::Appender::File.new(io: @io)
+      @appender = Sapience::Appender::Stream.new(io: @io)
       @mock_logger = MockLogger.new
       @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
       @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }

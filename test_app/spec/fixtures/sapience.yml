@@ -2,13 +2,13 @@
 default:
   log_level: error
   appenders:
-    - file:
+    - stream:
         file_name: log/error.log
         formatter: default
 
 test:
   log_level: fatal
   appenders:
-    - file:
+    - stream:
         file_name: log/fatal.log
         formatter: json

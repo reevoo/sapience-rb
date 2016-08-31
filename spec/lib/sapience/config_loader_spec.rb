@@ -15,7 +15,7 @@ describe Sapience::ConfigLoader do
         "default"    => {
           "log_level" => "info",
           "appenders" => [{
-            "file" => {
+            "stream" => {
               "io" => "STDOUT",
               "formatter" => "color",
             },
@@ -24,7 +24,7 @@ describe Sapience::ConfigLoader do
         "development" => {
           "log_level" => "debug",
           "appenders" => [{
-            "file" => {
+            "stream" => {
               "file_name" => "log/development.log",
               "formatter" => "color",
             },
@@ -33,7 +33,7 @@ describe Sapience::ConfigLoader do
         "production"  => {
           "log_level" => "warn",
           "appenders" => [{
-            "file" => {
+            "stream" => {
               "file_name" => "log/production.log",
               "formatter" => "json",
             },
@@ -42,7 +42,7 @@ describe Sapience::ConfigLoader do
         "test"        => {
           "log_level" => "warn",
           "appenders" => [{
-            "file" => {
+            "stream" => {
               "file_name" => "log/test.log",
               "formatter" => "color",
             },
@@ -57,7 +57,7 @@ describe Sapience::ConfigLoader do
           ["development:",
            "  log_level: debug",
            "  appenders:",
-           "    - file:",
+           "    - stream:",
            "        io: STDOUT",
            "        formatter: json"])
       end
@@ -69,7 +69,7 @@ describe Sapience::ConfigLoader do
           "development" => {
             "log_level" => "debug",
             "appenders" => [{
-              "file" => {
+              "stream" => {
                 "io" => "STDOUT",
                 "formatter" => "json",
               },

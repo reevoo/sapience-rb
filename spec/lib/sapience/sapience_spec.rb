@@ -9,13 +9,13 @@ describe Sapience do
     end
 
     context "when options is not a Hash" do
-      let(:appender) { :file }
+      let(:appender) { :stream }
       let(:options) { 1 }
       specify { expect { add_appender }.to raise_error(ArgumentError, "options should be a hash") }
     end
 
-    context "when appender is :file" do
-      let(:appender) { :file }
+    context "when appender is :stream" do
+      let(:appender) { :stream }
 
       context "and options has :io key present" do
         let(:options) do
@@ -25,7 +25,7 @@ describe Sapience do
           }
         end
 
-        it { is_expected.to be_a(Sapience::Appender::File) }
+        it { is_expected.to be_a(Sapience::Appender::Stream) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Color) }
       end
 
@@ -37,7 +37,7 @@ describe Sapience do
           }
         end
 
-        it { is_expected.to be_a(Sapience::Appender::File) }
+        it { is_expected.to be_a(Sapience::Appender::Stream) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Json) }
       end
     end
@@ -123,7 +123,7 @@ describe Sapience do
       before do
         allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
         allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
-        stub_const("Rails", double(:Rails, sub: "fuck"))
+        stub_const("Rails", double(:Rails, sub: "whatever"))
       end
 
       its(:environment) do
@@ -137,11 +137,11 @@ describe Sapience do
       let(:config) do
         instance_spy(Sapience::Configuration)
       end
-      let(:file_options) do
+      let(:stream_options) do
         { io: STDOUT }
       end
-      let(:file_appender) do
-        { file: file_options }
+      let(:stream_appender) do
+        { stream: stream_options }
       end
       let(:sentry_options) do
         { dsn: "https://getsentry.com:443" }
@@ -149,13 +149,21 @@ describe Sapience do
       let(:sentry_appender) do
         { sentry: sentry_options }
       end
-      let(:appenders) { [file_appender, sentry_appender] }
+      let(:appenders) { [stream_appender, sentry_appender] }
 
       before do
         allow(config).to receive(:appenders).and_return(appenders)
         allow(described_class).to receive(:config).and_return(config)
-        expect(described_class).to receive(:add_appender).with(:file, file_options).and_call_original
-        expect(described_class).to receive(:add_appender).with(:sentry, sentry_options).and_call_original
+
+        expect(described_class)
+          .to receive(:add_appender)
+          .with(:stream, stream_options)
+          .and_call_original
+
+        expect(described_class)
+          .to receive(:add_appender)
+          .with(:sentry, sentry_options)
+          .and_call_original
       end
 
       context "when provided a block" do
@@ -184,19 +192,25 @@ describe Sapience do
             config.default_level = :fatal
             config.backtrace_level = :error
             config.appenders = [
-              { file: { io: STDOUT, level: :info } },
-              { file: { io: STDERR, level: :error } },
-              { file: { io: STDOUT, level: :fatal } },
+              { stream: { io: STDOUT, level: :info } },
+              { stream: { io: STDERR, level: :error } },
+              { stream: { io: STDOUT, level: :fatal } },
             ]
           end
         end.to change { Sapience.appenders.size }.by(3)
+      end
+    end
+
+    context "when no block given" do
+      it "adds all configured appenders" do
+        expect(described_class.configure).to be_a(Sapience::Configuration)
       end
     end
   end
 
   describe ".logger" do
     specify do
-      expect(described_class.logger).to be_a(Sapience::Appender::File)
+      expect(described_class.logger).to be_a(Sapience::Appender::Stream)
     end
   end
 

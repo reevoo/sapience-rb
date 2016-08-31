@@ -39,7 +39,7 @@ Sapience.configure do |config|
   config.backtrace_level = :error
   config.application     = "my-app"
   config.appenders       = [
-    { file: { io: STDOUT, formatter: :color } },
+    { stream: { io: STDOUT, formatter: :color } },
     { sentry: { dsn: "https://username:password@app.getsentry.com/00000" } },
     { datadog: { url: "udp://localhost:8125" } },
   ]
@@ -53,28 +53,28 @@ Sapience provides a default configuration that will be used unless another file 
 default:
   log_level: info
   appenders:
-    - file:
+    - stream:
         io: STDOUT
         formatter: color
 
 test:
   log_level: warn
   appenders:
-    - file:
+    - stream:
         file_name: log/test.log
         formatter: color
 
 development:
   log_level: debug
   appenders:
-    - file:
+    - stream:
         file_name: log/development.log
         formatter: color
 
 production:
   log_level: warn
   appenders:
-    - file:
+    - stream:
         file_name: log/production.log
         formatter: json
 ```
@@ -86,13 +86,13 @@ One of the things that did not suite us so well with the Semantic Logger approac
 There are a number of appenders that all listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
 
 
-### File
+### Stream
 
-File appenders are basically a log stream. You can add as many file appenders as you like logging to different locations. 
+Stream appenders are basically a log stream. You can add as many stream appenders as you like logging to different locations. 
 
 ```ruby
-Sapience.add_appender(:file, file_name: "log/sapience.log", formatter: :json)
-Sapience.add_appender(:file, io: STDOUT, formatter: :color, level: :trace)
+Sapience.add_appender(:stream, file: "log/sapience.log", formatter: :json)
+Sapience.add_appender(:stream, io: STDOUT, formatter: :color, level: :trace)
 ```
 
 ### Sentry
