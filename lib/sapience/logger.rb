@@ -107,10 +107,10 @@ module Sapience
     def log(log, message = nil, progname = nil, &block)
       # Compatibility with ::Logger
       return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
-      @@appender_thread.post(log) do |log_message|
+      @@appender_thread << lambda do
         Sapience.appenders.each do |appender|
           begin
-            appender.log(log_message)
+            appender.log(log)
           rescue StandardError => exc
             logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
           end

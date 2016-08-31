@@ -108,6 +108,15 @@ Sapience.add_appender(
 )
 ```
 
+#### Test exceptions
+
+If you want to quickly verify that your appenders are handling exceptions properly. You can use the following method to 
+generate and log an exception at any given level.
+
+```ruby
+Sapience.test_exception(:error)
+```
+
 ### Datadog
 
 Datadog is a slightly modified version of statsd. On top of the standard statsd API it has support for events.

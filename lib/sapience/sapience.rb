@@ -225,6 +225,10 @@ module Sapience
     @@logger ||= Sapience::Logger.logger
   end
 
+  def self.test_exception(level = :error)
+    Sapience[self].public_send(level, Exception.new("Sapience Test Exception"))
+  end
+
   # Wait until all queued log messages have been written and flush all active
   # appenders
   def self.flush

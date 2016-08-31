@@ -219,4 +219,16 @@ describe Sapience do
       expect(described_class.metrix).to be_a(Sapience::Appender::Datadog)
     end
   end
+
+  describe ".test_exception" do
+    specify do
+      Sapience.add_appender(:sentry, dsn: "https://foobar:443@sentry.io/00000")
+      expect(Raven).to receive(:capture_exception) do |exception, _context|
+        expect(exception).to be_a_kind_of(Exception)
+        expect(exception.message).to eq("Sapience Test Exception")
+      end
+      described_class.test_exception
+      Sapience.flush
+    end
+  end
 end

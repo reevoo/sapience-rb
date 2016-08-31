@@ -1,3 +1,8 @@
+## v0.2.1
+
+- Fixed all appenders, it only worked for Sapience::Logger.
+- Added method to test exceptions `Sapience.test_exception(:error)`
+
 ## v0.2.0
 
 - Rename Appender::File to Appender::Stream. Accept option stream instead of file in `sapience.yml`  
