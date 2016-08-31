@@ -1,5 +1,6 @@
 require "concurrent"
 require "socket"
+require "sapience/descendants"
 
 # Example:
 #

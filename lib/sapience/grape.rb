@@ -4,13 +4,7 @@ require "sapience/extensions/grape/middleware/logging"
 
 module Grape
   class API
-    def self.descendants # :nodoc:
-      descendants = []
-      ObjectSpace.each_object(singleton_class) do |k|
-        descendants.unshift k unless k == self
-      end
-      descendants
-    end
+    extend Sapience::Descendants
   end
 end
 

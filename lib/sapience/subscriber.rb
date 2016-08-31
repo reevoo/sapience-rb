@@ -7,6 +7,8 @@ module Sapience
     attr_accessor :formatter
     attr_writer :application, :host
 
+    extend Sapience::Descendants
+
     # Returns the current log level if set, otherwise it logs everything it receives
     def level
       @level || :trace

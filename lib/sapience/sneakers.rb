@@ -2,13 +2,7 @@ require "sapience"
 
 module Sneakers
   module Worker
-    def self.descendants # :nodoc:
-      descendants = []
-      ObjectSpace.each_object(singleton_class) do |k|
-        descendants.unshift k unless k == self
-      end
-      descendants
-    end
+    extend Sapience::Descendants
   end
 end
 
