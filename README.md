@@ -61,21 +61,21 @@ test:
   log_level: warn
   appenders:
     - stream:
-        file: log/test.log
+        file_name: log/test.log
         formatter: color
 
 development:
   log_level: debug
   appenders:
     - stream:
-        file: log/development.log
+        file_name: log/development.log
         formatter: color
 
 production:
   log_level: warn
   appenders:
     - stream:
-        file: log/production.log
+        file_name: log/production.log
         formatter: json
 ```
 
@@ -86,9 +86,9 @@ One of the things that did not suite us so well with the Semantic Logger approac
 There are a number of appenders that all listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
 
 
-### File
+### Stream
 
-File appenders are basically a log stream. You can add as many file appenders as you like logging to different locations. 
+Stream appenders are basically a log stream. You can add as many stream appenders as you like logging to different locations. 
 
 ```ruby
 Sapience.add_appender(:stream, file: "log/sapience.log", formatter: :json)

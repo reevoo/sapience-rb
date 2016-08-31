@@ -10,20 +10,20 @@ test:
   log_level: warn
   appenders:
     - stream:
-        file: log/test.log
+        file_name: log/test.log
         formatter: color
 
 development:
   log_level: debug
   appenders:
     - stream:
-        file: log/development.log
+        file_name: log/development.log
         formatter: color
 
 production:
   log_level: warn
   appenders:
     - stream:
-        file: log/production.log
+        file_name: log/production.log
         formatter: json
 
