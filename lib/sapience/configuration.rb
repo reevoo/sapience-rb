@@ -12,7 +12,7 @@ module Sapience
       application: "Sapience",
       host:        nil,
       ap_options:  { multiline: false },
-      appenders:   [{ file: { io: STDOUT, formatter: :color } }],
+      appenders:   [{ stream: { io: STDOUT, formatter: :color } }],
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
