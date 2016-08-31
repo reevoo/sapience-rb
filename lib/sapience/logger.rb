@@ -39,7 +39,7 @@ module Sapience
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
           begin
-            logger.trace "Appender thread: Flushing appender: #{appender.name}"
+            logger.trace "Appender thread: Flushing appender: #{appender.class.name}"
             appender.flush
           rescue StandardError => exc
             logger.error "Appender thread: Failed to flush appender: #{appender.inspect}", exc
