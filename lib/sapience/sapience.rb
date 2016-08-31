@@ -164,6 +164,8 @@ module Sapience
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
     options.deep_symbolize_keys!
     appender_class = constantize_symbol(appender)
+    validate_appender!(appender_class)
+
     appender       = appender_class.new(options)
     @@appenders << appender
 
@@ -172,6 +174,17 @@ module Sapience
     Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
     Sapience.metrix = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
+  end
+
+  def self.validate_appender!(appender)
+    return if known_appenders.include?(appender)
+
+    fail NotImplementedError,
+      "Unknown appender '#{appender}'. Supported appenders are (#{known_appenders.join(", ")})"
+  end
+
+  def self.known_appenders
+    @_known_appenders ||= Sapience::Subscriber.descendants
   end
 
   # Examples:

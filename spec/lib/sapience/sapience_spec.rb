@@ -4,8 +4,13 @@ describe Sapience do
   describe ".add_appender" do
     subject(:add_appender) { described_class.add_appender(appender, options) }
 
-    after do
-      Sapience.remove_appender(subject) if options.is_a?(Hash)
+    context "unknown appender" do
+      let(:appender) { :statsd }
+      let(:options) { Hash.new }
+
+      specify do
+        expect { add_appender }.to raise_error(NotImplementedError, /Unknown appender/)
+      end
     end
 
     context "when options is not a Hash" do
