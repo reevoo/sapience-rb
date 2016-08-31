@@ -9,13 +9,13 @@ describe Sapience do
     end
 
     context "when options is not a Hash" do
-      let(:appender) { :file }
+      let(:appender) { :stream }
       let(:options) { 1 }
       specify { expect { add_appender }.to raise_error(ArgumentError, "options should be a hash") }
     end
 
-    context "when appender is :file" do
-      let(:appender) { :file }
+    context "when appender is :stream" do
+      let(:appender) { :stream }
 
       context "and options has :io key present" do
         let(:options) do
@@ -25,7 +25,7 @@ describe Sapience do
           }
         end
 
-        it { is_expected.to be_a(Sapience::Appender::File) }
+        it { is_expected.to be_a(Sapience::Appender::Stream) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Color) }
       end
 
@@ -37,7 +37,7 @@ describe Sapience do
           }
         end
 
-        it { is_expected.to be_a(Sapience::Appender::File) }
+        it { is_expected.to be_a(Sapience::Appender::Stream) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Json) }
       end
     end
@@ -120,11 +120,11 @@ describe Sapience do
   end
 
   describe ".configure" do
-    let(:file_options) do
+    let(:stream_options) do
       { io: STDOUT }
     end
-    let(:file_appender) do
-      { file: file_options }
+    let(:stream_appender) do
+      { stream: stream_options }
     end
     let(:sentry_options) do
       { dsn: "https://getsentry.com:443" }
@@ -132,11 +132,11 @@ describe Sapience do
     let(:sentry_appender) do
       { sentry: sentry_options }
     end
-    let(:appenders) { [file_appender, sentry_appender] }
+    let(:appenders) { [stream_appender, sentry_appender] }
 
     before do
       allow(described_class.config).to receive(:appenders).and_return(appenders)
-      expect(described_class).to receive(:add_appender).with(:file, file_options)
+      expect(described_class).to receive(:add_appender).with(:stream, stream_options)
       expect(described_class).to receive(:add_appender).with(:sentry, sentry_options)
     end
 
@@ -157,7 +157,7 @@ describe Sapience do
 
   describe ".logger" do
     specify do
-      expect(described_class.logger).to be_a(Sapience::Appender::File)
+      expect(described_class.logger).to be_a(Sapience::Appender::Stream)
     end
   end
 

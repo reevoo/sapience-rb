@@ -161,7 +161,7 @@ module Sapience
 
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
-    Sapience.logger = appender if appender.is_a?(Sapience::Appender::File)
+    Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
     Sapience.metrix = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
   end

@@ -23,7 +23,7 @@ require "sapience/logger"
 require "sapience/loggable"
 require "sapience/subscriber"
 
-require "sapience/appender/file"
+require "sapience/appender/stream"
 require "sapience/appender/sentry"
 require "sapience/appender/wrapper"
 require "sapience/appender/datadog"

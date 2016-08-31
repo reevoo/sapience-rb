@@ -1,12 +1,12 @@
-# File appender
+# Stream appender
 #
 #   Writes log messages to a file or open IO stream
 #
 module Sapience
   module Appender
-    class File < Sapience::Subscriber
+    class Stream < Sapience::Subscriber
 
-      # Create a File Logger appender instance.
+      # Create a Stream Logger appender instance.
       #
       # Parameters
       #  :file_name [String|IO]
@@ -61,7 +61,7 @@ module Sapience
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, &block)
         unless options[:io] || options[:file_name]
-          fail "Sapience::Appender::File missing mandatory parameter :file_name or :io"
+          fail "Sapience::Appender::Stream missing mandatory parameter :file_name or :io"
         end
 
         opts = options.dup
