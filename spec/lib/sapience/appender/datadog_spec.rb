@@ -19,6 +19,10 @@ describe Sapience::Appender::Datadog do
     allow(statsd).to receive(:batch).and_yield
   end
 
+  its(:name) do
+    is_expected.to eq(described_class.name)
+  end
+
   describe "#provider" do
     context "without url" do
       let(:url) { nil }

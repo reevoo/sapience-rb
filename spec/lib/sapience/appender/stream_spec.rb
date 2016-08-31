@@ -18,6 +18,12 @@ describe Sapience::Appender::Stream do
     Sapience.remove_appenders
   end
 
+  subject { appender }
+
+  its(:name) do
+    is_expected.to eq(described_class.name)
+  end
+
   describe "format logs into text form" do
     it "handle no message or payload" do
       appender.debug

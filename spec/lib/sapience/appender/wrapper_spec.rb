@@ -8,6 +8,12 @@ describe Sapience::Appender::Wrapper do
     @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
   end
 
+  subject { @appender }
+
+  its(:name) do
+    is_expected.to eq(described_class.name)
+  end
+
   describe "format logs into text form" do
     it "handle nil name, message and payload" do
       log = Sapience::Log.new

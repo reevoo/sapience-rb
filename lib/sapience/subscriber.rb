@@ -17,6 +17,10 @@ module Sapience
       # NOOP
     end
 
+    def name
+      self.class.name
+    end
+
     # A subscriber should implement close if it can.
     def close
       # NOOP

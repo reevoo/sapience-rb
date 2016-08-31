@@ -17,6 +17,13 @@ describe Sapience::Appender::Sentry do
     Sapience.add_appender(:sentry, options)
   end
 
+  subject { appender }
+
+
+  its(:name) do
+    is_expected.to eq(described_class.name)
+  end
+
   it "configures tags for Raven" do
     config = double(:config)
     expect(Raven).to receive(:configure).and_yield(config)

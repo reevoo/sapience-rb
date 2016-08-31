@@ -227,8 +227,8 @@ describe Sapience do
         expect(exception).to be_a_kind_of(Exception)
         expect(exception.message).to eq("Sapience Test Exception")
       end
+
       described_class.test_exception
-      Sapience.flush
     end
   end
 end

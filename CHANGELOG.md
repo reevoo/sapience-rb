@@ -1,3 +1,7 @@
+## v0.2.2
+
+- Add an instance method for the `#name` of the appender
+
 ## v0.2.1
 
 - Fixed all appenders, it only worked for Sapience::Logger.
