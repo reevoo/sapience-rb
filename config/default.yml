@@ -2,28 +2,28 @@
 default:
   log_level: info
   appenders:
-    - file:
+    - stream:
         io: STDOUT
         formatter: color
 
 test:
   log_level: warn
   appenders:
-    - file:
-        file_name: log/test.log
+    - stream:
+        file: log/test.log
         formatter: color
 
 development:
   log_level: debug
   appenders:
-    - file:
-        file_name: log/development.log
+    - stream:
+        file: log/development.log
         formatter: color
 
 production:
   log_level: warn
   appenders:
-    - file:
-        file_name: log/production.log
+    - stream:
+        file: log/production.log
         formatter: json
 
