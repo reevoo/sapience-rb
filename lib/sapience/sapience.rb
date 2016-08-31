@@ -10,7 +10,7 @@ require "socket"
 #   config.host            = ENV.fetch('SAPIENCE_HOST', nil)
 #   config.ap_options      = { multiline: false }
 #   config.appenders       = [
-#     { file: { io: STDOUT, formatter: :color } },
+#     { stream: { io: STDOUT, formatter: :color } },
 #     { statsd: { url: 'udp://localhost:2222' } },
 #     { sentry: { dsn: 'https://foobar:443' } },
 #   ]
@@ -127,14 +127,14 @@ module Sapience
   # Examples:
   #
   #   # Send all logging output to Standard Out (Screen)
-  #   Sapience.add_appender(:file, io: STDOUT)
+  #   Sapience.add_appender(:stream, io: STDOUT)
   #
   #   # Send all logging output to a file
-  #   Sapience.add_appender(:file, file_name: 'logfile.log')
+  #   Sapience.add_appender(:stream, file_name: 'logfile.log')
   #
   #   # Send all logging output to a file and only :info and above to standard output
-  #   Sapience.add_appender(:file, file_name: 'logfile.log')
-  #   Sapience.add_appender(:file, io: STDOUT, level: :info)
+  #   Sapience.add_appender(:stream, file_name: 'logfile.log')
+  #   Sapience.add_appender(:stream, io: STDOUT, level: :info)
   #
   # Log to log4r, Logger, etc.:
   #
