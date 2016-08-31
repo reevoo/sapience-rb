@@ -1,6 +1,6 @@
 # File appender
 #
-#   Writes log messages to a file or open iostream
+#   Writes log messages to a file or open IO stream
 #
 module Sapience
   module Appender
@@ -35,10 +35,10 @@ module Sapience
       #    Sapience.config.default_level = :info
       #
       #    # Log to screen
-      #    Sapience.add_appender(:file, io: STDOUT, formatter: :color)
+      #    Sapience.add_appender(:stream, io: STDOUT, formatter: :color)
       #
       #    # And log to a file at the same time
-      #    Sapience::Logger.add_appender(:file, file_name: 'application.log', formatter: :color)
+      #    Sapience::Logger.add_appender(:stream, file_name: 'application.log', formatter: :color)
       #
       #    logger = Sapience['test']
       #    logger.info 'Hello World'
@@ -51,10 +51,10 @@ module Sapience
       #    Sapience.config.default_level = :trace
       #
       #    # Log to screen but only display :info and above
-      #    Sapience.add_appender(:file, io: STDOUT, level: :info)
+      #    Sapience.add_appender(:stream, io: STDOUT, level: :info)
       #
       #    # And log to a file at the same time, including all :trace level data
-      #    Sapience.add_appender(:file, file_name: 'application.log')
+      #    Sapience.add_appender(:stream, file_name: 'application.log')
       #
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
