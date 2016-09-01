@@ -41,11 +41,9 @@ module Sapience
           def parameters # rubocop:disable AbcSize
             {
               status: (response.nil? ? "fail" : response.status),
-              time: {
-                total: total_runtime,
-                db: db_runtime,
-                view: view_runtime,
-              },
+              db_runtime: db_runtime,
+              view_runtime: view_runtime,
+              total_runtime: total_runtime,
               method: request.request_method,
               path: request.path,
               params: request.params,
@@ -62,7 +60,7 @@ module Sapience
           end
 
           def total_runtime
-            ((stop_time - start_time) * 1000).round(2)
+            ((stop_time - start_time) * 1000).round(3)
           end
 
           def view_runtime
@@ -70,7 +68,7 @@ module Sapience
           end
 
           def db_runtime
-            Grape::Timings.db_runtime.round(2)
+            Grape::Timings.db_runtime.round(3)
           end
 
           def reset_db_runtime

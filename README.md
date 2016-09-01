@@ -28,6 +28,25 @@ gem "sapience-rb", require: "sapience/rails"
 gem "sapience-rb", require: "sapience/grape"
 ```
 
+In your Base API class
+
+```ruby
+require "sapience/grape"
+
+module Aslan
+  module API
+    class Base < Grape::API
+      use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
+      
+      # To log all requests even when no route was found try the following:
+      route :any, "*path" do
+        error!({ error: "No route found" }, 404)
+      end 
+    end
+  end
+end
+
+```
 
 ### Configuration
 

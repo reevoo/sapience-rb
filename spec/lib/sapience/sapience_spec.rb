@@ -231,7 +231,7 @@ describe Sapience do
       expect(Raven).to receive(:capture_exception) do |exception, _context|
         expect(exception).to be_a_kind_of(Exception)
         expect(exception.message).to eq("Sapience Test Exception")
-      end
+      end.and_return(true)
 
       described_class.test_exception
     end

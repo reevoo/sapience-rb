@@ -12,8 +12,5 @@ module Sapience
   class Grape
     Sapience.configure
     ::Grape::API.send(:include, Sapience::Loggable)
-    ::Grape::API.descendants.each do |api|
-      api.send(:use, Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self])
-    end
   end
 end
