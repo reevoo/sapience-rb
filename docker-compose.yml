@@ -4,6 +4,8 @@ volumes:
     driver: local
 
 services:
+  rabbitmq:
+    image: rabbitmq:latest
   rails:
     image: ruby:2.3
     cpu_shares: 4
@@ -29,6 +31,8 @@ services:
       service: rails
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rake
+    depends_on:
+      - rabbitmq
     environment:
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -38,5 +42,7 @@ services:
     working_dir: /usr/src/app/test_app
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
+    depends_on:
+      - rabbitmq
     environment:
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

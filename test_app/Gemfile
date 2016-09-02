@@ -17,6 +17,7 @@ gem "puma", "~> 3.0"
 gem "sapience", path: "../", require: "sapience/rails"
 gem "sentry-raven"
 gem "statsd-ruby"
+gem "sneakers", github: "jondot/sneakers"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -34,6 +35,7 @@ end
 
 group :test do
   gem "rspec-its"
+  gem "bunny-mock"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

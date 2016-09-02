@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+require 'serverengine'
+require 'sneakers'
+require 'sneakers/runner'
+require_relative '../app/workers/test_worker'
+require_relative '../config/initializers/sneakers'
+
+runner = Sneakers::Runner.new([TestWorker])
+runner.run
