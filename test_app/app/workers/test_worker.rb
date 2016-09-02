@@ -1,13 +1,17 @@
+require_relative "../../../spec/support/file_helper"
+
 class TestWorker
+  QUEUE_NAME  = :sneakers_queue
+  ROUTING_KEY  = :sneakers_routing_key
+  VERIFICATION_FILE = "tmp/sneakers.verified".freeze
+
   include Sneakers::Worker
-  QUEUE_NAME  = "sneakers_queue".freeze
+  include FileHelper
 
-  from_queue QUEUE_NAME
+  from_queue QUEUE_NAME, routing_key: ROUTING_KEY
 
-  def work(message)
-    binding.pry
-    puts message
-    sleep 0.1
+  def work(_message)
+    create_file(VERIFICATION_FILE)
     ack!
   end
 end

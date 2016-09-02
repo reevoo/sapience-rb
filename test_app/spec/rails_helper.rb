@@ -6,7 +6,8 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "spec_helper"
 require "rspec/rails"
 require "rspec/its"
-require "bunny-mock"
+require "rspec/wait"
+require_relative "../../spec/support/file_helper"
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
@@ -15,6 +16,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  config.include FileHelper
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -26,14 +28,15 @@ RSpec.configure do |config|
     Sapience.reset!
   end
 
-  config.before(:suite) do
+  config.before(:each) do
     FileUtils.cp(
       Rails.root.join("spec/fixtures/sapience.yml"),
       Rails.root.join("config/sapience.yml"),
     )
   end
 
-  config.after(:suite) do
-    FileUtils.rm(Rails.root.join("config/sapience.yml"))
+  config.after(:each) do
+    sapience_config = Rails.root.join("config/sapience.yml")
+    FileUtils.rm(sapience_config) if File.exist?(sapience_config)
   end
 end

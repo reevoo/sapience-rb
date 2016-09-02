@@ -1,3 +1,7 @@
+## v0.2.3 - Unreleased
+
+- Adds debugging and coverage for sneakers integration
+
 ## v0.2.2
 
 - Add an instance method for the `#name` of the appender

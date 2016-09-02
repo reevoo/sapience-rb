@@ -4,10 +4,10 @@ require "sneakers"
 
 Sneakers.configure(
   amqp:               "amqp://guest:guest@localhost:5672",
-  exchange_type:      :topic,
+  exchange_type:      :direct,
   log:                Sapience[Sneakers], # Log file
   exchange:           "sapience", # AMQP exchange
-  durable:            true, # Is queue durable?
+  durable:            false, # Is queue durable?
   ack:                true, # Must we acknowledge?
   metrics:            Sapience.metrix,
 )
