@@ -35,7 +35,7 @@ module Sapience
       Raven.send(:include) { Sapience::Loggable }
 
       # Replace the Sneakers logger
-      Sneakers.logger             = Sapience[Sneakers] if defined?(Sneakers)
+      Sneakers.configure(log: Sapience[Sneakers]) if defined?(Sneakers)
 
       # Replace the Bugsnag logger
       Bugsnag.configure { |config| config.logger = Sapience[Bugsnag] } if defined?(Bugsnag)

@@ -6,6 +6,10 @@ volumes:
 services:
   rabbitmq:
     image: rabbitmq:latest
+    environment:
+      RABBITMQ_DEFAULT_USER: sapience
+      RABBITMQ_DEFAULT_PASS: tests
+
   rails:
     image: ruby:2.3
     cpu_shares: 4
@@ -26,6 +30,8 @@ services:
 
       # Mount the 'gems' volume on the folder that stores bundled gems:
       - gems:/usr/local/bundle
+
+
   rspec:
     extends:
       service: rails
@@ -45,4 +51,5 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      AMQP: amqp://sapience:tests@rabbitmq:5672
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
