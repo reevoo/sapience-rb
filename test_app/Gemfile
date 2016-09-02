@@ -17,7 +17,7 @@ gem "puma", "~> 3.0"
 gem "sapience", path: "../", require: "sapience/rails"
 gem "sentry-raven"
 gem "statsd-ruby"
-gem "sneakers", github: "jondot/sneakers"
+gem "sneakers"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
