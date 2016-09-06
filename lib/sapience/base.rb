@@ -128,6 +128,7 @@ module Sapience
     def push_tags(*tags)
       Sapience.push_tags(*tags)
     end
+    alias_method :tags=, :push_tags
 
     # :nodoc:
     def pop_tags(quantity = 1)

@@ -6,8 +6,6 @@ module ActiveJob::Logging # rubocop:disable ClassAndModuleChildren
 
   private
 
-  alias_method :tag_logger_old, :tag_logger
-
   def tag_logger(*tags, &block)
     logger.tagged(*tags, &block)
   end
