@@ -15,7 +15,6 @@ module Sapience
           data.merge! exception(event.payload)
 
           controller_logger(event).info(data)
-
         end
 
         def halted_callback(event)
@@ -51,7 +50,7 @@ module Sapience
 
         private
 
-        def request(payload)
+        def request(payload) # rubocop:disable AbcSize
           {
             method: payload[:method].upcase,
             request_path: request_path(payload),
@@ -63,7 +62,7 @@ module Sapience
             route: "#{payload[:params].delete("controller")}##{payload[:params]["action"]}",
             message: "Completed ##{payload[:params].delete("action")}",
             tags: Sapience.tags,
-            params: payload[:params]
+            params: payload[:params],
           }
         end
 

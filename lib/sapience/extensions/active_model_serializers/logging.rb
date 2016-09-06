@@ -1,14 +1,16 @@
 # Patch ActiveModelSerializers logger
-require "active_model_serializers/logging"
+if defined?(ActiveModelSerializers)
+  require "active_model_serializers/logging"
 
-module ActiveModelSerializers::Logging # rubocop:disable ClassAndModuleChildren
-  include Sapience::Loggable
+  module ActiveModelSerializers::Logging # rubocop:disable ClassAndModuleChildren
+    include Sapience::Loggable
 
-  private
+    private
 
-  alias_method :tag_logger_old, :tag_logger
+    alias_method :tag_logger_old, :tag_logger
 
-  def tag_logger(*tags, &block)
-    logger.tagged(*tags, &block)
+    def tag_logger(*tags, &block)
+      logger.tagged(*tags, &block)
+    end
   end
 end

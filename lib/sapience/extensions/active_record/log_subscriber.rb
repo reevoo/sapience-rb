@@ -22,11 +22,9 @@ module Sapience
 
           data.merge! runtimes(event)
           data.merge! extract_sql(data)
-          # data.merge! extract_custom_fields(data)
 
-          tags = ["request"]
-          tags.push("exception") if data[:exception]
-          LogStasher.build_logstash_event(data, tags)
+          data.merge! tags(data)
+          debug(data)
         end
 
         def runtimes(event)
@@ -39,6 +37,13 @@ module Sapience
 
         def extract_sql(data)
           { sql: data[:sql].squeeze(" ") }
+        end
+
+        def tags(data)
+          tags = Sapience.tags.dup
+          tags.push("request")
+          tags.push("exception") if data[:exception]
+          { tags: tags }
         end
       end
     end
