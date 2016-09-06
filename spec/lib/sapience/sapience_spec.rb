@@ -226,6 +226,7 @@ describe Sapience do
   end
 
   describe ".test_exception" do
+    # TODO: This test is flaky
     specify do
       Sapience.add_appender(:sentry, dsn: "https://foobar:443@sentry.io/00000")
       expect(Raven).to receive(:capture_exception) do |exception, _context|

@@ -17,6 +17,8 @@ require "sapience/descendants"
 #   ]
 # end
 
+# TODO: Clean up warnings
+
 # rubocop:disable ClassVars
 module Sapience
   @@configured = nil
