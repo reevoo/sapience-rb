@@ -1,0 +1,24 @@
+---
+default:
+  log_level: error
+  appenders:
+    - stream:
+        file_name: log/error.log
+        formatter: default
+
+development:
+  log_level: debug
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: color
+    - stream:
+        file_name: log/development.log
+        formatter: color
+
+test:
+  log_level: fatal
+  appenders:
+    - stream:
+        file_name: log/fatal.log
+        formatter: json
