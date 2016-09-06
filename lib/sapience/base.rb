@@ -271,7 +271,7 @@ module Sapience
       if self.payload
         payload = payload.nil? ? self.payload : self.payload.merge(payload)
       end
-      merged_tags  = self.tags.dup
+      merged_tags  = tags.dup
       if payload.is_a?(Hash)
         payload_tags = payload.delete(:tags) || []
         merged_tags.concat(payload_tags) if payload_tags.size > 0
@@ -353,7 +353,7 @@ module Sapience
           payload = payload.nil? ? self.payload : self.payload.merge(payload)
         end
 
-        merged_tags  = self.tags
+        merged_tags  = tags
         if payload.is_a?(Hash)
           payload_tags = payload.delete(:tags) || []
           merged_tags.concat(payload_tags) if payload_tags.size > 0

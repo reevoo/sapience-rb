@@ -20,7 +20,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
   let(:user_params) do
     {
       "username" => "testuser",
-      "email" => "test@user.com"
+      "email" => "test@user.com",
     }
   end
 
@@ -35,9 +35,9 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       params: {
         "action" => "index",
         "controller" => "test_controller",
-        "user" => user_params
+        "user" => user_params,
       },
-      controller: "test_controller"
+      controller: "test_controller",
     }
   end
   let(:logger) { Sapience[described_class]  }
@@ -52,7 +52,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
     ActionController::Base.logger = logger
   end
 
-  describe '#process_action' do
+  describe "#process_action" do
     specify do
       expected = {
         method: "GET",
@@ -69,7 +69,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
         runtimes: {
           total: 1_000.0,
           view: 100.0,
-          db: 50.0
+          db: 50.0,
         },
       }
       expect(logger).to receive(:info).with(expected)
