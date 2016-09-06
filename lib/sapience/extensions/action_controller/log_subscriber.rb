@@ -6,7 +6,7 @@ module Sapience
       class LogSubscriber < ::ActiveSupport::LogSubscriber # rubocop:disable ClassLength
         # Log as debug to hide Processing messages in production
         def start_processing(event)
-          controller_logger(event).debug { "Processing ##{event.payload[:action]}" }
+          debug { "Processing ##{event.payload[:action]}" }
         end
 
         def process_action(event) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
