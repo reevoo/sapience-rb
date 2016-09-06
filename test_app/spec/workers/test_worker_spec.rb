@@ -4,7 +4,7 @@ require "sneakers"
 require "sneakers/runner"
 require "external_sneaker"
 
-describe TestWorker, "This is manual labor as we can't verify that sneakers is runnin", :skip do
+describe TestWorker, "This is manual labor as we can't verify that sneakers is running", :skip do
   include FileHelper
   let(:message) do
     {

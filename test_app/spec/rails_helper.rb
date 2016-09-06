@@ -39,4 +39,5 @@ RSpec.configure do |config|
     sapience_config = Rails.root.join("config/sapience.yml")
     FileUtils.rm(sapience_config) if File.exist?(sapience_config)
   end
+  config.include FactoryGirl::Syntax::Methods
 end
