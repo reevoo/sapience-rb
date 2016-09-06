@@ -108,7 +108,6 @@ module Sapience
       #  Ruby or Rails Loggers
       def log(log)
         return false unless should_log?(log)
-
         # Since only one appender thread will be writing to the file at a time
         # it is not necessary to protect access to the file with a semaphore
         # Allow this logger to filter out log levels lower than it's own

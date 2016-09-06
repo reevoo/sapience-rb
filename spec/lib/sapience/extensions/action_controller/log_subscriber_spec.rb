@@ -14,7 +14,9 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
   class TestController < ::ActionController::Base
   end
 
-  let(:tags) { %w(appname rails staging) }
+  let(:sapience_tags) { %w(appname rails staging) }
+  let(:log_tags) { %w(other tags) }
+  let(:tags) { log_tags + sapience_tags }
   let(:user_params) do
     {
       "username" => "testuser",
@@ -46,7 +48,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
 
   before(:each) do
     Sapience.config.host = "example.com"
-    logger.tags = tags
+    logger.tags = sapience_tags
     ActionController::Base.logger = logger
   end
 
@@ -62,7 +64,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
         host: "example.com",
         route: "test_controller#index",
         message: "Completed #index",
-        tags: tags,
+        tags: sapience_tags,
         params: { "user" => user_params },
         runtimes: {
           total: 1_000.0,

@@ -52,6 +52,7 @@ describe Sapience::Appender::Sentry do
               application: Sapience.config.application,
               file: a_string_ending_with("example.rb"),
               line: 254,
+              tags: [],
             },
             backtrace: a_kind_of(Array),
           ),
@@ -75,6 +76,7 @@ describe Sapience::Appender::Sentry do
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
             application: Sapience.config.application,
+            tags: [],
           ),
         )
       appender.send(level, message, error)
@@ -99,6 +101,7 @@ describe Sapience::Appender::Sentry do
               level_index: a_kind_of(Integer),
               host: Sapience.config.host,
               application: Sapience.config.application,
+              tags: [],
             },
           ),
         )
@@ -121,6 +124,7 @@ describe Sapience::Appender::Sentry do
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
             application: Sapience.config.application,
+            tags: [],
           ),
         )
       appender.send(level, message, error)

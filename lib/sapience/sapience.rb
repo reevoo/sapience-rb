@@ -48,6 +48,7 @@ module Sapience
     @@logger = nil
     @@metrix = nil
     @@configured = nil
+    clear_tags!
     reset_appenders!
   end
 
@@ -312,6 +313,10 @@ module Sapience
     t                              = Thread.current[:sapience_tags]
     Thread.current[:sapience_tags] = t.nil? ? new_tags : t.concat(new_tags)
     new_tags
+  end
+
+  def self.clear_tags!
+    Thread.current[:sapience_tags] = []
   end
 
   # Remove specified number of tags from the current tag list

@@ -271,14 +271,20 @@ module Sapience
       if self.payload
         payload = payload.nil? ? self.payload : self.payload.merge(payload)
       end
+      merged_tags  = self.tags.dup
+      if payload.is_a?(Hash)
+        payload_tags = payload.delete(:tags) || []
+        merged_tags.concat(payload_tags) if payload_tags.size > 0
+      end
 
       # Add caller stack trace
       backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
-      log = Log.new(level, Thread.current.name, name, message, payload, Time.now, nil, tags, index, exception, nil, backtrace)
+      log = Log.new(level, Thread.current.name, name, message, payload, Time.now, nil, merged_tags.uniq, index, exception, nil, backtrace)
 
       # Logging Hash only?
       # logger.info(name: 'value')
+
       if payload.nil? && exception.nil? && message.is_a?(Hash)
         payload           = message.dup
         min_duration      = payload.delete(:min_duration) || 0.0
@@ -292,7 +298,6 @@ module Sapience
         end
         log.payload = payload if payload.size > 0
       end
-
       self.log(log) if include_message?(log)
     end
     # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
@@ -347,6 +352,14 @@ module Sapience
         if self.payload
           payload = payload.nil? ? self.payload : self.payload.merge(payload)
         end
+
+        merged_tags  = self.tags
+        if payload.is_a?(Hash)
+          payload_tags = payload.delete(:tags) || []
+          merged_tags.concat(payload_tags) if payload_tags.size > 0
+        end
+        merged_tags.uniq!
+
         if exception
           logged_exception = exception
           backtrace        = nil
@@ -371,7 +384,8 @@ module Sapience
             logged_exception = nil
             backtrace        = exception.backtrace
           end
-          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, logged_exception, metric, backtrace) # rubocop:disable LineLength
+
+          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, merged_tags, index, logged_exception, metric, backtrace) # rubocop:disable LineLength
           self.log(log) if include_message?(log)
           fail exception
         elsif duration >= min_duration
@@ -379,7 +393,7 @@ module Sapience
           # Add caller stack trace
           backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
-          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, tags, index, nil, metric, backtrace) # rubocop:disable LineLength
+          log = Log.new(level, Thread.current.name, name, message, payload, end_time, duration, merged_tags, index, nil, metric, backtrace) # rubocop:disable LineLength
           self.log(log) if include_message?(log)
         end
       end
