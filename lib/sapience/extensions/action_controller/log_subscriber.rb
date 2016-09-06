@@ -13,39 +13,7 @@ module Sapience
           data      = request(event.payload)
           data.merge! runtimes(event)
           data.merge! exception(event.payload)
-
-          controller_logger(event).info(data)
-        end
-
-        def halted_callback(event)
-          controller_logger(event).info do
-            "Filter chain halted as #{event.payload[:filter].inspect} rendered or redirected"
-          end
-        end
-
-        def send_file(event)
-          controller_logger(event).info("Sent file") do
-            { path: event.payload[:path], duration: event.duration }
-          end
-        end
-
-        def redirect_to(event)
-          controller_logger(event).info("Redirected to") do
-            { location: event.payload[:location] }
-          end
-        end
-
-        def send_data(event)
-          controller_logger(event).info("Sent data") do
-            { file_name: event.payload[:filename], duration: event.duration }
-          end
-        end
-
-        def unpermitted_parameters(event)
-          controller_logger(event).debug do
-            unpermitted_keys = event.payload[:keys]
-            "Unpermitted parameter#{"s" if unpermitted_keys.size > 1}: #{unpermitted_keys.join(", ")}"
-          end
+          info(data)
         end
 
         private
@@ -64,10 +32,6 @@ module Sapience
             tags: Sapience.tags,
             params: payload[:params],
           }
-        end
-
-        def location(payload)
-          { location: payload[:location] }
         end
 
         def format(payload)
@@ -103,64 +67,8 @@ module Sapience
           end
         end
 
-        # Returns the logger for the supplied event.
-        # Returns ActionController::Base.logger if no controller is present
-        def controller_logger(event)
-          if (controller = event.payload[:controller])
-            begin
-              controller.constantize.logger
-            rescue NameError
-              ::ActionController::Base.logger
-            end
-          else
-            ::ActionController::Base.logger
-          end
-        end
-
         def request_path(payload)
           payload[:path].split("?").first
-        end
-
-        def write_fragment(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Write fragment #{key_or_path}", duration: event.duration }
-          end
-        end
-
-        def read_fragment(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Read fragment #{key_or_path}", duration: event.duration }
-          end
-        end
-
-        def exist_fragment(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Exist fragment #{key_or_path}", duration: event.duration }
-          end
-        end
-
-        def expire_fragment(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Expire fragment #{key_or_path}", duration: event.duration }
-          end
-        end
-
-        def expire_page(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Expire page #{key_or_path}", duration: event.duration }
-          end
-        end
-
-        def write_page(event)
-          controller_logger(event).info do
-            key_or_path = event.payload[:key] || event.payload[:path]
-            { message: "Write page #{key_or_path}", duration: event.duration }
-          end
         end
       end
     end

@@ -72,7 +72,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
           db: 50.0,
         },
       }
-      expect(logger).to receive(:info).with(expected)
+      expect(subject).to receive(:info).with(expected)
       subject.process_action(event)
     end
   end
