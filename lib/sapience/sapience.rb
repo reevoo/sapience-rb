@@ -1,6 +1,7 @@
 require "concurrent"
 require "socket"
 require "sapience/descendants"
+require "English"
 
 # Example:
 #
@@ -398,5 +399,9 @@ module Sapience
     end
     string.gsub!("/".freeze, "::".freeze)
     string
+  end
+
+  def self.root
+    @_root ||= Gem::Specification.find_by_name("sapience").gem_dir
   end
 end

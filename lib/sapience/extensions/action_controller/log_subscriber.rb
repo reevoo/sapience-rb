@@ -13,6 +13,7 @@ module Sapience
         end
 
         def process_action(event) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+          return unless logger.info?
           data      = request(event.payload)
           data.merge! runtimes(event)
           data.merge! exception(event.payload)
@@ -61,8 +62,10 @@ module Sapience
         def exception(payload)
           if payload[:exception]
             exception, message = payload[:exception]
+            message ||= exception.message
             status = ActionDispatch::ExceptionWrapper.status_code_for_exception(exception)
-            backtrace = $ERROR_INFO.backtrace.first
+            backtrace = $ERROR_INFO.try(:backtrace).try(:first)
+            backtrace ||= exception.backtrace.first
             message = "#{exception}\n#{message}\n#{backtrace}"
             { status: status, error: message }
           else
