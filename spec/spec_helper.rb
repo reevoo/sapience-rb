@@ -6,6 +6,8 @@ require "logger"
 require "rspec/its"
 require "rspec/wait"
 require "pry-nav"
+require "active_support/testing/time_helpers"
+
 require_relative "support/mock_logger"
 require_relative "support/log_factory"
 require_relative "support/file_helper"
@@ -42,4 +44,5 @@ RSpec.configure do |config|
   config.wait_timeout = 2 # seconds
   config.extend ConfigHelper
   config.include ConfigHelper
+  config.include ActiveSupport::Testing::TimeHelpers
 end

@@ -1,6 +1,13 @@
 require "spec_helper"
 
 describe Sapience do
+
+  describe '.root' do
+    its(:root) do
+      is_expected.to end_with('spaience-rb/')
+    end
+  end
+
   describe ".add_appender" do
     subject(:add_appender) { described_class.add_appender(appender, options) }
 

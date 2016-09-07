@@ -47,6 +47,15 @@ module Sapience
   # rubocop:disable LineLength
   Log = Struct.new(:level, :thread_name, :name, :message, :payload, :time, :duration, :tags, :level_index, :exception, :metric, :backtrace, :metric_amount) do
     MAX_EXCEPTIONS_TO_UNWRAP = 5
+    HOURS_IN_DAY = 24
+    MINUTES_IN_HOUR = 60
+    SECONDS_IN_DAY = 86_400
+    SECONDS_IN_HOUR = 3_600
+    SECONDS_IN_MINUTE = 60
+    MILLISECONDS_IN_SECOND = 1_000
+    MILLISECONDS_IN_MINUTE = 60_000
+    MILLISECONDS_IN_HOUR = 3_600_000
+    MILLISECONDS_IN_DAY = 86_400_000
     # Call the block for exception and any nested exception
     def each_exception # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       # With thanks to https://github.com/bugsnag/bugsnag-ruby/blob/6348306e44323eee347896843d16c690cd7c4362/lib/bugsnag/notification.rb#L81
@@ -92,17 +101,26 @@ module Sapience
     # Returns [String] the duration in human readable form
     def duration_human # rubocop:disable AbcSize
       return nil unless duration
-      seconds = duration / 1000
-      if seconds >= 86_400.0 # 1 day
-        "#{(seconds / 86_400).to_i}d #{Time.at(seconds).strftime("%-Hh %-Mm")}"
-      elsif seconds >= 3600.0 # 1 hour
-        Time.at(seconds).strftime("%-Hh %-Mm")
-      elsif seconds >= 60.0 # 1 minute
-        Time.at(seconds).strftime("%-Mm %-Ss")
-      elsif seconds >= 1.0 # 1 second
-        format "%.3fs", seconds
+      days, ms    = duration.divmod(MILLISECONDS_IN_DAY)
+      hours, ms   = ms.divmod(MILLISECONDS_IN_HOUR)
+      minutes, ms = ms.divmod(MILLISECONDS_IN_MINUTE)
+      seconds, ms = ms.divmod(MILLISECONDS_IN_SECOND)
+
+      str = ""
+      str << "#{days}d" if days > 0
+      str << " #{hours}h" if hours > 0
+      str << " #{minutes}m" if minutes > 0
+      str << " #{seconds}s" if seconds > 0
+      str << " #{ms}ms" if ms > 0
+
+      if days > 0 || hours > 0 || minutes > 0
+        str.strip
       else
-        duration_to_s
+        if seconds >= 1.0
+          format "%.3fs", duration / MILLISECONDS_IN_SECOND.to_f
+        else
+          duration_to_s
+        end
       end
     end
 
