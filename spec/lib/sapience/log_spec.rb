@@ -273,5 +273,11 @@ describe Sapience::Log do
         is_expected.to eq("")
       end
     end
+
+    context "with an exception" do
+      its(:backtrace_to_s) do
+        is_expected.to include("Cause: RuntimeError: Error 1")
+      end
+    end
   end
 end
