@@ -145,6 +145,21 @@ module Sapience
       Sapience.fast_tag(tag, &block)
     end
 
+    # Returns [Sapience::Formatters::Default] formatter default for this subscriber
+    def default_formatter
+      Sapience::Formatters::Default.new
+    end
+
+    # Allow application name to be set globally or per subscriber
+    def application
+      Sapience.config.application
+    end
+
+    # Allow host name to be set globally or per subscriber
+    def host
+      Sapience.config.host
+    end
+
     # Thread specific context information to be logged with every log entry
     #
     # Add a payload to all log calls on This Thread within the supplied block

@@ -6,7 +6,6 @@ module Sapience
       def call(log, logger)
         log.to_h(log_host ? logger.host : nil, log_application ? logger.application : nil)
       end
-
     end
   end
 end
