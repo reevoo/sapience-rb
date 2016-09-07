@@ -1,9 +1,6 @@
 require "spec_helper"
 
 describe Sapience::Log do
-  let(:milliseconds_per_day) do
-    Sapience::SECONDS_IN_DAY * Sapience::MILLISECONDS_IN_SECOND
-  end
   let(:level) { :info }
   let(:thread_name) { "Custom Thread" }
   let(:name) { "Alex" }
@@ -76,14 +73,14 @@ describe Sapience::Log do
 
   describe "#duration_human" do
     context "when duration equals a day" do
-      let(:duration) { milliseconds_per_day } #
+      let(:duration) { Sapience::MILLISECONDS_IN_DAY } #
       its(:duration_human) do
         is_expected.to eq("1d")
       end
     end
 
     context "when duration equals two days" do
-      let(:duration) { milliseconds_per_day * 2 } #
+      let(:duration) { Sapience::MILLISECONDS_IN_DAY * 2 } #
       its(:duration_human) do
         is_expected.to eq("2d")
       end
@@ -91,10 +88,8 @@ describe Sapience::Log do
 
     context "when duration is greater than one day" do
       let(:duration) do
-        milliseconds_per_day +
-          Sapience::SECONDS_IN_MINUTE *
-            15 *
-            Sapience::MILLISECONDS_IN_SECOND
+        Sapience::MILLISECONDS_IN_DAY +
+          Sapience::MILLISECONDS_IN_MINUTE * 15
       end
       its(:duration_human) do
         is_expected.to eq("1d 15m")

@@ -47,13 +47,8 @@ module Sapience
   # rubocop:disable LineLength
   Log = Struct.new(:level, :thread_name, :name, :message, :payload, :time, :duration, :tags, :level_index, :exception, :metric, :backtrace, :metric_amount) do
     MAX_EXCEPTIONS_TO_UNWRAP = 5
-    HOURS_IN_DAY = 24
-    MINUTES_IN_HOUR = 60
-    SECONDS_IN_DAY = 86_400
-    SECONDS_IN_HOUR = 3_600
-    SECONDS_IN_MINUTE = 60
-    MILLISECONDS_IN_SECOND = 1_000
-    MILLISECONDS_IN_MINUTE = 60_000
+    MILLISECONDS_IN_SECOND =   1_000
+    MILLISECONDS_IN_MINUTE =  60_000
     MILLISECONDS_IN_HOUR = 3_600_000
     MILLISECONDS_IN_DAY = 86_400_000
     # Call the block for exception and any nested exception
