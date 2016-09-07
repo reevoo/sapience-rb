@@ -3,7 +3,7 @@ require "spec_helper"
 describe Sapience do
   describe ".root" do
     its(:root) do
-      is_expected.to end_with("sapience-rb")
+      is_expected.to eq(Gem::Specification.find_by_name("sapience").gem_dir)
     end
   end
 

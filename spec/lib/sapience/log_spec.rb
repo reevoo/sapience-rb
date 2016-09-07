@@ -224,7 +224,7 @@ describe Sapience::Log do
           stack_trace: a_kind_of(Array),
         ),
         file: a_string_ending_with("/sapience.rb"),
-        host: a_string_ending_with(".local"),
+        host: a_kind_of(String),
         level: :info,
         level_index: 2,
         line: a_kind_of(Integer),
