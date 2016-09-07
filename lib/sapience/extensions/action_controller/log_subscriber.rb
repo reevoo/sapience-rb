@@ -3,7 +3,10 @@ require "action_controller/log_subscriber"
 module Sapience
   module Extensions
     module ActionController
-      class LogSubscriber < ::ActiveSupport::LogSubscriber # rubocop:disable ClassLength
+      class LogSubscriber < ::ActionController::LogSubscriber # rubocop:disable ClassLength
+        alias_method :start_processing_original, :start_processing
+        alias_method :process_action_original, :process_action
+
         # Log as debug to hide Processing messages in production
         def start_processing(event)
           debug { "Processing ##{event.payload[:action]}" }

@@ -13,6 +13,8 @@ class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
     end
   end
 
+  alias_method :logger_original, :logger
+
   def logger
     @logger ||= begin
       logger = Sapience["Rails"]
