@@ -1,9 +1,20 @@
-class ActionView::LogSubscriber # rubocop:disable ClassAndModuleChildren
-  def info(message = nil, &block)
-    debug(message, &block)
-  end
+require "action_view/log_subscriber"
 
-  def info?
-    debug?
+module Sapience
+  module Extensions
+    module ActionView
+      class LogSubscriber < ::ActionView::LogSubscriber
+        include Sapience::Loggable
+
+        def info(message = nil, &block)
+          logger.debug(message, &block)
+        end
+
+        def info?
+          logger.debug?
+        end
+
+      end
+    end
   end
 end

@@ -62,7 +62,7 @@ module Sapience
       Sapience::Extensions::ActionController::LogSubscriber.attach_to :action_controller
       # Sapience::Extensions::ActiveSupport::MailerLogSubscriber.attach_to :action_mailer
       Sapience::Extensions::ActiveRecord::LogSubscriber.attach_to :active_record
-      # Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
+      Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
       # Sapience::Extensions::ActiveJob::LogSubscriber.attach_to :active_job
     end
   end
