@@ -3,7 +3,7 @@ require "spec_helper"
 describe Sapience do
   describe ".root" do
     its(:root) do
-      is_expected.to end_with("spaience-rb")
+      is_expected.to end_with("sapience-rb")
     end
   end
 
