@@ -264,4 +264,14 @@ describe Sapience::Log do
       end
     end
   end
+
+  describe "#backtrace_to_s" do
+    context "without an exception" do
+      let(:exception) { nil }
+
+      its(:backtrace_to_s) do
+        is_expected.to eq("")
+      end
+    end
+  end
 end

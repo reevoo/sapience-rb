@@ -51,27 +51,6 @@ module Sapience
     MILLISECONDS_IN_MINUTE =  60_000
     MILLISECONDS_IN_HOUR = 3_600_000
     MILLISECONDS_IN_DAY = 86_400_000
-    # Call the block for exception and any nested exception
-    def each_exception # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
-      # With thanks to https://github.com/bugsnag/bugsnag-ruby/blob/6348306e44323eee347896843d16c690cd7c4362/lib/bugsnag/notification.rb#L81
-      depth      = 0
-      exceptions = []
-      ex         = exception
-      while !ex.nil? && !exceptions.include?(ex) && exceptions.length < MAX_EXCEPTIONS_TO_UNWRAP
-        exceptions << ex
-        yield(ex, depth)
-
-        depth += 1
-        ex    =
-          if ex.respond_to?(:cause) && ex.cause
-            ex.cause
-          elsif ex.respond_to?(:continued_exception) && ex.continued_exception
-            ex.continued_exception
-          elsif ex.respond_to?(:original_exception) && ex.original_exception
-            ex.original_exception
-          end
-      end
-    end
 
     # Returns [String] the exception backtrace including all of the child / caused by exceptions
     def backtrace_to_s
@@ -230,6 +209,30 @@ module Sapience
       # Metric
       h[:metric] = metric if metric
       h
+    end
+
+    private
+
+    # Call the block for exception and any nested exception
+    def each_exception # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+      # With thanks to https://github.com/bugsnag/bugsnag-ruby/blob/6348306e44323eee347896843d16c690cd7c4362/lib/bugsnag/notification.rb#L81
+      depth      = 0
+      exceptions = []
+      ex         = exception
+      while !ex.nil? && !exceptions.include?(ex) && exceptions.length < MAX_EXCEPTIONS_TO_UNWRAP
+        exceptions << ex
+        yield(ex, depth)
+
+        depth += 1
+        ex    =
+          if ex.respond_to?(:cause) && ex.cause
+            ex.cause
+          elsif ex.respond_to?(:continued_exception) && ex.continued_exception
+            ex.continued_exception
+          elsif ex.respond_to?(:original_exception) && ex.original_exception
+            ex.original_exception
+          end
+      end
     end
   end
   # rubocop:enable LineLength
