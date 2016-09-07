@@ -7,9 +7,9 @@ describe Hash do
       {
         "one" => {
           "two" => [
-            "three" => "val"
-          ]
-        }
+            "three" => "val",
+          ],
+        },
       }
     end
 
@@ -17,9 +17,9 @@ describe Hash do
       {
         one: {
           two: [
-            three: "val"
-          ]
-        }
+            three: "val",
+          ],
+        },
       }
     end
 
@@ -27,13 +27,13 @@ describe Hash do
       expect { subject.deep_symbolize_keys! }
         .to change { subject }
         .to(
-          {
+
             one: {
               two: [
-                three: "val"
-              ]
-            }
-          }
+                three: "val",
+              ],
+            },
+
         )
     end
   end

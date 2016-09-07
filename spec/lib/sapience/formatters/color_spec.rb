@@ -20,7 +20,7 @@ describe Sapience::Formatters::Color do
           " (\e[1m9.999s\e[0m) \e[36mAlex\e[0m" \
           " -- Sapience is really cool" \
           " -- \"HEY HO\"" \
-          " -- Exception: \e[1mRuntimeError: Error 2\e[0m\n"
+          " -- Exception: \e[1mRuntimeError: Error 2\e[0m\n",
         )
     end
   end
