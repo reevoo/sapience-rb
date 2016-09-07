@@ -4,8 +4,8 @@ module Sapience
   module Extensions
     module ActionController
       class LogSubscriber < ::ActionController::LogSubscriber # rubocop:disable ClassLength
-        alias_method :start_processing_original, :start_processing
-        alias_method :process_action_original, :process_action
+        alias_method :orig_start_processing, :start_processing
+        alias_method :orig_process_action, :process_action
 
         # Log as debug to hide Processing messages in production
         def start_processing(event)
