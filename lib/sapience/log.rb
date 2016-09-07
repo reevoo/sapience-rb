@@ -38,7 +38,7 @@ module Sapience
   #   Object supplied when measure_x was called
   #
   # backtrace [Array<String>]
-  #   The backtrace captured at source when the log level >= Sapience.config.backtrace_level
+  #   The backtrace_level captured at source when the log level >= Sapience.config.backtrace_level
   #
   # metric_amount [Numeric]
   #   Used for numeric or counter metrics.

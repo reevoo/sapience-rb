@@ -208,7 +208,6 @@ describe Sapience::Log do
   end
 
   describe "#to_h" do
-
     let(:shared_hash) do
       {
         application: "Sapience",
