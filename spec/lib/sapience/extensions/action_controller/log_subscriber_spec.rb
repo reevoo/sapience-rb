@@ -84,17 +84,17 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       subject.process_action(event)
     end
 
-    context 'when logger.info? is false' do
+    context "when logger.info? is false" do
       specify do
         allow(subject.logger).to receive(:info?).and_return(false)
         expect(subject.process_action(event)).to eq(nil)
       end
     end
 
-    context 'when payload has exception' do
+    context "when payload has exception" do
       let(:exception) do
         begin
-          raise SapienceError, "Error in sapience"
+          fail SapienceError, "Error in sapience"
         rescue => e
           e
         end
@@ -103,7 +103,11 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       let(:expected) do
         success_hash.dup.merge(
           status: 500,
-          error: a_string_starting_with("Error in sapience\nError in sapience\n#{Sapience.root}/spec/lib/sapience/extensions/action_controller/log_subscriber_spec.rb"),
+          error: a_string_starting_with(
+            "Error in sapience\n" \
+            "Error in sapience\n" \
+            "#{Sapience.root}/spec/lib/sapience/extensions/action_controller/log_subscriber_spec.rb",
+          ),
         )
       end
 
@@ -113,7 +117,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       end
     end
 
-    context 'when actionpack version is 3' do
+    context "when actionpack version is 3" do
       before do
         stub_const("::ActionPack::VERSION::MAJOR", 3)
         stub_const("::ActionPack::VERSION::MINOR", 0)
