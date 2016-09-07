@@ -62,7 +62,6 @@ module Sapience
         end
         message
       end
-
     end
   end
 end

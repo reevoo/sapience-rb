@@ -11,12 +11,11 @@ describe Sapience::Formatters::Default do
     let(:payload) { "HEY HO" }
 
     specify do
-      is_expected.to match(/#{TS_REGEX} I \[\d+:#{thread_name} sapience.rb:(\d+)\] \[tag_one\] \[tag_two\] \(9\.999s\) Alex -- Sapience is really cool -- "HEY HO" -- Exception: RuntimeError: Error 2/) # rubocop:disable LineLength
+      is_expected.to start_with(
+        "2015-09-10 20:13:45.000000 I [#{$PROCESS_ID}:#{thread_name} sapience.rb:10]" \
+        " [tag_one] [tag_two] (9.999s) Alex -- Sapience is really cool" \
+        " -- \"HEY HO\" -- Exception: RuntimeError: Error 2"
+      )
     end
   end
-  # its(:call) do
-  #   aggregate_failures "testing call" do
-  #     expect(log).to eq("")
-  #   end
-  # end
 end
