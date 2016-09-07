@@ -1,5 +1,5 @@
 require "spec_helper"
-
+require "active_record"
 describe Sapience::Log do
   let(:level) { :info }
   let(:thread_name) { "Custom Thread" }
@@ -208,6 +208,7 @@ describe Sapience::Log do
   end
 
   describe "#to_h" do
+
     let(:shared_hash) do
       {
         application: "Sapience",
@@ -274,9 +275,27 @@ describe Sapience::Log do
       end
     end
 
-    context "with an exception" do
+    context "when exception is nested" do
       its(:backtrace_to_s) do
         is_expected.to include("Cause: RuntimeError: Error 1")
+      end
+    end
+
+    context "when exception isn't nested" do
+      let(:exception) do
+        begin
+          fail exception_message_one
+        rescue => ex
+          ex
+        end
+      end
+
+      its(:backtrace_to_s) do
+        is_expected.not_to include("Cause: RuntimeError: Error 1")
+      end
+
+      its(:backtrace_to_s) do
+        is_expected.to include(Sapience.root)
       end
     end
   end

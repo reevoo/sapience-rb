@@ -57,7 +57,7 @@ module Sapience
       trace = ""
       each_exception do |exception, i|
         if i == 0
-          trace = (exception.backtrace || []).join("\n")
+          trace << (exception.backtrace || []).join("\n")
         else
           trace << "\nCause: #{exception.class.name}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
         end
@@ -202,7 +202,7 @@ module Sapience
             message:     exception.message,
             stack_trace: exception.backtrace,
           }
-          root       = root[name]
+          root = root[name]
         end
       end
 
@@ -224,7 +224,10 @@ module Sapience
         yield(ex, depth)
 
         depth += 1
-        ex    =
+        ex =
+          # continued_exception is only used by REXML
+          # original_exception is deprecated in Rails 5+
+          # Not worth testing to thoroughly?
           if ex.respond_to?(:cause) && ex.cause
             ex.cause
           elsif ex.respond_to?(:continued_exception) && ex.continued_exception
