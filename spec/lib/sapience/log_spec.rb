@@ -8,7 +8,7 @@ describe Sapience::Log do
   let(:thread_name) { "Custom Thread" }
   let(:name) { "Alex" }
   let(:message) { "Sapience is really cool" }
-  let(:payload) { }
+  let(:payload) {}
   let(:time) { Time.now }
   let(:duration) { 9_999 }
   let(:tags) { %w(tag_one tag_two) }
@@ -18,9 +18,9 @@ describe Sapience::Log do
   let(:exception) do
     begin
       begin
-        raise RuntimeError, exception_message_one
-      rescue => error
-        raise RuntimeError, exception_message_two
+        fail exception_message_one
+      rescue RuntimeError
+        raise exception_message_two
       end
     rescue RuntimeError => e
       e
@@ -54,19 +54,19 @@ describe Sapience::Log do
 
   subject { log }
 
-  describe '#duration_to_s' do
+  describe "#duration_to_s" do
     its(:duration_to_s) do
       is_expected.to eq("#{duration}.0ms")
     end
 
-    context 'when duration is nil' do
+    context "when duration is nil" do
       let(:duration) { nil }
       its(:duration_to_s) do
         is_expected.to eq(nil)
       end
     end
 
-    context 'when duration is less than 10' do
+    context "when duration is less than 10" do
       let(:duration) { 9 }
       its(:duration_to_s) do
         is_expected.to eq("#{duration}.000ms")
@@ -74,34 +74,34 @@ describe Sapience::Log do
     end
   end
 
-  describe '#duration_human' do
-    context 'when duration equals a day' do
+  describe "#duration_human" do
+    context "when duration equals a day" do
       let(:duration) { milliseconds_per_day } #
       its(:duration_human) do
         is_expected.to eq("1d")
       end
     end
 
-    context 'when duration equals two days' do
+    context "when duration equals two days" do
       let(:duration) { milliseconds_per_day * 2 } #
       its(:duration_human) do
         is_expected.to eq("2d")
       end
     end
 
-    context 'when duration is greater than one day' do
+    context "when duration is greater than one day" do
       let(:duration) do
         milliseconds_per_day +
           Sapience::SECONDS_IN_MINUTE *
-          15 *
-          Sapience::MILLISECONDS_IN_SECOND
+            15 *
+            Sapience::MILLISECONDS_IN_SECOND
       end
       its(:duration_human) do
         is_expected.to eq("1d 15m")
       end
     end
 
-    context 'when duration is greater than a minute' do
+    context "when duration is greater than a minute" do
       let(:duration) { Sapience::MILLISECONDS_IN_MINUTE + 1 }
 
       its(:duration_human) do
@@ -109,7 +109,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when duration equals a minute' do
+    context "when duration equals a minute" do
       let(:duration) { Sapience::MILLISECONDS_IN_MINUTE }
 
       its(:duration_human) do
@@ -117,7 +117,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when duration is less than a minute' do
+    context "when duration is less than a minute" do
       let(:duration) { Sapience::MILLISECONDS_IN_SECOND + 35 }
 
       its(:duration_human) do
@@ -125,7 +125,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when duration is less than a second' do
+    context "when duration is less than a second" do
       let(:duration) { 900 }
 
       its(:duration_human) do
@@ -133,7 +133,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when duration is less than 10 ms' do
+    context "when duration is less than 10 ms" do
       let(:duration) { 8 }
 
       its(:duration_human) do
@@ -141,7 +141,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when duration is nil' do
+    context "when duration is nil" do
       let(:duration) { nil }
       its(:duration_human) do
         is_expected.to eq(nil)
@@ -149,7 +149,7 @@ describe Sapience::Log do
     end
   end
 
-  describe '#level_to_s' do
+  describe "#level_to_s" do
     its(:level_to_s) do
       is_expected.to eq("I")
     end
@@ -158,13 +158,13 @@ describe Sapience::Log do
   # This is covering both the below methods:
   #   - #extract_file_and_line
   #   - #file_name_and_line
-  describe '#process_info' do
+  describe "#process_info" do
     its(:process_info, 30) do
       is_expected.to match(/(\d+):Custom Thread sapience.rb:(\d+)/)
     end
   end
 
-  describe '#formatted_time' do
+  describe "#formatted_time" do
     before { travel_to Time.new(2004, 11, 24, 01, 04, 44) }
     after { travel_back }
     its(:formatted_time) do
@@ -172,14 +172,14 @@ describe Sapience::Log do
     end
   end
 
-  describe '#cleansed_message' do
+  describe "#cleansed_message" do
     let(:message) { "\033[32mThis message is Green\033[0m" }
     its(:cleansed_message) do
       is_expected.to eq("This message is Green")
     end
   end
 
-  describe '#payload_to_s' do
+  describe "#payload_to_s" do
     let(:inspected) { "Yummie" }
     let(:payload) { double(:payload, payload?: true, inspect: inspected) }
     its(:payload_to_s) do
@@ -187,20 +187,20 @@ describe Sapience::Log do
     end
   end
 
-  describe '#payload?' do
+  describe "#payload?" do
     let(:payload) do
       {
-        key: "value"
+        key: "value",
       }
     end
-    context 'when payload is nil' do
+    context "when payload is nil" do
       let(:payload) { nil }
       its(:payload?) do
         is_expected.to eq(false)
       end
     end
 
-    context 'when payload is empty?' do
+    context "when payload is empty?" do
       let(:payload) { [] }
       its(:payload?) do
         is_expected.to eq(false)
@@ -212,7 +212,7 @@ describe Sapience::Log do
     end
   end
 
-  describe '#to_h' do
+  describe "#to_h" do
     let(:shared_hash) do
       {
         application: "Sapience",
@@ -238,7 +238,7 @@ describe Sapience::Log do
       }
     end
 
-    context 'when payload is nil' do
+    context "when payload is nil" do
       let(:expected) { shared_hash }
 
       its(:to_h) do
@@ -246,7 +246,7 @@ describe Sapience::Log do
       end
     end
 
-    context 'when payload is a Hash' do
+    context "when payload is a Hash" do
       let(:expected) do
         shared_hash.merge(payload)
       end

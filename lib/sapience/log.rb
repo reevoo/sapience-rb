@@ -99,7 +99,7 @@ module Sapience
     end
 
     # Returns [String] the duration in human readable form
-    def duration_human # rubocop:disable AbcSize
+    def duration_human # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       return nil unless duration
       days, ms    = duration.divmod(MILLISECONDS_IN_DAY)
       hours, ms   = ms.divmod(MILLISECONDS_IN_HOUR)
