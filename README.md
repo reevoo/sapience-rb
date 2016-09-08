@@ -62,6 +62,7 @@ Sapience.configure do |config|
     { sentry: { dsn: "https://username:password@app.getsentry.com/00000" } },
     { datadog: { url: "udp://localhost:8125" } },
   ]
+  config.log_executor    = :single_thread_executor
 end
 ```
 
@@ -70,6 +71,7 @@ Sapience provides a default configuration that will be used unless another file 
 ```yaml
 ---
 default:
+  log_executor: single_thread_executor
   log_level: info
   appenders:
     - stream:
@@ -77,6 +79,7 @@ default:
         formatter: color
 
 test:
+  log_executor: immediate_executor
   log_level: warn
   appenders:
     - stream:
@@ -84,6 +87,7 @@ test:
         formatter: color
 
 development:
+  log_executor: single_thread_executor
   log_level: debug
   appenders:
     - stream:
@@ -91,6 +95,7 @@ development:
         formatter: color
 
 production:
+  log_executor: :single_thread_executor
   log_level: warn
   appenders:
     - stream:

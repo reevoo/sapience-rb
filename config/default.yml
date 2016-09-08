@@ -1,5 +1,6 @@
 ---
 default:
+  log_executor: :single_thread_executor
   log_level: info
   appenders:
     - stream:
@@ -7,6 +8,7 @@ default:
         formatter: color
 
 test:
+  log_executor: :immediate_executor
   log_level: warn
   appenders:
     - stream:
@@ -14,6 +16,7 @@ test:
         formatter: color
 
 development:
+  log_executor: :single_thread_executor
   log_level: debug
   appenders:
     - stream:
@@ -21,6 +24,7 @@ development:
         formatter: color
 
 production:
+  log_executor: :single_thread_executor
   log_level: warn
   appenders:
     - stream:

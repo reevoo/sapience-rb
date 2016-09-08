@@ -28,7 +28,7 @@ module Sapience
       self.host            = @options[:host]
       self.ap_options      = @options[:ap_options]
       self.appenders       = @options[:appenders]
-      self.log_executor    = @options[:log_executor]
+      self.log_executor    = @options[:log_executor].to_sym
     end
 
     # Sets the global default log level
