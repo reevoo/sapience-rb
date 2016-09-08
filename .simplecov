@@ -1,19 +1,23 @@
 require "simplecov-json"
-require "codeclimate-test-reporter"
-require "coveralls"
 
-CodeClimate::TestReporter.start
-SimpleCov.maximum_coverage_drop 1
+if ENV['CI']
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
 
-SimpleCov.formatters = [
-  SimpleCov::Formatter::HTMLFormatter,
-  SimpleCov::Formatter::JSONFormatter,
-  CodeClimate::TestReporter::Formatter,
-  Coveralls::SimpleCov::Formatter,
-]
+  require "coveralls"
+  Coveralls.wear!
+else
+  SimpleCov.maximum_coverage_drop 1
 
-SimpleCov.start do
-  add_filter "/spec/"
-  add_filter "/bin/"
-  add_filter "/gemfiles/"
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::JSONFormatter,
+  ]
+
+  SimpleCov.start do
+    add_filter "/spec/"
+    add_filter "/bin/"
+    add_filter "/gemfiles/"
+  end
+
 end

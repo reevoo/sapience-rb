@@ -40,6 +40,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      COVERALLS_REPO_TOKEN: 2pF5ERW8NKVYqrkGeGTvzGP7oYLidlQ41
       CODECLIMATE_REPO_TOKEN: 204dc055302da6aed94379e249aa0645636d1d1794920c62db05c5fa968215de
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
