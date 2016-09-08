@@ -4,7 +4,6 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "sapience"
 require "logger"
 require "rspec/its"
-require "rspec/wait"
 require "pry-nav"
 require "active_support/testing/time_helpers"
 
