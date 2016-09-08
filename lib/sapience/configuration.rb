@@ -5,26 +5,30 @@ module Sapience
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
-    attr_accessor :application, :ap_options, :appenders
+    attr_accessor :application, :ap_options, :appenders, :log_executor
 
+    SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
       log_level:   :info,
       application: "Sapience",
       host:        nil,
       ap_options:  { multiline: false },
       appenders:   [{ stream: { io: STDOUT, formatter: :color } }],
+      log_executor: :single_thread_executor,
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
     def initialize(options = {}) # rubocop:disable AbcSize
       fail ArgumentError, "options need to be a hash" unless options.is_a?(Hash)
       @options             = DEFAULT.merge(options.deep_symbolize_keys!)
+      validate_log_executor!(@options[:log_executor])
       self.default_level   = @options[:log_level].to_sym
       self.backtrace_level = @options[:log_level].to_sym
       self.application     = @options[:application]
       self.host            = @options[:host]
       self.ap_options      = @options[:ap_options]
       self.appenders       = @options[:appenders]
+      self.log_executor    = @options[:log_executor]
     end
 
     # Sets the global default log level
@@ -92,6 +96,9 @@ module Sapience
       @host ||= Socket.gethostname
     end
 
-
+    def validate_log_executor!(log_executor)
+      return true if SUPPORTED_EXECUTORS.include?(log_executor)
+      fail ArgumentError, "#{log_executor} is unsupported. Use (#{SUPPORTED_EXECUTORS.join(", ")})"
+    end
   end
 end

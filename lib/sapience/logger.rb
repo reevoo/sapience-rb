@@ -7,31 +7,6 @@ module Sapience
   class Logger < Base # rubocop:disable ClassLength, ClassVars
     include Sapience::Concerns::Compatibility
 
-    # Returns a Logger instance
-    #
-    # Return the logger for a specific class, supports class specific log levels
-    #   logger = Sapience::Logger.new(self)
-    # OR
-    #   logger = Sapience::Logger.new('MyClass')
-    #
-    # Parameters:
-    #  application
-    #    A class, module or a string with the application/class name
-    #    to be used in the logger
-    #
-    #  level
-    #    The initial log level to start with for this logger instance
-    #    Default: Sapience.config.default_level
-    #
-    #  filter [Regexp|Proc]
-    #    RegExp: Only include log messages where the class name matches the supplied
-    #    regular expression. All other messages will be ignored
-    #    Proc: Only include log messages where the supplied Proc returns true
-    #          The Proc must return true or false
-    def initialize(klass, level = nil, filter = nil)
-      super
-    end
-
     # Flush all queued log entries disk, database, etc.
     #  All queued log messages are written and then each appender is flushed in turn
     def self.flush # rubocop:disable AbcSize
@@ -94,30 +69,6 @@ module Sapience
       @@lag_threshold_s
     end
 
-    # Allow the internal logger to be overridden from its default to STDERR
-    #   Can be replaced with another Ruby logger or Rails logger, but never to
-    #   Sapience::Logger itself since it is for reporting problems
-    #   while trying to log to the various appenders
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
-    # Place log request on the queue for the Appender thread to write to each
-    # appender in the order that they were registered
-    def log(log, message = nil, progname = nil, &block)
-      # Compatibility with ::Logger
-      return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
-      @@appender_thread << lambda do
-        Sapience.appenders.each do |appender|
-          begin
-            appender.log(log)
-          rescue StandardError => exc
-            logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
-          end
-        end
-      end if @@appender_thread
-    end
-
     @@appender_thread = nil
 
     # Internal logger for Sapience
@@ -135,7 +86,7 @@ module Sapience
     def self.start_appender_thread
       return false if appender_thread_active?
 
-      @@appender_thread = Concurrent::SingleThreadExecutor.new
+      @@appender_thread = Sapience.log_executor_class.new
       fail "Failed to start Appender Thread" unless @@appender_thread
       true
     end
@@ -150,6 +101,55 @@ module Sapience
     # rubocop:disable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
     def self.appender_thread
       @@appender_thread
+    end
+
+    # Allow the internal logger to be overridden from its default to STDERR
+    #   Can be replaced with another Ruby logger or Rails logger, but never to
+    #   Sapience::Logger itself since it is for reporting problems
+    #   while trying to log to the various appenders
+    def self.logger=(logger)
+      @@logger = logger
+    end
+
+    # Returns a Logger instance
+    #
+    # Return the logger for a specific class, supports class specific log levels
+    #   logger = Sapience::Logger.new(self)
+    # OR
+    #   logger = Sapience::Logger.new('MyClass')
+    #
+    # Parameters:
+    #  application
+    #    A class, module or a string with the application/class name
+    #    to be used in the logger
+    #
+    #  level
+    #    The initial log level to start with for this logger instance
+    #    Default: Sapience.config.default_level
+    #
+    #  filter [Regexp|Proc]
+    #    RegExp: Only include log messages where the class name matches the supplied
+    #    regular expression. All other messages will be ignored
+    #    Proc: Only include log messages where the supplied Proc returns true
+    #          The Proc must return true or false
+    def initialize(klass, level = nil, filter = nil)
+      super
+    end
+
+    # Place log request on the queue for the Appender thread to write to each
+    # appender in the order that they were registered
+    def log(log, message = nil, progname = nil, &block)
+      # Compatibility with ::Logger
+      return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
+      @@appender_thread << lambda do
+        Sapience.appenders.each do |appender|
+          begin
+            appender.log(log)
+          rescue StandardError => exc
+            self.class.logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
+          end
+        end
+      end if @@appender_thread
     end
     # rubocop:enable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
   end

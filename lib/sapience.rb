@@ -1,4 +1,8 @@
 require "sapience/version"
+require "sapience/ansi_colors"
+require "sapience/core_ext/hash"
+require "sapience/core_ext/symbol"
+require "sapience/core_ext/thread"
 require "sapience/sapience"
 
 # @formatter:off
@@ -14,9 +18,6 @@ require "sapience/formatters/json"
 require "sapience/config_loader"
 require "sapience/configuration"
 require "sapience/configuration/grape"
-require "sapience/ansi_colors"
-require "sapience/core_ext/hash"
-require "sapience/core_ext/thread"
 require "sapience/base"
 require "sapience/log"
 require "sapience/logger"

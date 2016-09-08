@@ -20,6 +20,7 @@ require "English"
 
 # rubocop:disable ClassVars
 module Sapience
+  UnknownClass = Class.new(NameError)
   @@configured = nil
 
   # Logging levels in order of most detailed to most severe
@@ -372,11 +373,13 @@ module Sapience
 
   reset_appenders!
 
+  def self.log_executor_class
+    constantize_symbol(config.log_executor, "Concurrent")
+  end
+
   def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
-    klass = "#{namespace}::#{camelize(symbol.to_s)}"
-    constantize(klass)
-  rescue NameError
-    raise(ArgumentError, "Could not convert symbol: #{symbol} to a class in: #{namespace}. Looking for: #{klass}")
+    class_name = "#{namespace}::#{symbol.camelize}"
+    constantize(class_name)
   end
 
   def self.constantize(class_name)
@@ -386,17 +389,8 @@ module Sapience
     else
       class_name.split("::").inject(Object) { |o, name| o.const_get(name) } # rubocop:disable SingleLineBlockParams
     end
-  end
-
-  # Borrow from Rails, when not running Rails
-  def self.camelize(term) # rubocop:disable AbcSize
-    string = term.to_s
-    string = string.sub(/^[a-z\d]*/) { |match| match.capitalize }
-    string.gsub!(/(?:_|(\/))([a-z\d]*)/i) do
-      "#{Regexp.last_match[1]}#{inflections.acronyms[Regexp.last_match[2]] || Regexp.last_match[2].capitalize}"
-    end
-    string.gsub!("/".freeze, "::".freeze)
-    string
+  rescue NameError
+    raise UnknownClass, "Could not find class: #{class_name}."
   end
 
   def self.root
