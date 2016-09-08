@@ -1,4 +1,5 @@
 require "thread"
+
 class Thread
   # Returns the name of the current thread
   # Default:

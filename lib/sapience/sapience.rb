@@ -165,7 +165,7 @@ module Sapience
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
   def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
-    options.deep_symbolize_keys!
+    options.deep_symbolize_keyz!
     appender_class = constantize_symbol(appender)
     validate_appender!(appender_class)
 

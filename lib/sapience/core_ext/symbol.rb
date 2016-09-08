@@ -11,5 +11,5 @@ class Symbol
     end
     string.gsub!(/\//, "::")
     string
-  end # unless :sym.respond_to?(:camelize)
+  end unless :sym.respond_to?(:camelize)
 end

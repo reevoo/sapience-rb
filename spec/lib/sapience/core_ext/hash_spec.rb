@@ -2,7 +2,7 @@ require "spec_helper"
 require "sapience/core_ext/hash"
 
 describe Hash do
-  describe "#deep_symbolize_keys!" do
+  describe "#deep_symbolize_keyz!" do
     subject do
       {
         "one" => {
@@ -24,7 +24,7 @@ describe Hash do
     end
 
     it "sybolizes string keys" do
-      expect { subject.deep_symbolize_keys! }
+      expect { subject.deep_symbolize_keyz! }
         .to change { subject }
         .to(
 

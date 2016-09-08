@@ -9,7 +9,7 @@ describe Sapience::Formatters::Json do
   describe "#call" do
     subject(:formatted) do
       json = JSON.parse(formatter.call(log, Sapience[described_class]))
-      json.deep_symbolize_keys!
+      json.deep_symbolize_keyz!
     end
     let(:payload) { "HEY HO" }
 
