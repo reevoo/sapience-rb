@@ -36,7 +36,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-json"
   spec.add_development_dependency "rspec-its"
+  spec.add_development_dependency "pry-nav"
+  spec.add_development_dependency "sentry-raven"
+  spec.add_development_dependency "dogstatsd-ruby"
+  spec.add_development_dependency "rails", "~> 5.0.0.1"
+  spec.add_development_dependency "grape"
+  spec.add_development_dependency "active_model_serializers", "~> 0.10.0"
   spec.add_development_dependency "codeclimate-test-reporter"
-  spec.add_development_dependency "coveralls"
   spec.add_development_dependency "gem-release"
 end

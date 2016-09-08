@@ -1,12 +1,11 @@
-require "simplecov-json"
-
 if ENV['CI']
   require "codeclimate-test-reporter"
   CodeClimate::TestReporter.start
 
-  require "coveralls"
-  Coveralls.wear!
+  # require "coveralls"
+  # Coveralls.wear!
 else
+  require "simplecov-json"
   SimpleCov.maximum_coverage_drop 1
 
   SimpleCov.formatters = [
