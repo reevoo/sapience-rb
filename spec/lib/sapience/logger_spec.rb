@@ -7,8 +7,14 @@ describe Sapience::Logger do
   let(:logger) { Sapience["LoggerTest"] }
 
   describe ".logger" do
-    specify do
-      expect(described_class.logger).to be_a(Sapience::Appender::Stream)
+    context "when @logger is nil" do
+      before do
+        described_class.class_variable_set(:@@logger, nil)
+      end
+
+      specify do
+        expect(described_class.logger).to be_a(Sapience::Appender::Stream)
+      end
     end
   end
 
@@ -18,6 +24,45 @@ describe Sapience::Logger do
       expect(described_class.logger).to receive(:trace).with("Appender thread: All appenders flushed")
       expect(appender).to receive(:flush).and_call_original
       described_class.flush
+    end
+
+    context "when appender.flush raises StandardError" do
+      let(:exception) { StandardError.new("Flush failed") }
+      it "logs an additional message about the error" do
+        expect(described_class.logger)
+          .to receive(:trace)
+          .with("Appender thread: Flushing appender: #{appender.class.name}")
+
+        expect(described_class.logger)
+          .to receive(:trace)
+          .with("Appender thread: All appenders flushed")
+
+        expect(described_class.logger)
+          .to receive(:error)
+          .with("Appender thread: Failed to flush appender: #{appender.inspect}", exception)
+
+        expect(appender).to receive(:flush).and_raise(exception)
+        expect { described_class.flush }.not_to raise_error
+      end
+    end
+
+    context "when appender.flush raises Exception" do
+      let(:exception) { Exception.new("Flush failed") }
+      it "logs an additional message about the error" do
+        expect(described_class.logger)
+          .to receive(:trace)
+          .with("Appender thread: Flushing appender: #{appender.class.name}")
+
+        expect(described_class.logger)
+          .not_to receive(:trace)
+          .with("Appender thread: All appenders flushed")
+
+        expect(described_class.logger)
+          .not_to receive(:error)
+
+        expect(appender).to receive(:flush).and_raise(exception)
+        expect { described_class.flush }.to raise_error(Exception, "Flush failed")
+      end
     end
   end
 
@@ -29,6 +74,32 @@ describe Sapience::Logger do
       expect(appender).to receive(:close).and_call_original
       expect(Sapience).to receive(:remove_appender).with(appender)
       described_class.close
+    end
+
+    context "when appender.flush raises StandardError" do
+      let(:exception) { StandardError.new("Flush failed") }
+      it "logs an additional message about the error" do
+        expect(described_class.logger).to receive(:trace).with("Appender thread: Closing appender: #{appender.name}")
+        expect(described_class.logger).to receive(:trace).with("Appender thread: All appenders flushed")
+        expect(appender).to receive(:flush).and_raise(exception)
+        expect(appender).not_to receive(:close)
+        expect(Sapience).not_to receive(:remove_appender)
+
+        expect { described_class.close }.not_to raise_error
+      end
+    end
+
+    context "when appender.flush raises Exception" do
+      let(:exception) { Exception.new("Flush failed") }
+      it "logs an additional message about the error" do
+        expect(described_class.logger).to receive(:trace).with("Appender thread: Closing appender: #{appender.name}")
+        expect(described_class.logger).not_to receive(:trace).with("Appender thread: All appenders flushed")
+        expect(appender).to receive(:flush).and_raise(exception)
+        expect(appender).not_to receive(:close)
+        expect(Sapience).not_to receive(:remove_appender)
+
+        expect { described_class.close }.to raise_error(Exception, "Flush failed")
+      end
     end
   end
 
