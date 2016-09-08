@@ -286,16 +286,12 @@ module Sapience
       if self.payload
         payload = payload.nil? ? self.payload : self.payload.merge(payload)
       end
-      merged_tags  = tags.dup
-      if payload.is_a?(Hash)
-        payload_tags = payload.delete(:tags) || []
-        merged_tags.concat(payload_tags) if payload_tags.size > 0
-      end
 
+      merged_tags = merge_tags_with_payload(payload)
       # Add caller stack trace
       backtrace = extract_backtrace if index >= Sapience.config.backtrace_level_index
 
-      log = Log.new(level, Thread.current.name, name, message, payload, Time.now, nil, merged_tags.uniq, index, exception, nil, backtrace)
+      log = Log.new(level, Thread.current.name, name, message, payload, Time.now, nil, merged_tags, index, exception, nil, backtrace)
 
       # Logging Hash only?
       # logger.info(name: 'value')
@@ -318,6 +314,15 @@ module Sapience
     # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
 
     SELF_PATTERN = File.join("lib", "sapience")
+
+    def merge_tags_with_payload(payload = {})
+      merged_tags = tags.dup
+      if payload.is_a?(Hash)
+        payload_tags = payload.delete(:tags) || []
+        merged_tags.concat(payload_tags) if payload_tags.size > 0
+      end
+      merged_tags.uniq
+    end
 
     # Extract the callers backtrace leaving out Sapience
     def extract_backtrace
@@ -368,12 +373,7 @@ module Sapience
           payload = payload.nil? ? self.payload : self.payload.merge(payload)
         end
 
-        merged_tags  = tags
-        if payload.is_a?(Hash)
-          payload_tags = payload.delete(:tags) || []
-          merged_tags.concat(payload_tags) if payload_tags.size > 0
-        end
-        merged_tags.uniq!
+        merged_tags = merge_tags_with_payload(payload)
 
         if exception
           logged_exception = exception
