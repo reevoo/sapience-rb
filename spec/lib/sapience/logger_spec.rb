@@ -12,6 +12,36 @@ describe Sapience::Logger do
     end
   end
 
+  describe '.flush' do
+    it 'flushes, closes and removes appender' do
+      expect(described_class.logger).to receive(:trace).with("Appender thread: Flushing appender: #{appender.class.name}")
+      expect(described_class.logger).to receive(:trace).with("Appender thread: All appenders flushed")
+      expect(appender).to receive(:flush).and_call_original
+      described_class.flush
+    end
+  end
+
+  describe '.close' do
+    it 'flushes, closes and removes appender' do
+      expect(described_class.logger).to receive(:trace).with("Appender thread: Closing appender: #{appender.name}")
+      expect(described_class.logger).to receive(:trace).with("Appender thread: All appenders flushed")
+      expect(appender).to receive(:flush).and_call_original
+      expect(appender).to receive(:close).and_call_original
+      expect(Sapience).to receive(:remove_appender).with(appender)
+      described_class.close
+    end
+  end
+
+  describe '.close_appender' do
+    it 'flushes, closes and removes appender' do
+      expect(described_class.logger).to receive(:trace).with("Appender thread: Closing appender: #{appender.name}")
+      expect(appender).to receive(:flush).and_call_original
+      expect(appender).to receive(:close).and_call_original
+      expect(Sapience).to receive(:remove_appender).with(appender)
+      described_class.close_appender(appender)
+    end
+  end
+
   describe "#log" do
     include_context "logs"
     let(:appender) { Sapience.add_appender(:stream, file_name: "log/test.log", formatter: :color) }
