@@ -48,27 +48,6 @@ module Sapience
       Sapience.remove_appender(appender)
     end
 
-    @@lag_check_interval = 5000
-    @@lag_threshold_s    = 30
-
-    # Returns the check_interval which is the number of messages between checks
-    # to determine if the appender thread is falling behind
-    def self.lag_check_interval
-      @@lag_check_interval
-    end
-
-    # Set the check_interval which is the number of messages between checks
-    # to determine if the appender thread is falling behind
-    def self.lag_check_interval=(lag_check_interval)
-      @@lag_check_interval = lag_check_interval
-    end
-
-    # Returns the amount of time in seconds
-    # to determine if the appender thread is falling behind
-    def self.lag_threshold_s
-      @@lag_threshold_s
-    end
-
     @@appender_thread = nil
 
     # Internal logger for Sapience
