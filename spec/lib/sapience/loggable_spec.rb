@@ -5,6 +5,33 @@ class TestAttribute
   include Sapience::Loggable
 end
 
+class LoggableIncluded
+  include Sapience::Loggable
+end
+
+describe LoggableIncluded do
+  let(:logger) { Logger.new(STDOUT) }
+
+  shared_examples "loggable" do
+    it { is_expected.to respond_to(:logger) }
+    it { is_expected.to respond_to(:logger=) }
+    specify do
+      expect { subject.logger = logger  }
+        .to change { subject.logger }
+        .to logger
+    end
+  end
+
+  describe "class methods" do
+    subject { described_class }
+    it_behaves_like "loggable"
+  end
+
+  describe "instance methods" do
+    it_behaves_like "loggable"
+  end
+end
+
 module Perform
   def perform
     logger.info("perform")
