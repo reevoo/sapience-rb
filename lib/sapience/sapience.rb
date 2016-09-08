@@ -276,19 +276,6 @@ module Sapience
     Thread.current[:sapience_tags].pop
   end
 
-  # Add the supplied named tags to the list of tags to log for this thread whilst
-  # the supplied block is active.
-  #
-  # Returns result of block
-  #
-  # Example:
-  def self.named_tags(tag)
-    (Thread.current[:sapience_tags] ||= []) << tag
-    yield
-  ensure
-    Thread.current[:sapience_tags].pop
-  end
-
   # Add the supplied tags to the list of tags to log for this thread whilst
   # the supplied block is active.
   # Returns result of block
