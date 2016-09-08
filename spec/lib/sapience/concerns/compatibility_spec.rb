@@ -14,17 +14,17 @@ describe Sapience::Concerns::Compatibility do
 
   it "#add" do
     logger.add(Logger::INFO, "hello world", "progname") { "Data" }
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data -- \"progname\"/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data -- \"progname\"/)
   end
 
   it "#log" do
     logger.log(Logger::FATAL, "hello world", "progname") { "Data" }
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ F \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data -- \"progname\"/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ F \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data -- \"progname\"/)
   end
 
   it "#unknown" do
     logger.unknown("hello world") { "Data" }
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ E \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ E \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
   end
 
   it "#unknown? as error?" do
@@ -41,12 +41,12 @@ describe Sapience::Concerns::Compatibility do
 
   it "#silence_logger" do
     logger.silence_logger { logger.info("hello world") }
-    wait_for { mock_logger.message }.to be_falsey
+    expect(mock_logger.message).to be_falsey
   end
 
   it "#<< as info" do
     (logger << "hello world")
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world/)
   end
 
   it "#progname= as #name=" do
@@ -86,13 +86,13 @@ describe Sapience::Concerns::Compatibility do
   it "#close NOOP" do
     logger.close
     logger.info("hello world") { "Data" }
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
   end
 
   it "#reopen NOOP" do
     logger.reopen
     logger.info("hello world") { "Data" }
-    wait_for { mock_logger.message }.to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
+    expect(mock_logger.message).to match(/\d+-\d+-\d+ \d+:\d+:\d+.\d+ I \[\d+:#{@thread_name}\] CompatibilityTest -- hello world -- Data/)
   end
 end
 # rubocop:enable LineLength

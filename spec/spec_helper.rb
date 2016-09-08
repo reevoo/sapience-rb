@@ -37,6 +37,12 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
+  config.before(:suite) do
+    Sapience.configure do |c|
+      c.log_executor = :immediate_executor
+    end
+  end
+
   config.before(:each) do |_example|
     Sapience.reset!
   end

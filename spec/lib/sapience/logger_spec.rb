@@ -6,12 +6,6 @@ describe Sapience::Logger do
   let(:appender) { Sapience.add_appender(:wrapper, logger: mock_logger) }
   let(:logger) { Sapience["LoggerTest"] }
 
-  before do
-    Sapience.configure do |config|
-      config.log_executor = :immediate_executor
-    end
-  end
-
   describe ".logger" do
     specify do
       expect(described_class.logger).to be_a(Sapience::Appender::Stream)
