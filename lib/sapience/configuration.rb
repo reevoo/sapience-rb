@@ -21,6 +21,7 @@ module Sapience
     def initialize(options = {}) # rubocop:disable AbcSize
       fail ArgumentError, "options need to be a hash" unless options.is_a?(Hash)
       @options             = DEFAULT.merge(options.deep_symbolize_keys!)
+      @options[:log_executor] &&= @options[:log_executor].to_sym
       validate_log_executor!(@options[:log_executor])
       self.default_level   = @options[:log_level].to_sym
       self.backtrace_level = @options[:log_level].to_sym
@@ -28,7 +29,7 @@ module Sapience
       self.host            = @options[:host]
       self.ap_options      = @options[:ap_options]
       self.appenders       = @options[:appenders]
-      self.log_executor    = @options[:log_executor].to_sym
+      self.log_executor    = @options[:log_executor]
     end
 
     # Sets the global default log level

@@ -95,7 +95,7 @@ development:
         formatter: color
 
 production:
-  log_executor: :single_thread_executor
+  log_executor: single_thread_executor
   log_level: warn
   appenders:
     - stream:
