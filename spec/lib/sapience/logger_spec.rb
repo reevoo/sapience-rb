@@ -5,6 +5,33 @@ describe Sapience::Logger do
   let(:mock_logger) { MockLogger.new }
   let(:appender) { Sapience.add_appender(:wrapper, logger: mock_logger) }
   let(:logger) { Sapience["LoggerTest"] }
+  describe ".logger" do
+    specify do
+      expect(described_class.logger).to be_a(Sapience::Appender::Stream)
+    end
+  end
+
+  describe "#log" do
+    include_context "logs"
+    let(:appender) { Sapience.add_appender(:stream, file_name: "log/test.log", formatter: :color) }
+    subject(:logger) { described_class.new("Test", :info) }
+
+    specify "handles standard error" do
+      allow(described_class).to receive(:logger).and_return(appender)
+      allow(appender).to receive(:log).with(log).and_raise(StandardError, "We failed")
+      expect(appender).to receive(:error).with("Appender thread: Failed to log to appender: #{appender.inspect}", a_kind_of(StandardError))
+      subject.log(log, "whaatever", "sapience")
+    end
+
+    specify "raises exceptions" do
+      allow(described_class).to receive(:logger).and_return(appender)
+      allow(appender).to receive(:log).with(log).and_raise(Exception, "We failed")
+      expect(appender).not_to receive(:error)
+      expect { subject.log(log, "whaatever", "sapience") }
+        .to raise_error(Exception, "We failed")
+    end
+  end
+
   [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
     describe "filter: #{filter.class.name}" do
       force_config(default_level: :trace, backtrace_level: nil)
