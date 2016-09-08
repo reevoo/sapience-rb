@@ -9,7 +9,7 @@ describe Thread do
   it { is_expected.to respond_to(:name) }
   it { is_expected.to respond_to(:name=) }
 
-  describe '#name=' do
+  describe "#name=" do
     specify do
       expect { subject.name = :test }
         .to change { subject.name }.to "test"
