@@ -5,6 +5,13 @@ describe Sapience::Logger do
   let(:mock_logger) { MockLogger.new }
   let(:appender) { Sapience.add_appender(:wrapper, logger: mock_logger) }
   let(:logger) { Sapience["LoggerTest"] }
+
+  before do
+    Sapience.configure do |config|
+      config.log_executor = :immediate_executor
+    end
+  end
+
   describe ".logger" do
     specify do
       expect(described_class.logger).to be_a(Sapience::Appender::Stream)
@@ -54,13 +61,13 @@ describe Sapience::Logger do
         describe level do
           it "logs" do
             logger.send(level, "hello world", @hash) { "Calculations" }
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
           end
 
           it "exclude log messages using Proc filter" do
             if filter.is_a?(Proc)
               logger.send(level, "Exclude this log message", @hash) { "Calculations" }
-              wait_for { mock_logger.message }.to(be_nil)
+              expect(mock_logger.message).to(be_nil)
             end
           end
 
@@ -71,47 +78,47 @@ describe Sapience::Logger do
                 "Calculations"
               end
 
-              wait_for { mock_logger.message }.to(be_nil)
+              expect(mock_logger.message).to(be_nil)
             end
           end
 
           it "logs with backtrace" do
             allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
             logger.send(level, "hello world", @hash) { "Calculations" }
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
           end
 
           it "logs with backtrace and exception" do
             allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
             exc = RuntimeError.new("Test")
             logger.send(level, "hello world", exc)
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] LoggerTest -- hello world -- Exception: RuntimeError: Test/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] LoggerTest -- hello world -- Exception: RuntimeError: Test/)
           end
 
           it "logs payload" do
             hash = { tracking_number: "123456", even: 2, more: "data" }
             hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
             logger.send(level, "Hello world", hash)
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
           end
 
           it "does not log an empty payload" do
             hash = {}
             logger.send(level, "Hello world", hash)
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world/)
           end
 
           describe "hash only argument" do
             it "logs message" do
               logger.send(level, message: "Hello world")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world/)
             end
 
             it "logs payload and message" do
               logger.send(level, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
             end
 
             it "logs payload and message from block" do
@@ -121,14 +128,14 @@ describe Sapience::Logger do
 
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
             end
 
             it "logs payload only" do
               hash = { tracking_number: "123456", even: 2, more: "data" }
               logger.send(level, hash)
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] LoggerTest -- #{hash_str}/)
             end
 
             it "logs duration" do
@@ -136,12 +143,12 @@ describe Sapience::Logger do
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
               duration_match = "\\(123\\.5ms\\)"
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
 
             it "does not log when below min_duration" do
               logger.send(level, min_duration: 200, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
-              wait_for { mock_logger.message }.to(be_nil)
+              expect(mock_logger.message).to(be_nil)
             end
 
             it "logs duration" do
@@ -150,7 +157,7 @@ describe Sapience::Logger do
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
               duration_match = "\\(123\\.5ms\\)"
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
           end
         end
@@ -160,7 +167,7 @@ describe Sapience::Logger do
         it "add tags to log entries" do
           logger.tagged("12345", "DJHSFK") do
             logger.info("Hello world")
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[12345\] \[DJHSFK\] LoggerTest -- Hello world/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[12345\] \[DJHSFK\] LoggerTest -- Hello world/)
           end
         end
 
@@ -168,7 +175,7 @@ describe Sapience::Logger do
           logger.tagged("First Level", "tags") do
             logger.tagged("Second Level") do
               logger.info("Hello world")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[First Level\] \[tags\] \[Second Level\] LoggerTest -- Hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[First Level\] \[tags\] \[Second Level\] LoggerTest -- Hello world/)
             end
 
             expect(logger.tags.count).to(eq(2))
@@ -185,7 +192,7 @@ describe Sapience::Logger do
           logger.with_payload(tracking_number: "123456") do
             logger.with_payload(even: 2, more: "data") do
               logger.info("Hello world")
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] LoggerTest -- Hello world -- #{hash_str}/)
             end
           end
         end
@@ -195,7 +202,7 @@ describe Sapience::Logger do
         it "add string tag to log entries" do
           logger.fast_tag("12345") do
             logger.info("Hello world")
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[12345\] LoggerTest -- Hello world/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[12345\] LoggerTest -- Hello world/)
           end
         end
       end
@@ -219,7 +226,7 @@ describe Sapience::Logger do
           describe "direct method" do
             it "log #{level} info" do
               expect(logger.send("measure_#{level}".to_sym, "hello world") { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
             end
 
             it "log #{level} info with payload" do
@@ -227,7 +234,7 @@ describe Sapience::Logger do
                 "result"
               end,
               ).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "not log #{level} info when block is faster than :min_duration" do
@@ -235,7 +242,7 @@ describe Sapience::Logger do
                 "result"
               end,
               ).to(eq("result"))
-              wait_for { mock_logger.message }.to(be_nil)
+              expect(mock_logger.message).to(be_nil)
             end
 
             it "log #{level} info when block duration exceeds :min_duration" do
@@ -244,7 +251,7 @@ describe Sapience::Logger do
                 "result"
               end,
               ).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "log #{level} info with an exception" do
@@ -254,7 +261,7 @@ describe Sapience::Logger do
                 end
               end
                 .to(raise_error(RuntimeError))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
             end
 
             it "change log #{level} info with an exception" do
@@ -263,30 +270,30 @@ describe Sapience::Logger do
                   fail("Test")
                 end
               end.to(raise_error(RuntimeError))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} F \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} F \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
             end
 
             it "log #{level} info with backtrace" do
               allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
               expect(logger.send("measure_#{level}".to_sym, "hello world") { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
             end
           end
 
           describe "generic method" do
             it "log #{level} info" do
               expect(logger.measure(level, "hello world") { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
             end
 
             it "log #{level} info with payload" do
               expect(logger.measure(level, "hello world", payload: (@hash)) { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "not log #{level} info when block is faster than :min_duration" do
               expect(logger.measure(level, "hello world", min_duration: 500) { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to(be_nil)
+              expect(mock_logger.message).to(be_nil)
             end
 
             it "log #{level} info when block duration exceeds :min_duration" do
@@ -295,7 +302,7 @@ describe Sapience::Logger do
                 "result"
               end,
               ).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "log #{level} info with an exception" do
@@ -305,20 +312,20 @@ describe Sapience::Logger do
                 end
               end
                 .to(raise_error(RuntimeError))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- Exception: RuntimeError: Test -- #{@hash_str}/)
             end
 
             it "log #{level} info with backtrace" do
               allow(Sapience.config).to receive(:backtrace_level_index).and_return(0)
               expect(logger.measure(level, "hello world") { "result" }).to(eq("result"))
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}#{@file_name_reg_exp}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
             end
           end
         end
 
         it "log when the block performs a return" do
           expect(function_with_return(logger)).to(eq("Good"))
-          wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
+          expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
         end
 
         it "not log at a level below the silence level" do
@@ -327,7 +334,7 @@ describe Sapience::Logger do
               logger.warn("don't log me")
             end
 
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
           end
         end
 
@@ -335,10 +342,10 @@ describe Sapience::Logger do
           use_config(default_level: :info) do
             logger.measure_info("hello world", silence: :trace) do
               logger.debug("hello world", @hash) { "Calculations" }
-              wait_for { mock_logger.message }.to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+              expect(mock_logger.message).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
             end
 
-            wait_for { mock_logger.message }.to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
+            expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world/)
           end
         end
       end
@@ -349,7 +356,7 @@ describe Sapience::Logger do
           expect(Sapience.config.default_level).to(eq(:debug))
           expect(logger.level).to(eq(:debug))
           logger.trace("hello world", @hash) { "Calculations" }
-          wait_for { mock_logger.message }.to(be_nil)
+          expect(mock_logger.message).to(be_nil)
         end
 
         it "log at the instance level" do
@@ -357,7 +364,7 @@ describe Sapience::Logger do
           logger.level = :trace
           expect(logger.level).to(eq(:trace))
           logger.trace("hello world", @hash) { "Calculations" }
-          wait_for { mock_logger.message }.to match(/#{TS_REGEX} T \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+          expect(mock_logger.message).to match(/#{TS_REGEX} T \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
         end
 
         it "not log at a level below the instance level" do
@@ -365,7 +372,7 @@ describe Sapience::Logger do
           logger.level = :warn
           expect(logger.level).to(eq(:warn))
           logger.debug("hello world", @hash) { "Calculations" }
-          wait_for { mock_logger.message }.to(be_nil)
+          expect(mock_logger.message).to(be_nil)
         end
       end
 
@@ -381,14 +388,14 @@ describe Sapience::Logger do
             logger.trace("hello world", @hash) { "Calculations" }
           end
 
-          wait_for { mock_logger.message }.to(be_nil)
+          expect(mock_logger.message).to(be_nil)
         end
 
         it "log at the instance level even with the silencer at a higher level" do
           logger.level = :trace
           expect(logger.level).to(eq(:trace))
           logger.silence { logger.trace("hello world", @hash) { "Calculations" } }
-          wait_for { mock_logger.message }.to match(/#{TS_REGEX} T \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+          expect(mock_logger.message).to match(/#{TS_REGEX} T \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
         end
 
         it "log at a silence level below the default level" do
@@ -398,7 +405,7 @@ describe Sapience::Logger do
             logger.debug("hello world", @hash) { "Calculations" }
           end
 
-          wait_for { mock_logger.message }.to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
+          expect(mock_logger.message).to match(/#{TS_REGEX} D \[\d+:#{@thread_name}\] LoggerTest -- hello world -- Calculations -- #{@hash_str}/)
         end
       end
 
