@@ -46,7 +46,6 @@ RSpec.configure do |config|
     Sapience.reset!
   end
 
-  config.wait_timeout = 2 # seconds
   config.extend ConfigHelper
   config.include ConfigHelper
   config.include ActiveSupport::Testing::TimeHelpers
