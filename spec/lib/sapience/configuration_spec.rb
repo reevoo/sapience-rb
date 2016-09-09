@@ -2,6 +2,13 @@ require "spec_helper"
 require "logger"
 
 describe Sapience::Configuration do
+  describe '#validate_log_executor!' do
+    specify do
+      expect { subject.validate_log_executor!(:invalid) }
+        .to raise_error(Sapience::InvalidLogExecutor)
+    end
+  end
+
   describe "#level_to_index" do
     def level_to_index
       subject.level_to_index(level)

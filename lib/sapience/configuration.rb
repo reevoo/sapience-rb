@@ -2,6 +2,7 @@ require "ostruct"
 
 module Sapience
   UnkownLogLevel = Class.new(StandardError)
+  InvalidLogExecutor = Class.new(StandardError)
 
   # rubocop:disable ClassVars
   class Configuration
@@ -111,7 +112,7 @@ module Sapience
 
     def validate_log_executor!(log_executor)
       return true if SUPPORTED_EXECUTORS.include?(log_executor)
-      fail ArgumentError, "#{log_executor} is unsupported. Use (#{SUPPORTED_EXECUTORS.join(", ")})"
+      fail InvalidLogExecutor, "#{log_executor} is unsupported. Use (#{SUPPORTED_EXECUTORS.join(", ")})"
     end
   end
 end
