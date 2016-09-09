@@ -1,13 +1,13 @@
 require "spec_helper"
 
 describe Sapience::Descendants do
-  class Base
+  class DescBase
     extend Sapience::Descendants
   end
-  class ChildOne < Base
+  class DescOne < DescBase
   end
-  class ChildTwo < Base
+  class DescTwo < DescBase
   end
-  subject { Base }
-  its(:descendants) { is_expected.to match_array([ChildOne, ChildTwo]) }
+  subject { DescBase}
+  its(:descendants) { is_expected.to match_array([DescOne, DescTwo]) }
 end

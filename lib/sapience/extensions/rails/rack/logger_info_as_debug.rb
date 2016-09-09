@@ -13,7 +13,7 @@ class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
     end
   end
 
-  alias_method :logger_original, :logger
+  alias_method :orig_logger, :logger
 
   def logger
     @logger ||= begin

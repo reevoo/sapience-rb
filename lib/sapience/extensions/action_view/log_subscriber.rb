@@ -13,7 +13,6 @@ module Sapience
         def info?
           logger.debug?
         end
-
       end
     end
   end
