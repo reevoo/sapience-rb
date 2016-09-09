@@ -2,7 +2,7 @@ require "spec_helper"
 require "logger"
 
 describe Sapience::Configuration do
-  describe '#validate_log_executor!' do
+  describe "#validate_log_executor!" do
     specify do
       expect { subject.validate_log_executor!(:invalid) }
         .to raise_error(Sapience::InvalidLogExecutor)
