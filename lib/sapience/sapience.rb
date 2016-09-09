@@ -27,6 +27,9 @@ module Sapience
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
   DEFAULT_ENV = "default".freeze
 
+  # TODO: Should we really always read from file?
+  # What if someone wants to configure sapience with a block
+  # without reading the default.yml?
   def self.config
     @@config ||= begin
       config    = ConfigLoader.load_from_file
@@ -71,6 +74,8 @@ module Sapience
     end
   end
 
+  # TODO: Maybe when configuring with a block we should create a new config?
+  # See the TODO note on .config for more information
   def self.configure(force: false)
     yield config if block_given?
     return config if configured? && force == false
