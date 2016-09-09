@@ -3,7 +3,7 @@
 class ActionDispatch::DebugExceptions # rubocop:disable ClassAndModuleChildren
   private
 
-  undef_method :log_error
+  alias_method :orig_log_error, :log_error
 
   def log_error(_request, wrapper)
     ActiveSupport::Deprecation.silence do

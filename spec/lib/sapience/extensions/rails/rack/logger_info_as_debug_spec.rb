@@ -6,7 +6,7 @@ describe Rails::Rack::Logger do
   subject { described_class.new(double) }
   let(:logger) { subject.send(:logger) }
 
-  describe '#info' do
+  describe "#info" do
     let(:message) { "test" }
     specify do
       expect(logger).to receive(:debug).with(message)
@@ -14,7 +14,7 @@ describe Rails::Rack::Logger do
     end
   end
 
-  describe '#info?' do
+  describe "#info?" do
     specify do
       expect(logger).to receive(:debug?).and_call_original
       logger.info?

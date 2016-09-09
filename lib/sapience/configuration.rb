@@ -1,6 +1,8 @@
 require "ostruct"
 
 module Sapience
+  UnkownLogLevel = Class.new(StandardError)
+
   # rubocop:disable ClassVars
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
@@ -49,25 +51,35 @@ module Sapience
     def level_to_index(level) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
       return if level.nil?
 
-      index =
-      if level.is_a?(Symbol)
+      case level
+      when Symbol
         LEVELS.index(level)
-      elsif level.is_a?(String)
-        level = level.downcase.to_sym
-        LEVELS.index(level)
-      elsif level.is_a?(Integer) && defined?(::Logger::Severity)
-        # Mapping of Rails and Ruby Logger levels to Sapience levels
-        @@map_levels ||= begin
-          levels = []
-          ::Logger::Severity.constants.each do |constant|
-            levels[::Logger::Severity.const_get(constant)] = LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error) # rubocop:disable LineLength
-          end
-          levels
-        end
-        @@map_levels[level]
+      when String
+        LEVELS.index(level.downcase.to_sym)
+      when Integer
+        map_levels[level] || fail_with_unkown_log_level!(level)
+      else
+        fail_with_unkown_log_level!(level)
       end
-      fail "Invalid level:#{level.inspect} being requested. Must be one of #{LEVELS.inspect}" unless index
-      index
+    end
+
+    def fail_with_unkown_log_level!(level)
+      fail UnkownLogLevel,
+        "Invalid level:#{level.inspect} being requested." \
+        " Must be one of #{LEVELS.inspect}"
+    end
+
+    # Mapping of Rails and Ruby Logger levels to Sapience levels
+    def map_levels
+      return [] unless defined?(::Logger::Severity)
+      @@map_levels ||=
+        ::Logger::Severity.constants.each_with_object([]) do |constant, levels|
+          levels[::Logger::Severity.const_get(constant)] = level_by_index_or_error(constant)
+        end
+    end
+
+    def level_by_index_or_error(constant)
+      LEVELS.find_index(constant.downcase.to_sym) || LEVELS.find_index(:error)
     end
 
     def default_level_index

@@ -8,6 +8,6 @@ describe Sapience::Descendants do
   end
   class DescTwo < DescBase
   end
-  subject { DescBase}
+  subject { DescBase }
   its(:descendants) { is_expected.to match_array([DescOne, DescTwo]) }
 end

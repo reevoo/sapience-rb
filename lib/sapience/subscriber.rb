@@ -105,9 +105,7 @@ module Sapience
     # rubocop:disable CyclomaticComplexity, AbcSize, PerceivedComplexity
     def extract_formatter(formatter, &block)
       case
-      when formatter.is_a?(Symbol)
-        Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
-      when formatter.is_a?(String)
+      when formatter.is_a?(Symbol) || formatter.is_a?(String)
         Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
       when formatter.is_a?(Hash) && formatter.size > 0
         fmt, options = formatter.first
@@ -123,15 +121,5 @@ module Sapience
       end
     end
     # rubocop:enable CyclomaticComplexity, AbcSize, PerceivedComplexity
-
-    SUBSCRIBER_OPTIONS = [:level, :formatter, :filter, :application, :host].freeze
-
-    # Returns [Hash] the subscriber common options from the supplied Hash
-    def extract_subscriber_options!(options)
-      subscriber_options = {}
-      SUBSCRIBER_OPTIONS.each { |key| subscriber_options[key] = options.delete(key) if options.key?(key) }
-      subscriber_options
-    end
-
   end
 end
