@@ -3,8 +3,8 @@ language: ruby
 services:
   - docker
 script:
-  - docker-compose run rspec
-  - docker-compose run test_app
+  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST rspec
+  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST test_app
 notifications:
   slack:
     secure: apFwkfBQ+3NDJgcLNCHQori9qtr6ePaN3Xx7Sy7NVWwYm9BHNxoX/FN8/hxR63JjXrf1C0hK0FLQ0TiA0BN9PgEEIecg78BvWUwMClDDiwhyYN3H0Bbg35PUFtgDIrOGpu/TYlxNmdHEDYEAxaWsl9wSds8pAJsN6m7VTjGfBwJUDcOiM4L1eRpbp7smPqOjmuQFuOJnO8YkPb+6nUfz53cJrMRUdha89Vgmvnw6cP4/Ms1TsL3vKmMSVbGGh/6WNKPjU6IbuUjwlsh6a9xWxQOk6Wnis/Z+kA+T0XbLMuTLLmzRDuql1tjJeMPi+wukmK1a7GjpPkpkzAgwLQ/CkjTBfIRbMyaBYSuAciuOY8PDtCcT4WLwEvdZbkFmhAdSr1RYxIBpONVfZ/5DT3bpk71+O74OIBqxG6NmkiZ0B6u9/KxbnIINLVAcVaqsN8sdSqWlWKzPm45BfGPXGjmGGgIVFU31rs+W5Zs7IYMNUjZxabYKIv9TsBONbogfbcoGZA+rWWUnQdjypNWJS9wyQDvJ4btxqy8YhDfaV6gF30Un5JcAggMutzKJiYi+qAeh0uN3/9XoXV2N6XBnh58h8ny1NY+0vklWhtFGR1wfFAqkDskvCIZabSeJ5bFM6FtNbNKq9tYciS+eAO1vEYQVDFt9eY2uZF2mFDKRnEegHMU=
