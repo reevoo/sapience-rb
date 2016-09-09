@@ -1,5 +1,7 @@
 require "spec_helper"
 require "active_model_serializers"
+require "active_model_serializers/logging"
+require "sapience/extensions/active_model_serializers/logging"
 
 describe ActiveModelSerializers::Logging do
   class LoggingTest
@@ -9,16 +11,12 @@ describe ActiveModelSerializers::Logging do
 
   describe "#tag_logger" do
     context "when given a block" do
-      specify do
-        expect { subject.send(:tag_logger, ["test"]) }.to raise_error(LocalJumpError)
-      end
     end
 
     context "when given no block" do
-      # specify do
-      #   proc = ->{ puts "inside" }
-      #   expect(subject.send(:tag_logger, ['test']), &proc)).not_to raise_error
-      # end
+      specify do
+        expect { subject.send(:tag_logger, ["test"]) }.to raise_error(LocalJumpError)
+      end
     end
   end
 end

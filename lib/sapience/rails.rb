@@ -1,11 +1,8 @@
 require "sapience"
-require "sapience/extensions/action_cable/tagged_logger_proxy"
 require "sapience/extensions/action_controller/live"
 require "sapience/extensions/action_controller/log_subscriber"
 require "sapience/extensions/action_dispatch/debug_exceptions"
 require "sapience/extensions/action_view/streaming_template_renderer"
-require "sapience/extensions/active_job/logging"
-require "sapience/extensions/active_model_serializers/logging"
 require "sapience/extensions/active_record/log_subscriber"
 require "sapience/extensions/rails/rack/logger"
 require "sapience/extensions/rails/rack/logger_info_as_debug"
@@ -57,6 +54,9 @@ module Sapience
 
     # Before any initializers run, but after the gems have been loaded
     config.after_initialize do
+      require "sapience/extensions/action_cable/tagged_logger_proxy" if defined?(ActionCable)
+      require "sapience/extensions/active_model_serializers/logging" if defined?(ActiveModelSerializers)
+      require "sapience/extensions/active_job/logging" if defined?(ActiveJob)
       # Replace the Bugsnag logger
       Bugsnag.configure { |config| config.logger = Sapience[Bugsnag] } if defined?(Bugsnag)
       Sapience::Extensions::ActionController::LogSubscriber.attach_to :action_controller

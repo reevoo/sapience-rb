@@ -1,5 +1,5 @@
 require "spec_helper"
-require "action_cable"
+require "action_cable/engine"
 require "sapience/extensions/action_cable/tagged_logger_proxy"
 
 describe ActionCable::Connection::TaggedLoggerProxy do
