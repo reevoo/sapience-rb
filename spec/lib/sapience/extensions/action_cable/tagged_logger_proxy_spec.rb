@@ -1,6 +1,7 @@
 require "spec_helper"
 require "action_cable"
 require "sapience/extensions/action_cable/tagged_logger_proxy"
+
 describe ActionCable::Connection::TaggedLoggerProxy do
   subject { described_class.new(logger, tags: proxy_tags) }
 

@@ -1,4 +1,11 @@
-## v0.2.3 - Unreleased
+## v0.2.5
+
+- Allow the log_executor to be configured to either `:single_thread_executor` or `:immediate_executor`
+- Test coverage improvement
+- Working rails integration
+- Minor adjustments to the log_formatter to make it more compatible with log_stasher.
+
+## v0.2.3
 
 - Adds debugging and coverage for sneakers integration
 
