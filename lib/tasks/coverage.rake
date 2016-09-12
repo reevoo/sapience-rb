@@ -17,13 +17,11 @@ namespace :coverage do
   task :merge do
     hide_coverage_config
     require "json"
-    require "pry"
     require "simplecov/version"
     require "simplecov/result"
     require "simplecov-html"
     require "simplecov-json"
 
-    require "pry-nav"
     coverage_file_pattern = "{rails,sapience}/.resultset.json"
     json_files = Dir[File.join(coverage_dir, coverage_file_pattern)]
 
