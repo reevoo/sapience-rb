@@ -3,15 +3,11 @@ COVERAGE_BKP_FILE = ".simplecov.bkp".freeze
 COVERAGE_DIR = "./coverage".freeze
 
 def hide_coverage_config
-  FileUtils.mv COVERAGE_FILE, COVERAGE_BKP_FILE
-rescue Errno::ENOENT => ex
-  p ex.message, ex.backtrace
+  FileUtils.mv COVERAGE_FILE, COVERAGE_BKP_FILE if File.exist?(COVERAGE_FILE)
 end
 
 def unhide_coverage_config
-  FileUtils.mv COVERAGE_BKP_FILE, COVERAGE_FILE
-rescue Errno::ENOENT => ex
-  p ex.message, ex.backtrace
+  FileUtils.mv COVERAGE_BKP_FILE, COVERAGE_FILE if File.exist?(COVERAGE_BKP_FILE)
 end
 
 namespace :coverage do
@@ -37,7 +33,7 @@ namespace :coverage do
 
     merged_result = SimpleCov::Result.new(merged_hash)
     result_file = File.join(COVERAGE_DIR, ".resultset.json")
-    FileUtils.rm result_file
+    FileUtils.rm result_file if File.exist?(result_file)
     File.open(result_file, "w") do |file|
       file.puts merged_result.to_hash.to_json
     end
