@@ -41,6 +41,8 @@ group :test do
   gem "bunny-mock"
   gem "rspec-wait"
   gem "rails-controller-testing"
+  gem "simplecov"
+  gem "simplecov-json"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
