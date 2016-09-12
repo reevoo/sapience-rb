@@ -10,11 +10,11 @@ SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter,
   SimpleCov::Formatter::JSONFormatter,
 ]
-SimpleCov.start :rails do
+SimpleCov.start do
   profiles.delete(:root_filter)
   filters.clear
   add_filter do |src|
-    if src.filename =~ /sapience\-rb/
+    if src.filename =~ %r{sapience\-rb|\/usr\/src\/app/}
       src.filename.include?("test_app")
     else
       true
