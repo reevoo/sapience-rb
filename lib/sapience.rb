@@ -17,7 +17,6 @@ require "sapience/formatters/json"
 
 require "sapience/config_loader"
 require "sapience/configuration"
-require "sapience/configuration/grape"
 require "sapience/base"
 require "sapience/log"
 require "sapience/logger"

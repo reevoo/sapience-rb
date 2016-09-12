@@ -4,8 +4,9 @@ language: ruby
 services:
   - docker
 script:
-  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST rspec
-  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST test_app
+  - docker-compose run rspec
+  - docker-compose run rails
+  - docker-compose run grape
   - bundle exec rake coverage:merge coverage:send
 notifications:
   slack:

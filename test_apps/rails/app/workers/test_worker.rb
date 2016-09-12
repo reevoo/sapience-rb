@@ -1,4 +1,4 @@
-require_relative "../../../spec/support/file_helper"
+require_relative "../../../../spec/support/file_helper"
 
 class TestWorker
   QUEUE_NAME  = :sneakers_queue

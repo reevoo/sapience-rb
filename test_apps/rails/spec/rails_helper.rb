@@ -10,7 +10,7 @@ require "sapience/rails"
 require "rspec/rails"
 require "rspec/its"
 require "rspec/wait"
-require_relative "../../spec/support/file_helper"
+require_relative "../../../spec/support/file_helper"
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 

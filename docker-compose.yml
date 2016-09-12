@@ -10,7 +10,9 @@ services:
       RABBITMQ_DEFAULT_USER: sapience
       RABBITMQ_DEFAULT_PASS: tests
 
-  rails:
+
+
+  base:
     image: ruby:2.3
     cpu_shares: 4
     # Specify the directory from where all commands sent to the container will be
@@ -31,9 +33,10 @@ services:
       - gems:/usr/local/bundle
 
 
+
   rspec:
     extends:
-      service: rails
+      service: base
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rake
     depends_on:
@@ -42,14 +45,27 @@ services:
       CODECLIMATE_REPO_TOKEN: 204dc055302da6aed94379e249aa0645636d1d1794920c62db05c5fa968215de
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-  test_app:
+
+
+  rails:
     extends:
-      service: rails
-    working_dir: /usr/src/app/test_app
+      service: base
+    working_dir: /usr/src/app/test_apps/rails
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
     depends_on:
       - rabbitmq
     environment:
       AMQP: amqp://sapience:tests@rabbitmq:5672
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+
+  grape:
+    extends:
+      service: base
+    working_dir: /usr/src/app/test_apps/grape
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rspec
+    environment:
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
