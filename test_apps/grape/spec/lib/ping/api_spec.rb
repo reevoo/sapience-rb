@@ -34,8 +34,8 @@ describe Ping::API do
                         db:    kind_of(Float),
                       ),
       )
-      get "/api/ping"
 
+      get "/api/ping"
     end
   end
 end

@@ -34,7 +34,7 @@ module Sapience
               request_path: request.path,
               format: "json",
               status: response.try(:status),
-              class_name: env['api.endpoint'].options[:for].to_s,
+              class_name: env["api.endpoint"].options[:for].to_s,
               action: "index",
               host: request.host,
               ip: (request.env["HTTP_X_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]),
