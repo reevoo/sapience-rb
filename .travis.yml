@@ -3,13 +3,16 @@ dist: trusty
 language: ruby
 services:
   - docker
+
 before_script:
   - mkdir -p coverage/rails coverage/grape coverage/sapience
+
 script:
   - docker-compose run rspec
   - docker-compose run rails
   - docker-compose run grape
-after_script:
+
+after_success:
   - chown -R $(whoami) coverage
   - bundle exec rake coverage:merge coverage:send
 
