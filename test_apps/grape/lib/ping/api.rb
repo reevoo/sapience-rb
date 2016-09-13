@@ -5,7 +5,7 @@ require "sapience/grape"
 module Ping
   class API < ::Grape::API
     format :json
-    use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
+    use Sapience::Extensions::Grape::Middleware::Logging, logger: Grape::API.logger
     prefix :api
 
     desc "Returns pong."

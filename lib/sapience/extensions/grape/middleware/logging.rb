@@ -26,17 +26,7 @@ module Sapience
             nil
           end
 
-          def call!(env)
-            super
-          end
-
           protected
-
-          def response
-            super
-          rescue
-            nil
-          end
 
           def parameters # rubocop:disable AbcSize
             {

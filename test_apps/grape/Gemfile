@@ -19,10 +19,12 @@ group :development, :test do
   # gem "pry-nav"
   gem "pry-byebug", platform: :mri
   gem "rspec"
+  gem "racksh"
 end
 
 group :test do
   gem "rspec-its"
   gem "simplecov"
   gem "simplecov-json"
+  gem "fuubar"
 end

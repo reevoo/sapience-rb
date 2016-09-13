@@ -8,9 +8,34 @@ describe Ping::API do
   end
 
   context "GET /api/ping" do
+    let(:logger) { Grape::API.logger }
+
     specify do
       get "/api/ping"
       expect(last_response.body).to match(/PONG/)
+    end
+
+    it "logs something" do
+      expect(logger).to receive(:info).with(
+        method:       "GET",
+        request_path: "/api/ping",
+        format:       "json",
+        status:       200,
+        class_name:   "Ping::API",
+        action:       "index",
+        host:         "example.org",
+        ip:           "127.0.0.1",
+        ua:           nil,
+        tags:         [],
+        params:       {},
+        runtimes:     a_hash_including(
+                        total: kind_of(Float),
+                        view:  kind_of(Float),
+                        db:    kind_of(Float),
+                      ),
+      )
+      get "/api/ping"
+
     end
   end
 end
