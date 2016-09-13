@@ -20,6 +20,7 @@ group :development, :test do
   gem "pry-byebug", platform: :mri
   gem "rspec"
   gem "racksh"
+  gem "appraisal"
 end
 
 group :test do

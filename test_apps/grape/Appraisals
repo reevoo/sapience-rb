@@ -1,0 +1,9 @@
+appraise "grape-0.17.0" do
+  gem "grape", "0.17.0"
+end
+
+appraise "grape-0.16.2" do
+  gem "grape", "0.16.2"
+  gem "activesupport", "4.2.6"
+  gem "rack", "1.6.4"
+end
