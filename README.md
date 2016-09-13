@@ -2,7 +2,7 @@
 
 **Hasslefree autoconfiguration for logging, metrics and exception collection.**
 
-[![Build Status](https://travis-ci.org/reevoo/sapience-rb.svg?branch=TECH-4%2FConfiguration-DSL)](https://travis-ci.org/reevoo/sapience-rb)[![Code Climate](https://codeclimate.com/github/reevoo/sapience-rb/badges/gpa.svg)](https://codeclimate.com/github/reevoo/sapience-rb)[![Test Coverage](https://codeclimate.com/github/reevoo/sapience-rb/badges/coverage.svg)](https://codeclimate.com/github/reevoo/sapience-rb/coverage)[![Issue Count](https://codeclimate.com/github/reevoo/sapience-rb/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/sapience-rb)
+[![Build Status](https://travis-ci.org/reevoo/sapience-rb.svg?branch=master)](https://travis-ci.org/reevoo/sapience-rb)[![Code Climate](https://codeclimate.com/github/reevoo/sapience-rb/badges/gpa.svg)](https://codeclimate.com/github/reevoo/sapience-rb)[![Test Coverage](https://codeclimate.com/github/reevoo/sapience-rb/badges/coverage.svg)](https://codeclimate.com/github/reevoo/sapience-rb/coverage)[![Issue Count](https://codeclimate.com/github/reevoo/sapience-rb/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/sapience-rb)
 
 ## Background
 
