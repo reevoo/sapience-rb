@@ -370,7 +370,7 @@ module Sapience
   end
 
   def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
-    class_name = "#{namespace}::#{symbol.camelize}"
+    class_name = "#{namespace}::#{symbol.to_sym.camelize}"
     constantize(class_name)
   end
 
