@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+current_dir="$(pwd)"
+function finish {
+  cd $current_dir
+}
+trap finish EXIT
+
+bundle exec rake
+[ $? -ne 0 ] && exit $?
+
+pushd test_apps/grape
+bundle exec rake
+[ $? -ne 0 ] && exit $?
+popd
+
+pushd test_apps/rails
+bundle exec rake
+[ $? -ne 0 ] && exit $?
+popd
+
+bundle exec rake coverage:merge
+[ $? -ne 0 ] && exit $?
