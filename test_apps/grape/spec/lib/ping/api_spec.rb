@@ -1,4 +1,5 @@
 require "spec_helper"
+require "rack/test"
 
 describe Ping::API do
   include Rack::Test::Methods
@@ -36,6 +37,31 @@ describe Ping::API do
       )
 
       get "/api/ping"
+    end
+
+    context "no routes defined" do
+      it "logs something" do
+        expect(logger).to receive(:info).with(
+          method:       "GET",
+          request_path: "/api/404",
+          format:       "json",
+          status:       404,
+          class_name:   "Ping::API",
+          action:       "index",
+          host:         "example.org",
+          ip:           "127.0.0.1",
+          ua:           nil,
+          tags:         [],
+          params:       {},
+          runtimes:     a_hash_including(
+                          total: kind_of(Float),
+                          view:  kind_of(Float),
+                          db:    kind_of(Float),
+                        ),
+        )
+
+        get "/api/404"
+      end
     end
   end
 end
