@@ -1,3 +1,3 @@
 module Ping
-  require "ping/api"
+  require_relative "ping/api"
 end
