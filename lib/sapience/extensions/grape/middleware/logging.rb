@@ -33,7 +33,7 @@ module Sapience
               method: request.request_method,
               request_path: request.path,
               format: "json",
-              status: response.try(:status),
+              status: response.try(:status) || 404,
               class_name: env["api.endpoint"].options[:for].to_s,
               action: "index",
               host: request.host,
