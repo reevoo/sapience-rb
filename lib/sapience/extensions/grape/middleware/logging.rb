@@ -28,6 +28,13 @@ module Sapience
 
           protected
 
+          # TODO: Is NoMethodError :[] equal to `404`?
+          def response
+            super
+          rescue
+            nil
+          end
+
           def parameters # rubocop:disable AbcSize
             {
               method: request.request_method,
