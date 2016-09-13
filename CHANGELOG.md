@@ -1,3 +1,10 @@
+## v0.2.9
+
+- Added test apps for Rails and Grape frameworks
+- Testing different Grape versions (0.16.2, 0.17.0)
+- Improved request logging for Grape
+- Merge and send coverage from main gem and Rails/Grape test apps
+
 ## v0.2.5
 
 - Allow the log_executor to be configured to either `:single_thread_executor` or `:immediate_executor`

@@ -196,6 +196,10 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 `formatter: :raw` - logs are saved as a single line ruby hash. Useful for production like environments and is used internally for the Sentry appender.
 
+## Running the tests
+
+`bin/rake`
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/reevoo/sapience. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
