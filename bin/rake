@@ -6,15 +6,19 @@ function finish {
 }
 trap finish EXIT
 
+bundle install
 bundle exec rake
 [ $? -ne 0 ] && exit $?
 
 pushd test_apps/grape
-bundle exec rake
+bundle install
+bundle appraisal install
+bundle exec appraisal rake
 [ $? -ne 0 ] && exit $?
 popd
 
 pushd test_apps/rails
+bundle install
 bundle exec rake
 [ $? -ne 0 ] && exit $?
 popd
