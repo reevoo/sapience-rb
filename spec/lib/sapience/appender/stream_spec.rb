@@ -5,8 +5,8 @@ require "stringio"
 describe Sapience::Appender::Stream do
   force_config(default_level: :trace, backtrace_level: nil)
   let(:io) { StringIO.new }
-  let(:appender) { Sapience.add_appender(:stream, io: io) }
-  before do |_example|
+  let(:appender) { described_class.new(io: io) }
+  before do
     @time              = Time.new
     @hash              = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
     @hash_str          = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
@@ -22,6 +22,15 @@ describe Sapience::Appender::Stream do
 
   its(:name) do
     is_expected.to eq(described_class.name)
+  end
+
+  describe ".new" do
+    context "when mandatory argument :filename or :io is missing" do
+      specify do
+        expect { described_class.new }
+          .to raise_error(ArgumentError, "missing mandatory argument :file_name or :io")
+      end
+    end
   end
 
   describe "format logs into text form" do

@@ -61,7 +61,7 @@ module Sapience
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, &block)
         unless options[:io] || options[:file_name]
-          fail "Sapience::Appender::Stream missing mandatory parameter :file_name or :io"
+          fail ArgumentError, "missing mandatory argument :file_name or :io"
         end
 
         opts = options.dup
