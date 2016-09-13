@@ -40,16 +40,24 @@ module Sapience
 
           def parameters # rubocop:disable AbcSize
             {
-              status: (response.nil? ? "fail" : response.status),
-              db_runtime: db_runtime,
-              view_runtime: view_runtime,
-              total_runtime: total_runtime,
               method: request.request_method,
-              path: request.path,
-              params: request.params,
+              request_path: request.path,
+              format: "json",
+              status: response.try(:status),
+              class_name: env['api.endpoint'].options[:for].to_s,
+              action: "index",
               host: request.host,
               ip: (request.env["HTTP_X_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]),
               ua: request.env["HTTP_USER_AGENT"],
+              # route: "test_controller#index",
+              # message: "Completed #index",
+              tags: Sapience.tags,
+              params: request.params,
+              runtimes: {
+                total: total_runtime,
+                view: view_runtime,
+                db: db_runtime,
+              },
             }
           end
 
