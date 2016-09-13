@@ -1,3 +1,7 @@
+## v0.2.10
+
+- Rename `bin/rake` to `bin/tests` to avoid conflicts with rake
+
 ## v0.2.9
 
 - Added test apps for Rails and Grape frameworks

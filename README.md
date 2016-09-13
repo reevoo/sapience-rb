@@ -198,7 +198,7 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 ## Running the tests
 
-`bin/rake`
+`bin/tests`
 
 ## Contributing
 
