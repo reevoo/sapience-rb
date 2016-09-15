@@ -35,6 +35,9 @@ module Sapience
       # Replace the Sidekiq logger
       Sidekiq::Logging.logger     = Sapience[Sidekiq] if defined?(Sidekiq)
 
+      # Replace the Sequel logger
+      Sequel::Database.logger     = Sapience[Sequel] if defined?(Sequel::Database)
+
       # Replace the Sidetiq logger
       Sidetiq.logger              = Sapience[Sidetiq] if defined?(Sidetiq)
 
