@@ -15,6 +15,7 @@ module Sapience
         def process_action(event) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
           return unless logger.info?
           data      = request(event.payload)
+          data.merge! request_id(event)
           data.merge! runtimes(event)
           data.merge! exception(event.payload)
           info(data)
@@ -44,6 +45,10 @@ module Sapience
           else
             payload[:format]
           end
+        end
+
+        def request_id(event)
+          { request_id: event.transaction_id }
         end
 
         def runtimes(event)

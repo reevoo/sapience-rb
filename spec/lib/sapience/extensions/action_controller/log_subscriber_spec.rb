@@ -25,6 +25,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
     }
   end
   let(:exception) { nil }
+  let(:request_id) { SecureRandom.uuid }
 
   let(:success_payload) do
     {
@@ -47,7 +48,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
   let(:logger) { Sapience[described_class]  }
   let(:duration) { 1_000 }
   let(:event) do
-    instance_spy(ActiveSupport::Notifications::Event, payload: payload, duration: duration)
+    instance_spy(ActiveSupport::Notifications::Event, transaction_id: request_id, payload: payload, duration: duration)
   end
   let(:success_hash) do
     {
@@ -61,6 +62,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       route: "test_controller#index",
       message: "Completed #index",
       tags: sapience_tags,
+      request_id: request_id,
       params: { "user" => user_params },
       runtimes: {
         total: 1_000.0,
