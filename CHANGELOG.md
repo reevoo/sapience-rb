@@ -1,3 +1,7 @@
+## v0.2.12
+
+- Adds support for Rails apps with disabled ActiveRecord 
+
 ## v0.2.11
 
 - Adds `request_id` to the action_controller/log_subscriber
