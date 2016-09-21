@@ -57,6 +57,9 @@ module Sapience
 
     # Before any initializers run, but after the gems have been loaded
     config.after_initialize do
+      # in the rare case a gem disables logging but still requires a logger (teaspoon gem)
+      ::Rails.logger ||= Sapience[::Rails]
+
       require "sapience/extensions/action_cable/tagged_logger_proxy" if defined?(ActionCable)
       require "sapience/extensions/active_model_serializers/logging" if defined?(ActiveModelSerializers)
       require "sapience/extensions/active_job/logging" if defined?(ActiveJob)

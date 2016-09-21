@@ -175,7 +175,7 @@ module Sapience
     #     logger.debug('Hello World', result: 'blah')
     #   end
     def with_payload(payload)
-      current_payload                          = self.payload
+      current_payload                   = self.payload
       Thread.current[:sapience_payload] = current_payload ? current_payload.merge(payload) : payload
       yield
     ensure
@@ -222,7 +222,10 @@ module Sapience
       fail ArgumentError, ":filter must be a Regexp or Proc" unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
 
       @filter = filter.is_a?(Regexp) ? filter.freeze : filter
-      @name   = klass.is_a?(String) ? klass : klass.name
+      @name   = klass if klass.is_a?(String)
+      @name ||= klass.name if klass.respond_to?(:name)
+      @name ||= klass.class.name
+
       if level.nil?
         # Allow the global default level to determine this loggers log level
         @level_index = nil

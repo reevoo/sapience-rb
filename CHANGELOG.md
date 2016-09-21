@@ -1,3 +1,7 @@
+## v0.2.13
+
+- Set Rails.logger even some gems disables logging on initialisation. 
+
 ## v0.2.12
 
 - Adds support for Rails apps with disabled ActiveRecord 
