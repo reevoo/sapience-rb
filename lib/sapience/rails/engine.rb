@@ -15,8 +15,6 @@ module Sapience
       ::Rails::Application::Bootstrap.initializers.delete_if { |i| i.name == :initialize_logger }
 
       initializer :initialize_logger, group: :all, before: :bootstrap_hook do
-        require 'pry'; binding.pry
-
         Sapience.configure
 
         [:active_record, :action_controller, :action_mailer, :action_view].each do |name|

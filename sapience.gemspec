@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(/^(test|spec|features)\//) }
   spec.bindir        = "bin"
-  spec.executables   = [] #spec.files.grep(/^bin\//) { |f| File.basename(f) }
+  spec.executables   = [] # spec.files.grep(/^bin\//) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_dependency "concurrent-ruby", "~> 1.0"
