@@ -10,8 +10,17 @@ describe Sapience do
   describe ".add_appender" do
     subject(:add_appender) { described_class.add_appender(appender, options) }
 
-    context "unknown appender" do
+    context "unknown class" do
       let(:appender) { :statsd }
+      let(:options) { Hash.new }
+
+      specify do
+        expect { add_appender }.to raise_error(Sapience::UnknownClass, /Could not find/)
+      end
+    end
+
+    context "unknown appender" do
+      let(:appender) { :logger }
       let(:options) { Hash.new }
 
       specify do

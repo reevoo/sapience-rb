@@ -6,7 +6,7 @@ gem "grape", "0.16.2"
 gem "puma", "~> 3.0"
 gem "sapience", :path => "../../.."
 gem "sentry-raven"
-gem "statsd-ruby"
+gem "dogstatsd-ruby"
 gem "activesupport", "4.2.6"
 gem "rack", "1.6.4"
 

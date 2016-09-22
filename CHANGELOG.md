@@ -1,6 +1,6 @@
-## v0.2.16
+## v0.2.17
 
-- Specify dogstatsd-ruby gem version as development dependency
+- Update datadog appender to use Datadog::Statsd from dogstatsd-ruby gem
 
 ## v0.2.15
 

@@ -39,7 +39,7 @@ module Sapience
 
       def provider
         @_provider ||= begin
-          statsd           = ::Statsd.new(@uri.host, @uri.port, tags: @tags)
+          statsd           = ::Datadog::Statsd.new(@uri.host, @uri.port, tags: @tags)
           path             = @uri.path.chomp("/")
           statsd.namespace = path.sub("/", "") if path != ""
           statsd

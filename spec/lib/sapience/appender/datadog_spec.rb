@@ -11,11 +11,11 @@ describe Sapience::Appender::Datadog do
     }
   end
 
-  let(:statsd) { instance_spy(::Statsd) }
+  let(:statsd) { instance_spy(::Datadog::Statsd) }
   let(:metric) { "my/own/metric" }
 
   before do
-    allow(::Statsd).to receive(:new).and_return(statsd)
+    allow(::Datadog::Statsd).to receive(:new).and_return(statsd)
     allow(statsd).to receive(:batch).and_yield
   end
 
@@ -28,14 +28,14 @@ describe Sapience::Appender::Datadog do
       let(:url) { nil }
 
       it "sets the default url" do
-        expect(::Statsd).to receive(:new).with("localhost", 8125, tags: nil)
+        expect(::Datadog::Statsd).to receive(:new).with("localhost", 8125, tags: nil)
         subject.provider
       end
     end
 
     context "with url provided" do
       it "sets the url" do
-        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: nil)
+        expect(::Datadog::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: nil)
         subject.provider
       end
     end
@@ -43,7 +43,7 @@ describe Sapience::Appender::Datadog do
     context "with tags provided" do
       let(:tags) { "tag1:true" }
       it "sets the url" do
-        expect(::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: "tag1:true")
+        expect(::Datadog::Statsd).to receive(:new).with("0.0.0.0", 2222, tags: "tag1:true")
         subject.provider
       end
     end

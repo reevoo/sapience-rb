@@ -16,7 +16,7 @@ gem "puma", "~> 3.0"
 # gem 'capistrano-rails', group: :development
 gem "sapience", path: "../..", require: "sapience/rails"
 gem "sentry-raven"
-gem "statsd-ruby"
+gem "dogstatsd-ruby"
 gem "active_model_serializers"
 gem "sneakers"
 gem "slim-rails"
