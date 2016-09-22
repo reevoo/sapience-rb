@@ -1,3 +1,7 @@
+## v0.2.16
+
+- Specify dogstatsd-ruby gem version as development dependency
+
 ## v0.2.15
 
 - Fix issue with not resetting previously attached appenders when calling `Sapience.configure`.

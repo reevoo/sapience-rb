@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "pry-nav"
   spec.add_development_dependency "sentry-raven"
-  spec.add_development_dependency "dogstatsd-ruby"
+  spec.add_development_dependency "dogstatsd-ruby", "~> 2.0"
   spec.add_development_dependency "rails", "~> 5.0.0.1"
   spec.add_development_dependency "grape"
   spec.add_development_dependency "active_model_serializers", "~> 0.10.0"
