@@ -1,3 +1,7 @@
+## v0.2.15
+
+- Fix issue with not resetting previously attached appenders when calling `Sapience.configure`.
+
 ## v0.2.14
 
 - Reduce noise for assets:precompile by changing default Railtie log level to :warn instead of :debug

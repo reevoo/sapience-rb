@@ -165,32 +165,50 @@ describe Sapience do
       before do
         allow(config).to receive(:appenders).and_return(appenders)
         allow(described_class).to receive(:config).and_return(config)
-
-        expect(described_class)
-          .to receive(:add_appender)
-          .with(:stream, stream_options)
-          .and_call_original
-
-        expect(described_class)
-          .to receive(:add_appender)
-          .with(:sentry, sentry_options)
-          .and_call_original
       end
 
-      context "when provided a block" do
-        it "adds all configured appenders" do
-          described_class.configure(force: false) do |c|
+      context "when some appenders exist before call" do
+        before do
+          Sapience.add_appender(:datadog)
+        end
+
+        it "removes previously added appenders" do
+          expect(described_class.appenders.size).to eq(1)
+          described_class.configure do |c|
             expect(c).to eq(config)
           end
           expect(described_class.appenders.size).to eq(2)
         end
       end
 
-      context "when no block given" do
-        it "adds all configured appenders" do
-          described_class.configure(force: false)
-          expect(described_class.configure).to eq(config)
-          expect(described_class.appenders.size).to eq(2)
+      context "when no appenders exist before call" do
+        before do
+          expect(described_class)
+            .to receive(:add_appender)
+            .with(:stream, stream_options)
+            .and_call_original
+
+          expect(described_class)
+            .to receive(:add_appender)
+            .with(:sentry, sentry_options)
+            .and_call_original
+        end
+
+        context "when provided a block" do
+          it "adds all configured appenders" do
+            described_class.configure(force: false) do |c|
+              expect(c).to eq(config)
+            end
+            expect(described_class.appenders.size).to eq(2)
+          end
+        end
+
+        context "when no block given" do
+          it "adds all configured appenders" do
+            described_class.configure(force: false)
+            expect(described_class.configure).to eq(config)
+            expect(described_class.appenders.size).to eq(2)
+          end
         end
       end
     end
@@ -208,7 +226,7 @@ describe Sapience do
               { stream: { io: STDOUT, level: :fatal } },
             ]
           end
-        end.to change { Sapience.appenders.size }.by(3)
+        end.to change { Sapience.appenders.size }.by(2)
       end
     end
 

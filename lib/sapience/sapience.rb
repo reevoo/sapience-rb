@@ -79,6 +79,7 @@ module Sapience
   def self.configure(force: false)
     yield config if block_given?
     return config if configured? && force == false
+    reset_appenders!
     add_appenders(*config.appenders)
     @@configured = true
 
