@@ -21,7 +21,7 @@ require "English"
 # rubocop:disable ClassVars
 module Sapience
   UnknownClass = Class.new(NameError)
-  @@configured = nil
+  @@configured = false
 
   # Logging levels in order of most detailed to most severe
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
@@ -52,7 +52,7 @@ module Sapience
     @@config = nil
     @@logger = nil
     @@metrix = nil
-    @@configured = nil
+    @@configured = false
     clear_tags!
     reset_appenders!
   end
