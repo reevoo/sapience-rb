@@ -1,3 +1,7 @@
+## v0.2.14
+
+- Reduce noise for assets:precompile by changing default Railtie log level to :warn instead of :debug
+
 ## v0.2.13
 
 - Set Rails.logger even some gems disables logging on initialisation. 
