@@ -22,9 +22,7 @@ Gem::Specification.new do |spec|
     fail "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(/^(test|spec|features)\//) }
-  spec.bindir        = "bin"
-  spec.executables   = [] # spec.files.grep(/^bin\//) { |f| File.basename(f) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(/^(test|spec|features|bin)\//) }
   spec.require_paths = ["lib"]
 
   spec.add_dependency "concurrent-ruby", "~> 1.0"
