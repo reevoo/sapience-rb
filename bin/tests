@@ -7,18 +7,21 @@ function finish {
 trap finish EXIT
 
 bundle install
-bundle exec rake
+bundle exec rake reevoocop spec
 [ $? -ne 0 ] && exit $?
 
 pushd test_apps/grape
 bundle install
-bundle appraisal install
+[ $? -ne 0 ] && exit $?
+bundle exec appraisal install
+[ $? -ne 0 ] && exit $?
 bundle exec appraisal rake
 [ $? -ne 0 ] && exit $?
 popd
 
 pushd test_apps/rails
 bundle install
+[ $? -ne 0 ] && exit $?
 bundle exec rake
 [ $? -ne 0 ] && exit $?
 popd
