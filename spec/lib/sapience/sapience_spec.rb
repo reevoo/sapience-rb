@@ -252,9 +252,9 @@ describe Sapience do
     end
   end
 
-  describe ".metrix" do
+  describe ".metrics" do
     specify do
-      expect(described_class.metrix).to be_a(Sapience::Appender::Datadog)
+      expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
     end
   end
 

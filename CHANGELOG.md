@@ -1,3 +1,7 @@
+## v1.0.0
+
+- Rename Sapience.metrix to Sapience.metrics
+
 ## v0.2.17
 
 - Update datadog appender to use Datadog::Statsd from dogstatsd-ruby gem

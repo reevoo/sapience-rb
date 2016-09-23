@@ -10,6 +10,6 @@ Sneakers.configure(
   exchange:           "sapience", # AMQP exchange
   durable:            false, # Is queue durable?
   ack:                true, # Must we acknowledge?
-  metrics:            Sapience.metrix,
+  metrics:            Sapience.metrics,
 )
 Sapience.logger.level = Logger::DEBUG

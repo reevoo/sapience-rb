@@ -51,7 +51,7 @@ module Sapience
   def self.reset!
     @@config = nil
     @@logger = nil
-    @@metrix = nil
+    @@metrics = nil
     @@configured = false
     clear_tags!
     reset_appenders!
@@ -181,7 +181,7 @@ module Sapience
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
     Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
-    Sapience.metrix = appender if appender.is_a?(Sapience::Appender::Datadog)
+    Sapience.metrics = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
   end
 
@@ -232,12 +232,12 @@ module Sapience
     @@appenders.clone
   end
 
-  def self.metrix=(metrix)
-    @@metrix = metrix
+  def self.metrics=(metrics)
+    @@metrics = metrics
   end
 
-  def self.metrix
-    @@metrix ||= Sapience.add_appender(:datadog)
+  def self.metrics
+    @@metrics ||= Sapience.add_appender(:datadog)
   end
 
   def self.logger=(logger)
