@@ -102,60 +102,125 @@ describe Sapience do
   describe ".environment" do
     subject { described_class }
 
-    context "when RAILS_ENV is set" do
-      let(:env) { "integration" }
+    context "when SAPIENCE_ENV is set" do
+      let(:env) { "sapience" }
       before do
-        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_return(env)
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_ENV).and_return(env)
       end
 
       its(:environment) do
-        is_expected.to eq(env)
+        is_expected.to eq("sapience")
+      end
+    end
+
+    context "when RAILS_ENV is set" do
+      let(:env) { "integration" }
+      before do
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RAILS_ENV).and_return(env)
+      end
+
+      its(:environment) do
+        is_expected.to eq("integration")
       end
     end
 
     context "when RACK_ENV is set" do
       let(:env) { "ci" }
       before do
-        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
-        allow(ENV).to receive(:fetch).with("RACK_ENV").and_return(env)
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RAILS_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RACK_ENV).and_return(env)
       end
 
       its(:environment) do
-        is_expected.to eq(env)
+        is_expected.to eq("ci")
       end
     end
 
     context "when Rails respond to .env" do
       let(:env) { "fudge" }
       before do
-        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
-        allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RAILS_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RACK_ENV).and_yield
         allow(Rails).to receive(:env).and_return(env)
       end
 
       its(:environment) do
-        is_expected.to eq(env)
+        is_expected.to eq("fudge")
       end
     end
 
     context "when no other environment is found" do
       let(:env) { "default" }
       before do
-        allow(ENV).to receive(:fetch).with("RAILS_ENV").and_yield
-        allow(ENV).to receive(:fetch).with("RACK_ENV").and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RAILS_ENV).and_yield
+        allow(ENV).to receive(:fetch).with(Sapience::RACK_ENV).and_yield
         stub_const("Rails", double(:Rails, sub: "whatever"))
       end
 
       its(:environment) do
-        is_expected.to eq(env)
+        is_expected.to eq("default")
+      end
+    end
+  end
+
+  describe ".app_name" do
+    subject { described_class }
+
+    context "when SAPIENCE_APP_NAME is set" do
+      let(:app) { "my_app" }
+      before do
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_return(app)
+      end
+
+      its(:app_name) do
+        is_expected.to eq("my_app")
+      end
+    end
+
+    context "when SAPIENCE_APP_NAME has prohibited characters" do
+      let(:app) { "RSpec R0x'n Ro!!5" }
+      before do
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_return(app)
+      end
+
+      its(:app_name) do
+        is_expected.to eq("rspec_r0x_n_ro_5")
+      end
+    end
+
+    context "when delegating to config.app_name" do
+      let(:config) { instance_spy(Sapience::Configuration, app_name: app) }
+      before do
+        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_yield
+        allow(Sapience).to receive(:config).and_return(config)
+      end
+
+      context "when config.app_name is set" do
+        let(:app) { "test_app" }
+
+        its(:app_name) do
+          is_expected.to eq("test_app")
+        end
+      end
+
+      context "when no other app_name is found" do
+        let(:app) { nil }
+        its(:app_name) do
+          is_expected.to eq(nil)
+        end
       end
     end
   end
 
   describe ".configure" do
+    let(:app_name) { "my_app" }
     context "when configure(force: false)" do
       let(:config) do
-        instance_spy(Sapience::Configuration)
+        instance_spy(Sapience::Configuration, app_name: app_name)
       end
       let(:stream_options) do
         { io: STDOUT }
@@ -174,6 +239,17 @@ describe Sapience do
       before do
         allow(config).to receive(:appenders).and_return(appenders)
         allow(described_class).to receive(:config).and_return(config)
+      end
+
+      context "when app_name is nil" do
+        let(:app_name) { nil }
+        specify do
+          expect { described_class.configure }
+            .to raise_error(
+              Sapience::AppNameMissing,
+              "app_name is not configured. See documentation for more information",
+            )
+        end
       end
 
       context "when some appenders exist before call" do
@@ -223,7 +299,9 @@ describe Sapience do
     end
 
     context "when configure(force: true)" do
-      before { Sapience.configure }
+      before do
+        Sapience.configure { |c| c.app_name = app_name }
+      end
       specify do
         expect do
           Sapience.configure(force: true) do |config|
@@ -241,6 +319,7 @@ describe Sapience do
 
     context "when no block given" do
       it "adds all configured appenders" do
+        Sapience.configure { |c| c.app_name = app_name }
         expect(described_class.configure).to be_a(Sapience::Configuration)
       end
     end
@@ -263,7 +342,7 @@ describe Sapience do
     specify do
       Sapience.add_appender(:sentry, dsn: "https://foobar:443@sentry.io/00000")
       expect(Raven).to receive(:capture_exception) do |exception, _context|
-        expect(exception).to be_a_kind_of(Exception)
+        expect(exception).to be_a_kind_of(Sapience::TestException)
         expect(exception.message).to eq("Sapience Test Exception")
       end.and_return(true)
 

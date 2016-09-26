@@ -2,7 +2,10 @@ require "spec_helper"
 
 describe Sapience::Formatters::Json do
   include_context "logs"
-  before { travel_to Time.new(2015, 9, 10, 20, 13, 45) }
+  before do
+    travel_to Time.new(2015, 9, 10, 20, 13, 45)
+    Sapience.configure { |c| c.app_name = "some_tests" }
+  end
   after { travel_back }
   let(:formatter) { described_class.new }
 
@@ -15,7 +18,7 @@ describe Sapience::Formatters::Json do
 
     specify do
       is_expected.to match(
-        application: "Sapience",
+        app_name: Sapience.app_name,
         duration: "9.999s",
         duration_ms: duration,
         exception: a_hash_including(

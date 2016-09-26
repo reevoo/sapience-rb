@@ -52,11 +52,13 @@ end
 
 The sapience configuration can be controlled by a `config/sapience.yml` file or if you like us have many projects that use the same configuration you can create your own gem with a shared config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb)
 
+The `app_name` is required to be configured. Sapience will fail on startup if app_name isn't configured properly.
+
 ```ruby 
 Sapience.configure do |config|
   config.default_level   = :info
   config.backtrace_level = :error
-  config.application     = "my-app"
+  config.app_name        = "my_app"
   config.appenders       = [
     { stream: { io: STDOUT, formatter: :color } },
     { sentry: { dsn: "https://username:password@app.getsentry.com/00000" } },
@@ -199,6 +201,11 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 ## Running the tests
 
 `bin/tests`
+
+## Environment variables
+
+`SAPIENCE_APP_NAME` - If you want to provide an application name for sapience
+`SAPIENCE_ENV` - For applications that don't use rack or rails
 
 ## Contributing
 

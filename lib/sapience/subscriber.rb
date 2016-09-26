@@ -5,7 +5,7 @@ module Sapience
   class Subscriber < Sapience::Base
     # Every logger has its own formatter
     attr_accessor :formatter
-    attr_writer :application, :host
+    attr_writer :app_name, :host
 
     extend Sapience::Descendants
 
@@ -33,9 +33,9 @@ module Sapience
       Sapience::Formatters::Default.new
     end
 
-    # Allow application name to be set globally or per subscriber
-    def application
-      @application || Sapience.config.application
+    # Allow app_name to be set globally or per subscriber
+    def app_name
+      @app_name || Sapience.app_name
     end
 
     # Allow host name to be set globally or per subscriber
@@ -67,18 +67,18 @@ module Sapience
     #     Name of this host to appear in log messages.
     #     Default: Sapience.config.host
     #
-    #   application: [String]
-    #     Name of this application to appear in log messages.
-    #     Default: Sapience.config.application
+    #   app_name: [String]
+    #     Name of this app_name to appear in log messages.
+    #     Default: Sapience.app_name
     def initialize(options = {}, &block)
       # Backward compatibility
-      options      = { level: options } unless options.is_a?(Hash)
-      options      = options.dup
-      level        = options.delete(:level)
-      filter       = options.delete(:filter)
-      @formatter   = extract_formatter(options.delete(:formatter), &block)
-      @application = options.delete(:application)
-      @host        = options.delete(:host)
+      options     = { level: options } unless options.is_a?(Hash)
+      options     = options.dup
+      level       = options.delete(:level)
+      filter      = options.delete(:filter)
+      @formatter  = extract_formatter(options.delete(:formatter), &block)
+      @app_name   = options.delete(:app_name)
+      @host       = options.delete(:host)
       fail(ArgumentError, "Unknown options: #{options.inspect}") if options.size > 0
 
       # Subscribers don't take a class name, so use this class name if an subscriber

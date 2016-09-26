@@ -11,6 +11,8 @@ describe Sapience::Appender::Sentry do
     }
   end
 
+  before { Sapience.configure { |c| c.app_name = "test_app" } }
+
   after { Sapience.remove_appenders }
 
   def add_appender(options = {})
@@ -49,7 +51,7 @@ describe Sapience::Appender::Sentry do
               level: level,
               level_index: a_kind_of(Integer),
               host: Sapience.config.host,
-              application: Sapience.config.application,
+              app_name: Sapience.app_name,
               file: a_string_ending_with("example.rb"),
               line: 254,
             },
@@ -74,7 +76,7 @@ describe Sapience::Appender::Sentry do
             level: level,
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
-            application: Sapience.config.application,
+            app_name: Sapience.app_name,
           ),
         )
       appender.send(level, message, error)
@@ -98,7 +100,7 @@ describe Sapience::Appender::Sentry do
               level: level,
               level_index: a_kind_of(Integer),
               host: Sapience.config.host,
-              application: Sapience.config.application,
+              app_name: Sapience.app_name,
             },
           ),
         )
@@ -120,7 +122,7 @@ describe Sapience::Appender::Sentry do
             level: level,
             level_index: a_kind_of(Integer),
             host: Sapience.config.host,
-            application: Sapience.config.application,
+            app_name: Sapience.app_name,
           ),
         )
       appender.send(level, message, error)

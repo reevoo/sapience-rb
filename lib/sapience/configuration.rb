@@ -8,12 +8,11 @@ module Sapience
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
-    attr_accessor :application, :ap_options, :appenders, :log_executor
+    attr_accessor :app_name, :ap_options, :appenders, :log_executor
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
       log_level:   :info,
-      application: "Sapience",
       host:        nil,
       ap_options:  { multiline: false },
       appenders:   [{ stream: { io: STDOUT, formatter: :color } }],
@@ -28,8 +27,8 @@ module Sapience
       validate_log_executor!(@options[:log_executor])
       self.default_level   = @options[:log_level].to_sym
       self.backtrace_level = @options[:log_level].to_sym
-      self.application     = @options[:application]
       self.host            = @options[:host]
+      self.app_name        = @options[:app_name]
       self.ap_options      = @options[:ap_options]
       self.appenders       = @options[:appenders]
       self.log_executor    = @options[:log_executor]

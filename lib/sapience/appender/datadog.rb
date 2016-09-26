@@ -38,12 +38,7 @@ module Sapience
       end
 
       def provider
-        @_provider ||= begin
-          statsd           = ::Datadog::Statsd.new(@uri.host, @uri.port, tags: @tags)
-          path             = @uri.path.chomp("/")
-          statsd.namespace = path.sub("/", "") if path != ""
-          statsd
-        end
+        @_provider ||= ::Datadog::Statsd.new(@uri.host, @uri.port, dog_options)
       end
 
       # Send an error notification to sentry
@@ -108,6 +103,19 @@ module Sapience
 
       def event(title, text, options = {})
         provider.event(title, text, options)
+      end
+
+      def namespace
+        ns = Sapience.app_name
+        ns << ".#{Sapience.environment}" if Sapience.environment
+        ns
+      end
+
+      def dog_options
+        {
+          namespace: namespace,
+          tags: @tags,
+        }
       end
     end
   end

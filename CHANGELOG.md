@@ -1,3 +1,8 @@
+## v1.0.2
+
+- Require `app_name` to be configured. Either set it with the environment variable `SAPIENCE_APP_NAME` or provided it when configuring the application.
+- Fixes problems with Datadog namespace always being nil.
+
 ## v1.0.1
 
 - Fix loading configuration outside of Rack application

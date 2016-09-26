@@ -35,9 +35,9 @@ module Sapience
       #     Name of this host to appear in log messages.
       #     Default: Sapience.config.host
       #
-      #   application: [String]
+      #   app_name: [String]
       #     Name of this application to appear in log messages.
-      #     Default: Sapience.config.application
+      #     Default: Sapience.app_name
       def initialize(options = {}, &block)
         validate_options!(options)
 
@@ -46,7 +46,6 @@ module Sapience
           config.dsn  = options.delete(:dsn)
           config.tags = { environment: Sapience.environment }
         end
-
         super(options, &block)
       end
 
@@ -57,10 +56,11 @@ module Sapience
       end
 
       # Send an error notification to sentry
-      def log(log)
+      def log(log) # rubocop:disable AbcSize
         return false unless should_log?(log)
 
         context = formatter.call(log, self)
+
         if log.exception
           context.delete(:exception)
           Raven.capture_exception(log.exception, context)

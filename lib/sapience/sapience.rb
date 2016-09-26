@@ -8,7 +8,7 @@ require "English"
 # Sapience.configure do |config|
 #   config.default_level   = ENV.fetch('SAPIENCE_DEFAULT_LEVEL') { :info }.to_sym
 #   config.backtrace_level = ENV.fetch('SAPIENCE_BACKTRACE_LEVEL') { :info }.to_sym
-#   config.application     = 'TestApplication'
+#   config.app_name        = 'TestApplication'
 #   config.host            = ENV.fetch('SAPIENCE_HOST', nil)
 #   config.ap_options      = { multiline: false }
 #   config.appenders       = [
@@ -20,12 +20,18 @@ require "English"
 
 # rubocop:disable ClassVars
 module Sapience
-  UnknownClass = Class.new(NameError)
+  UnknownClass   = Class.new(NameError)
+  AppNameMissing = Class.new(NameError)
+  TestException  = Class.new(StandardError)
   @@configured = false
 
   # Logging levels in order of most detailed to most severe
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
-  DEFAULT_ENV = "default".freeze
+  DEFAULT_ENV       = "default".freeze
+  RACK_ENV          = "RACK_ENV".freeze
+  RAILS_ENV         = "RAILS_ENV".freeze
+  SAPIENCE_APP_NAME = "SAPIENCE_APP_NAME".freeze
+  SAPIENCE_ENV      = "SAPIENCE_ENV".freeze
 
   # TODO: Should we really always read from file?
   # What if someone wants to configure sapience with a block
@@ -44,7 +50,9 @@ module Sapience
   end
 
   def self.default_options(options = {})
-    warn "No configuration for environment #{environment}. Using 'default'"
+    unless environment =~ /default|rspec/
+      warn "No configuration for environment #{environment}. Using 'default'"
+    end
     options[DEFAULT_ENV]
   end
 
@@ -52,6 +60,8 @@ module Sapience
     @@config = nil
     @@logger = nil
     @@metrics = nil
+    @@environment = nil
+    @@app_name = nil
     @@configured = false
     clear_tags!
     reset_appenders!
@@ -61,23 +71,56 @@ module Sapience
     @@appenders = Concurrent::Array.new
   end
 
+  # TODO: Default to SAPIENCE_ENV (if present it should be returned first)
   def self.environment
-    ENV.fetch("RAILS_ENV") do
-      ENV.fetch("RACK_ENV") do
-        if defined?(::Rails) && ::Rails.respond_to?(:env)
-          ::Rails.env
-        else
-          puts "Sapience is going to use default configuration"
-          DEFAULT_ENV
+    @@environment ||=
+      ENV.fetch(SAPIENCE_ENV) do
+        ENV.fetch(RAILS_ENV) do
+          ENV.fetch(RACK_ENV) do
+            if defined?(::Rails) && ::Rails.respond_to?(:env)
+              ::Rails.env
+            else
+              warn "Sapience is going to use default configuration"
+              DEFAULT_ENV
+            end
+          end
         end
       end
+  end
+
+  def self.app_name
+    @@app_name ||= begin
+      appname = ENV.fetch(SAPIENCE_APP_NAME) do
+        config.app_name
+      end
+      namify(appname)
     end
   end
+
+  def self.namify(appname, sep = "_")
+    return unless appname.is_a?(String)
+    return unless appname.length > 0
+
+    # Turn unwanted chars into the separator
+    appname = appname.dup
+    appname.gsub!(/[^a-z0-9\-_]+/i, sep)
+    unless sep.nil? || sep.empty?
+      re_sep = Regexp.escape(sep)
+      # No more than one of the separator in a row.
+      appname.gsub!(/#{re_sep}{2,}/, sep)
+      # Remove leading/trailing separator.
+      appname.gsub!(/^#{re_sep}|#{re_sep}$/, "")
+    end
+    appname.downcase
+  end
+  private_class_method :namify
+
 
   # TODO: Maybe when configuring with a block we should create a new config?
   # See the TODO note on .config for more information
   def self.configure(force: false)
     yield config if block_given?
+    fail AppNameMissing, "app_name is not configured. See documentation for more information" unless app_name
     return config if configured? && force == false
     reset_appenders!
     add_appenders(*config.appenders)
@@ -249,7 +292,9 @@ module Sapience
   end
 
   def self.test_exception(level = :error)
-    Sapience[self].public_send(level, Exception.new("Sapience Test Exception"))
+    fail Sapience::TestException, "Sapience Test Exception"
+  rescue Sapience::TestException => ex
+    Sapience[self].public_send(level, ex)
   end
 
   # Wait until all queued log messages have been written and flush all active

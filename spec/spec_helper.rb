@@ -36,8 +36,9 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
-  config.before(:suite) do
+  config.before(:each) do
     Sapience.configure do |c|
+      c.app_name = "Sapience RSpec"
       c.log_executor = :immediate_executor
     end
   end

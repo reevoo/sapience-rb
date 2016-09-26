@@ -150,9 +150,8 @@ module Sapience
       Sapience::Formatters::Default.new
     end
 
-    # Allow application name to be set globally or per subscriber
-    def application
-      Sapience.config.application
+    def app_name
+      Sapience.app_name
     end
 
     # Allow host name to be set globally or per subscriber
