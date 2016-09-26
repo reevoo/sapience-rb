@@ -1,3 +1,7 @@
+## v1.0.1
+
+- Fix loading configuration outside of Rack application
+
 ## v1.0.0
 
 - Rename Sapience.metrix to Sapience.metrics
