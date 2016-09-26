@@ -10,75 +10,92 @@ describe Sapience::ConfigLoader do
     subject(:load_from_file) { described_class.load_from_file }
 
     context "no file in the application config directory" do
-      it "uses the default configuration" do
-        expect(load_from_file).to eq(
-        "default"    => {
-          "log_executor" => "single_thread_executor",
-          "log_level" => "info",
-          "appenders" => [{
-            "stream" => {
-              "io" => "STDOUT",
-              "formatter" => "color",
-            },
-          }],
-        },
-        "development" => {
-          "log_executor" => "single_thread_executor",
-          "log_level" => "debug",
-          "appenders" => [{
-            "stream" => {
-              "file_name" => "log/development.log",
-              "formatter" => "color",
-            },
-          }],
-        },
-        "production"  => {
-          "log_executor" => "single_thread_executor",
-          "log_level" => "warn",
-          "appenders" => [{
-            "stream" => {
-              "file_name" => "log/production.log",
-              "formatter" => "json",
-            },
-          }],
-        },
-        "test"        => {
-          "log_executor" => "immediate_executor",
-          "log_level" => "warn",
-          "appenders" => [{
-            "stream" => {
-              "file_name" => "log/test.log",
-              "formatter" => "color",
-            },
-          }],
-        })
+      shared_examples "loading default configuration" do
+        it "uses the default configuration" do
+          expect(load_from_file).to eq(
+          "default"    => {
+            "log_executor" => "single_thread_executor",
+            "log_level" => "info",
+            "appenders" => [{
+              "stream" => {
+                "io" => "STDOUT",
+                "formatter" => "color",
+              },
+            }],
+          },
+          "development" => {
+            "log_executor" => "single_thread_executor",
+            "log_level" => "debug",
+            "appenders" => [{
+              "stream" => {
+                "file_name" => "log/development.log",
+                "formatter" => "color",
+              },
+            }],
+          },
+          "production"  => {
+            "log_executor" => "single_thread_executor",
+            "log_level" => "warn",
+            "appenders" => [{
+              "stream" => {
+                "file_name" => "log/production.log",
+                "formatter" => "json",
+              },
+            }],
+          },
+          "test"        => {
+            "log_executor" => "immediate_executor",
+            "log_level" => "warn",
+            "appenders" => [{
+              "stream" => {
+                "file_name" => "log/test.log",
+                "formatter" => "color",
+              },
+            }],
+          })
+        end
+      end
+
+      it_behaves_like "loading default configuration"
+
+      context "when Rack::Directory is undefined" do
+        before { hide_const("Rack::Directory") }
+        it_behaves_like "loading default configuration"
       end
     end
 
     context "when sapience.yml file defined in the application" do
-      before do
-        create_file("config/sapience.yml",
-          ["development:",
-           "  log_level: debug",
-           "  appenders:",
-           "    - stream:",
-           "        io: STDOUT",
-           "        formatter: json"])
+      shared_examples "loading application configuration" do
+        before do
+          create_file("config/sapience.yml",
+            ["development:",
+             "  log_level: debug",
+             "  appenders:",
+             "    - stream:",
+             "        io: STDOUT",
+             "        formatter: json"])
+        end
+
+        it "uses the default configuration" do
+          expect(load_from_file).to eq(
+            "development" => {
+              "log_level" => "debug",
+              "appenders" => [{
+                "stream" => {
+                  "io" => "STDOUT",
+                  "formatter" => "json",
+                },
+              }],
+            })
+        end
+        after { delete_file("config/sapience.yml") }
       end
 
-      after { delete_file("config/sapience.yml") }
+      it_behaves_like "loading application configuration"
 
-      it "uses the default configuration" do
-        expect(load_from_file).to eq(
-          "development" => {
-            "log_level" => "debug",
-            "appenders" => [{
-              "stream" => {
-                "io" => "STDOUT",
-                "formatter" => "json",
-              },
-            }],
-          })
+      context "when Rack::Directory is undefined" do
+        before { hide_const("Rack::Directory") }
+        it_behaves_like "loading application configuration"
       end
     end
   end

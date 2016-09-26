@@ -32,7 +32,15 @@ module Sapience
       end
 
       def application_config_file
-        File.join(Rack::Directory.new("").root, "config", SAPIENCE_FILE)
+        File.join(root_dir, "config", SAPIENCE_FILE)
+      end
+
+      def root_dir
+        if defined?(::Rack::Directory)
+          Rack::Directory.new("").root
+        else
+          Dir.pwd
+        end
       end
 
       def load_yaml_configuration(absolute_path)
