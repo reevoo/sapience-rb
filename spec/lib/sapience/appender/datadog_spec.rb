@@ -241,9 +241,9 @@ describe Sapience::Appender::Datadog do
       expect(statsd).to receive(:gauge).with(metric, metric_amount, hash)
       expect(statsd).to receive(:increment).with(metric)
 
-      subject.batch do |s|
-        s.gauge(metric, metric_amount, hash)
-        s.increment(metric)
+      subject.batch do
+        subject.gauge(metric, metric_amount, hash)
+        subject.increment(metric)
       end
     end
   end

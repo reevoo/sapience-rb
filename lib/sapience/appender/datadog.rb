@@ -97,8 +97,8 @@ module Sapience
         provider.time(metric, &block)
       end
 
-      def batch
-        yield provider
+      def batch(&block)
+        provider.batch(&block)
       end
 
       def event(title, text, options = {})
