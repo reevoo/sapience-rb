@@ -28,9 +28,6 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.before(:each) do
     Sapience.reset!
-  end
-
-  config.before(:each) do
     FileUtils.cp(
       Rails.root.join("spec/fixtures/sapience.yml"),
       Rails.root.join("config/sapience.yml"),

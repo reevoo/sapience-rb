@@ -165,6 +165,7 @@ describe Sapience::Log do
   describe "#to_h" do
     let(:shared_hash) do
       {
+        app_name: "Sapience RSpec",
         duration: "9.999s",
         duration_ms: duration,
         exception: a_hash_including(

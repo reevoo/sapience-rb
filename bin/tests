@@ -15,14 +15,14 @@ bundle update
 [ $? -ne 0 ] && exit $?
 bundle exec appraisal update
 [ $? -ne 0 ] && exit $?
-SAPIENCE_APP_NAME=grape_app bundle exec appraisal rspec
+APP_NAME=grape_app bundle exec appraisal rspec
 [ $? -ne 0 ] && exit $?
 popd
 
 pushd test_apps/rails
 bundle update
 [ $? -ne 0 ] && exit $?
-SAPIENCE_APP_NAME=rails_app bundle exec rspec
+APP_NAME=rails_app bundle exec rspec
 [ $? -ne 0 ] && exit $?
 popd
 

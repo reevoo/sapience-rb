@@ -1,3 +1,8 @@
+## v1.0.3
+
+- Rename `SAPIENCE_APP_NAME` to `APP_NAME`
+- Allow for configuration inheritance (see the history for [config_loader.rb](https://github.com/reevoo/sapience-rb/blame/master/lib/sapience/config_loader.rb#L19))
+
 ## v1.0.2
 
 - Require `app_name` to be configured. Either set it with the environment variable `SAPIENCE_APP_NAME` or provided it when configuring the application.

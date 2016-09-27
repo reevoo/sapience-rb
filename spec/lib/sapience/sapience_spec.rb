@@ -170,10 +170,10 @@ describe Sapience do
   describe ".app_name" do
     subject { described_class }
 
-    context "when SAPIENCE_APP_NAME is set" do
+    context "when APP_NAME is set" do
       let(:app) { "my_app" }
       before do
-        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_return(app)
+        allow(ENV).to receive(:[]).with(Sapience::APP_NAME).and_return(app)
       end
 
       its(:app_name) do
@@ -181,26 +181,32 @@ describe Sapience do
       end
     end
 
-    context "when SAPIENCE_APP_NAME has prohibited characters" do
+    context "when APP_NAME has prohibited characters" do
       let(:app) { "RSpec R0x'n Ro!!5" }
       before do
-        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_return(app)
+        allow(ENV).to receive(:[]).with(Sapience::APP_NAME).and_return(app)
       end
 
       its(:app_name) do
-        is_expected.to eq("rspec_r0x_n_ro_5")
+        is_expected.to eq("RSpec R0x'n Ro!!5")
       end
     end
 
     context "when delegating to config.app_name" do
+      let(:app) { nil }
       let(:config) { instance_spy(Sapience::Configuration, app_name: app) }
+
       before do
-        allow(ENV).to receive(:fetch).with(Sapience::SAPIENCE_APP_NAME).and_yield
+        allow(ENV).to receive(:[]).with(Sapience::APP_NAME).and_yield
         allow(Sapience).to receive(:config).and_return(config)
       end
 
       context "when config.app_name is set" do
         let(:app) { "test_app" }
+        before do
+          allow(Sapience.config_hash).to receive(:fetch).and_call_original
+          allow(Sapience.config_hash).to receive(:fetch).with(Sapience::DEFAULT_ENV).and_return("app_name" => app)
+        end
 
         its(:app_name) do
           is_expected.to eq("test_app")
@@ -208,9 +214,15 @@ describe Sapience do
       end
 
       context "when no other app_name is found" do
-        let(:app) { nil }
-        its(:app_name) do
-          is_expected.to eq(nil)
+        before do
+          allow(ENV).to receive(:[]).with(Sapience::APP_NAME).and_return(nil)
+        end
+        specify do
+          expect { described_class.app_name }
+            .to raise_error(
+              Sapience::AppNameMissing,
+              "app_name is not configured. See documentation for more information",
+            )
         end
       end
     end
@@ -239,17 +251,6 @@ describe Sapience do
       before do
         allow(config).to receive(:appenders).and_return(appenders)
         allow(described_class).to receive(:config).and_return(config)
-      end
-
-      context "when app_name is nil" do
-        let(:app_name) { nil }
-        specify do
-          expect { described_class.configure }
-            .to raise_error(
-              Sapience::AppNameMissing,
-              "app_name is not configured. See documentation for more information",
-            )
-        end
       end
 
       context "when some appenders exist before call" do

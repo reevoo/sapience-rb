@@ -16,7 +16,6 @@ describe Sapience::Appender::Datadog do
 
   before do
     allow(Sapience).to receive(:environment).and_return("rspec")
-    Sapience.configure { |c| c.app_name = "datadog" }
     allow(::Datadog::Statsd).to receive(:new).and_return(statsd)
     allow(statsd).to receive(:batch).and_yield
   end
@@ -32,7 +31,7 @@ describe Sapience::Appender::Datadog do
       it "sets the default url" do
         expect(::Datadog::Statsd)
           .to receive(:new)
-          .with("localhost", 8125, namespace: "datadog.rspec", tags: nil)
+          .with("localhost", 8125, namespace: "sapience_rspec.rspec", tags: nil)
         subject.provider
       end
     end
@@ -41,7 +40,7 @@ describe Sapience::Appender::Datadog do
       it "sets the url" do
         expect(::Datadog::Statsd)
           .to receive(:new)
-          .with("0.0.0.0", 2222, namespace: "datadog.rspec", tags: nil)
+          .with("0.0.0.0", 2222, namespace: "sapience_rspec.rspec", tags: nil)
         subject.provider
       end
     end
@@ -51,7 +50,7 @@ describe Sapience::Appender::Datadog do
       it "sets the url" do
         expect(::Datadog::Statsd)
           .to receive(:new)
-          .with("0.0.0.0", 2222, namespace: "datadog.rspec", tags: tags)
+          .with("0.0.0.0", 2222, namespace: "sapience_rspec.rspec", tags: tags)
         subject.provider
       end
     end

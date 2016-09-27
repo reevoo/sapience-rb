@@ -56,7 +56,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      SAPIENCE_APP_NAME: rails_app
+      APP_NAME: rails_app
       AMQP: amqp://sapience:tests@rabbitmq:5672
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -69,5 +69,5 @@ services:
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
     environment:
-      SAPIENCE_APP_NAME: grape_app
+      APP_NAME: grape_app
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

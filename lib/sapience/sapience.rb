@@ -27,20 +27,40 @@ module Sapience
 
   # Logging levels in order of most detailed to most severe
   LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
-  DEFAULT_ENV       = "default".freeze
-  RACK_ENV          = "RACK_ENV".freeze
-  RAILS_ENV         = "RAILS_ENV".freeze
-  SAPIENCE_APP_NAME = "SAPIENCE_APP_NAME".freeze
-  SAPIENCE_ENV      = "SAPIENCE_ENV".freeze
+  APP_NAME     = "APP_NAME".freeze
+  DEFAULT_ENV  = "default".freeze
+  RACK_ENV     = "RACK_ENV".freeze
+  RAILS_ENV    = "RAILS_ENV".freeze
+  SAPIENCE_ENV = "SAPIENCE_ENV".freeze
+
+  # TODO: Maybe when configuring with a block we should create a new config?
+  # See the TODO note on .config for more information
+  def self.configure(force: false)
+    yield config if block_given?
+    return config if configured? && force == false
+    reload_config!
+    reset_appenders!
+    add_appenders(*config.appenders)
+    @@configured = true
+
+    config
+  end
+
+  def self.config_hash
+    @@config_hash ||= ConfigLoader.load_from_file
+  end
+
+  def self.reload_config!
+    @@config_hash = ConfigLoader.load_from_file
+  end
 
   # TODO: Should we really always read from file?
   # What if someone wants to configure sapience with a block
   # without reading the default.yml?
   def self.config
     @@config ||= begin
-      config    = ConfigLoader.load_from_file
-      options   = config[environment]
-      options ||= default_options(config)
+      options   = config_hash[environment]
+      options ||= default_options(config_hash)
       Configuration.new(options)
     end
   end
@@ -63,6 +83,7 @@ module Sapience
     @@environment = nil
     @@app_name = nil
     @@configured = false
+    @@config_hash = nil
     clear_tags!
     reset_appenders!
   end
@@ -89,12 +110,12 @@ module Sapience
   end
 
   def self.app_name
-    @@app_name ||= begin
-      appname = ENV.fetch(SAPIENCE_APP_NAME) do
-        config.app_name
-      end
-      namify(appname)
-    end
+    @@app_name ||= config.app_name
+    @@app_name ||= config_hash.fetch(environment) { {} }["app_name"]
+    @@app_name ||= config_hash.fetch(DEFAULT_ENV) { {} }["app_name"]
+    @@app_name ||= ENV[APP_NAME]
+    fail AppNameMissing, "app_name is not configured. See documentation for more information" unless @@app_name
+    @@app_name
   end
 
   def self.namify(appname, sep = "_")
@@ -112,21 +133,6 @@ module Sapience
       appname.gsub!(/^#{re_sep}|#{re_sep}$/, "")
     end
     appname.downcase
-  end
-  private_class_method :namify
-
-
-  # TODO: Maybe when configuring with a block we should create a new config?
-  # See the TODO note on .config for more information
-  def self.configure(force: false)
-    yield config if block_given?
-    fail AppNameMissing, "app_name is not configured. See documentation for more information" unless app_name
-    return config if configured? && force == false
-    reset_appenders!
-    add_appenders(*config.appenders)
-    @@configured = true
-
-    config
   end
 
   # Return a logger for the supplied class or class_name
