@@ -65,16 +65,12 @@ module Sapience
         end
       end
 
-      def increment(metric, amount = 1)
-        provider.batch do
-          amount.times { provider.increment(metric) }
-        end
+      def increment(metric, options = {})
+        provider.increment(metric, options)
       end
 
-      def decrement(metric, amount = 1)
-        provider.batch do
-          amount.times { provider.decrement(metric) }
-        end
+      def decrement(metric, options = {})
+        provider.decrement(metric, options)
       end
 
       def histogram(metric, amount)

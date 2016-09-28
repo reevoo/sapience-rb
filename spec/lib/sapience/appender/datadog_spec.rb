@@ -153,37 +153,41 @@ describe Sapience::Appender::Datadog do
   end
 
   describe "#increment" do
-    context "without metric_amount" do
+    context "without options" do
       it "increment by 1" do
-        expect(statsd).to receive(:increment).with(metric).once
+        expect(statsd).to receive(:increment).with(metric, {})
         subject.increment(metric)
       end
     end
 
-    context "with metric_amount" do
-      let(:metric_amount) { 2 }
+    context "with options" do
+      let(:hash) do
+        { foo: "bar" }
+      end
 
       it "increment by 1" do
-        expect(statsd).to receive(:increment).with(metric).twice
-        subject.increment(metric, metric_amount)
+        expect(statsd).to receive(:increment).with(metric, hash)
+        subject.increment(metric, hash)
       end
     end
   end
 
   describe "#decrement" do
-    context "without metric_amount" do
-      it "decrement by 1" do
-        expect(statsd).to receive(:decrement).with(metric).once
+    context "without options" do
+      it "decrements" do
+        expect(statsd).to receive(:decrement).with(metric, {})
         subject.decrement(metric)
       end
     end
 
-    context "with metric_amoun" do
-      let(:metric_amount) { 2 }
+    context "with options" do
+      let(:hash) do
+        { foo: "bar" }
+      end
 
-      it "decrement by 2" do
-        expect(statsd).to receive(:decrement).with(metric).twice
-        subject.decrement(metric, metric_amount)
+      it "decrement with options provided" do
+        expect(statsd).to receive(:decrement).with(metric, hash)
+        subject.decrement(metric, hash)
       end
     end
   end
