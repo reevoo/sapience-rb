@@ -1,9 +1,11 @@
 require "sapience"
 require "sapience/extensions/action_controller/live" if defined?(ActionController::Live)
 require "sapience/extensions/action_controller/log_subscriber"
+require "sapience/extensions/action_controller/notifications"
 require "sapience/extensions/action_dispatch/debug_exceptions"
 require "sapience/extensions/action_view/streaming_template_renderer"
 require "sapience/extensions/active_record/log_subscriber" if defined?(ActiveRecord)
+# require "sapience/extensions/active_record/notifications"
 require "sapience/extensions/rails/rack/logger"
 require "sapience/extensions/rails/rack/logger_info_as_debug"
 require "sapience/extensions/action_view/log_subscriber"
@@ -70,6 +72,7 @@ module Sapience
         Sapience::Extensions::ActiveRecord::LogSubscriber.attach_to :active_record if defined?(ActiveRecord)
         Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
         # Sapience::Extensions::ActiveJob::LogSubscriber.attach_to :active_job
+        Sapience::Extensions::ActionController::Notifications.use
       end
     end
   end

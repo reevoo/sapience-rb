@@ -59,13 +59,13 @@ module Sapience
         true
       end
 
-      def timing(metric, duration = 0)
+      def timing(metric, duration = 0, hash = {})
         if block_given?
           start = Time.now
           yield
-          provider.timing(metric, ((Time.now - start) * 1000).floor)
+          provider.timing(metric, ((Time.now - start) * 1000).floor, hash)
         else
-          provider.timing(metric, duration)
+          provider.timing(metric, duration, hash)
         end
       end
 

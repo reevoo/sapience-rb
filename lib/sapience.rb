@@ -4,6 +4,7 @@ require "sapience/core_ext/hash"
 require "sapience/core_ext/symbol"
 require "sapience/core_ext/thread"
 require "sapience/sapience"
+require "sapience/extensions/notifications"
 
 # @formatter:off
 
