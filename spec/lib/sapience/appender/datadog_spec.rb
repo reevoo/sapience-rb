@@ -65,7 +65,7 @@ describe Sapience::Appender::Datadog do
         metric:        metric,
         duration:      duration,
         metric_amount: metric_amount,
-        tags: ["baz"]
+        tags:          ["baz"],
       )
     end
 

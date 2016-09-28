@@ -28,8 +28,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.before(:each) do
     Sapience.reset!
-    Sapience.configure do |config|
-      config.app_name = "rails_app"
+    Sapience.configure do |c|
+      c.app_name = "rails_app"
     end
     FileUtils.cp(
       Rails.root.join("spec/fixtures/sapience.yml"),
