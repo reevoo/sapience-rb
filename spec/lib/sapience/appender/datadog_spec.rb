@@ -88,7 +88,7 @@ describe Sapience::Appender::Datadog do
       let(:duration) { 200 }
 
       it "calls timing" do
-        expect(subject).to receive(:timing).with(metric, duration)
+        expect(subject).to receive(:timing).with(metric, duration, tags: ["baz"])
         expect(subject.log(log)).to eq(true)
       end
 
@@ -135,7 +135,7 @@ describe Sapience::Appender::Datadog do
     let(:duration) { 200 }
 
     it "calls timing" do
-      expect(statsd).to receive(:timing).with(metric, duration)
+      expect(statsd).to receive(:timing).with(metric, duration, {})
       subject.timing(metric, duration)
     end
 
@@ -196,7 +196,7 @@ describe Sapience::Appender::Datadog do
     let(:metric_amount) { 444 }
 
     it "calls timing" do
-      expect(statsd).to receive(:histogram).with(metric, metric_amount)
+      expect(statsd).to receive(:histogram).with(metric, metric_amount, {})
       subject.histogram(metric, metric_amount)
     end
   end
@@ -212,7 +212,7 @@ describe Sapience::Appender::Datadog do
 
   describe "#time" do
     it "calls count" do
-      expect(statsd).to receive(:time).with(metric).and_yield
+      expect(statsd).to receive(:time).with(metric, {}).and_yield
       subject.time(metric) do
         sleep 0.5
       end
@@ -244,11 +244,11 @@ describe Sapience::Appender::Datadog do
 
     it "calls batch" do
       expect(statsd).to receive(:gauge).with(metric, metric_amount, hash)
-      expect(statsd).to receive(:increment).with(metric)
+      expect(statsd).to receive(:increment).with(metric, hash)
 
       subject.batch do
         subject.gauge(metric, metric_amount, hash)
-        subject.increment(metric)
+        subject.increment(metric, hash)
       end
     end
   end

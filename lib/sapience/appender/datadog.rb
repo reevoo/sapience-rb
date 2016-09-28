@@ -55,13 +55,13 @@ module Sapience
         true
       end
 
-      def timing(metric, duration = 0, hash = {})
+      def timing(metric, duration = 0, options = {})
         if block_given?
           start = Time.now
           yield
-          provider.timing(metric, ((Time.now - start) * 1000).floor, hash)
+          provider.timing(metric, ((Time.now - start) * 1000).floor, options)
         else
-          provider.timing(metric, duration, hash)
+          provider.timing(metric, duration, options)
         end
       end
 
@@ -73,20 +73,20 @@ module Sapience
         provider.decrement(metric, options)
       end
 
-      def histogram(metric, amount)
-        provider.histogram(metric, amount)
+      def histogram(metric, amount, options = {})
+        provider.histogram(metric, amount, options)
       end
 
-      def gauge(metric, amount, hash = {})
-        provider.gauge(metric, amount, hash)
+      def gauge(metric, amount, options = {})
+        provider.gauge(metric, amount, options)
       end
 
       def count(metric, amount, options = {})
         provider.count(metric, amount, options)
       end
 
-      def time(metric, &block)
-        provider.time(metric, &block)
+      def time(metric, options = {}, &block)
+        provider.time(metric, options, &block)
       end
 
       def batch(&block)
