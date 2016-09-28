@@ -65,6 +65,7 @@ describe Sapience::Appender::Datadog do
         metric:        metric,
         duration:      duration,
         metric_amount: metric_amount,
+        tags: ["baz"]
       )
     end
 
@@ -105,7 +106,7 @@ describe Sapience::Appender::Datadog do
     context "without duration" do
       context "without metric_amount" do
         it "increment by 1" do
-          expect(subject).to receive(:increment).with(metric, 1)
+          expect(subject).to receive(:count).with(metric, 1, tags: ["baz"])
           expect(subject.log(log)).to eq(true)
         end
       end
@@ -114,7 +115,7 @@ describe Sapience::Appender::Datadog do
         let(:metric_amount) { -2 }
 
         it "decrement by 2" do
-          expect(subject).to receive(:decrement).with(metric, 2)
+          expect(subject).to receive(:count).with(metric, -2, tags: ["baz"])
           expect(subject.log(log)).to eq(true)
         end
       end
@@ -123,7 +124,7 @@ describe Sapience::Appender::Datadog do
         let(:metric_amount) { 3 }
 
         it "increment by 3" do
-          expect(subject).to receive(:increment).with(metric, metric_amount)
+          expect(subject).to receive(:count).with(metric, 3, tags: ["baz"])
           expect(subject.log(log)).to eq(true)
         end
       end

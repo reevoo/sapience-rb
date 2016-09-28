@@ -47,14 +47,10 @@ module Sapience
         return false unless metric
 
         if log.duration
-          timing(metric, log.duration)
+          timing(metric, log.duration, tags: log.tags)
         else
           amount = (log.metric_amount || 1).round
-          if amount < 0
-            decrement(metric, amount.abs)
-          else
-            increment(metric, amount)
-          end
+          count(metric, amount, tags: log.tags)
         end
         true
       end
@@ -89,8 +85,8 @@ module Sapience
         provider.gauge(metric, amount, hash)
       end
 
-      def count(metric, amount, hash = {})
-        provider.count(metric, amount, hash)
+      def count(metric, amount, options = {})
+        provider.count(metric, amount, options)
       end
 
       def time(metric, &block)
