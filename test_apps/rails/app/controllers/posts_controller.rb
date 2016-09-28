@@ -3,7 +3,6 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    binding.pry
     @posts = Post.all
   end
 
