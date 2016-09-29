@@ -10,6 +10,12 @@ services:
       RABBITMQ_DEFAULT_USER: sapience
       RABBITMQ_DEFAULT_PASS: tests
 
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: sapience
+      POSTGRES_PASSWORD: tests
+
 
 
   base:
@@ -55,8 +61,12 @@ services:
     command: bundle exec rspec
     depends_on:
       - rabbitmq
+      - postgres
     environment:
       APP_NAME: rails_app
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sapience
+      POSTGRES_PASSWORD: tests
       AMQP: amqp://sapience:tests@rabbitmq:5672
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
