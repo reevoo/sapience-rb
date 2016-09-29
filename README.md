@@ -19,13 +19,13 @@ First of all we need to require the right file for the project. There are curren
 ### Rails  
 
 ```ruby
-gem "sapience-rb", require: "sapience/rails"
+gem "sapience", require: "sapience/rails"
 ```
 
 ### Grape 
 
 ```ruby
-gem "sapience-rb", require: "sapience/grape"
+gem "sapience", require: "sapience/grape"
 ```
 
 In your Base API class
