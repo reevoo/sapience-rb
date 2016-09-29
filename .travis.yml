@@ -1,7 +1,6 @@
 sudo: required
 dist: trusty
 language: ruby
-install: echo "NO OP due to using docker"
 cache:
   bundler: true
   directories:
@@ -9,13 +8,15 @@ cache:
 
 services:
   - docker
+
 before_script:
   - mkdir -p coverage/rails coverage/grape coverage/sapience
+  - bundle exec rake reevoocop
 
 env:
-  - TEST_SUITE=rspec
-  - TEST_SUITE=rails
-  - TEST_SUITE=grape
+  - TEST_SUITE=rspec INSTALL=false
+  - TEST_SUITE=rails INSTALL=false
+  - TEST_SUITE=grape INSTALL=false
 
 script: "docker-compose run $TEST_SUITE"
 
