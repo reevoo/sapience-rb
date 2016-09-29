@@ -11,11 +11,12 @@ gem "puma", "~> 3.0"
 gem "sapience", path: "../.."
 gem "sentry-raven"
 gem "dogstatsd-ruby"
+gem "activesupport"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platform: :mri
-  # gem "pry-nav"
+  # gem "pry-nav", platform: :mri
   gem "pry-byebug", platform: :mri
   gem "rspec"
   gem "racksh"

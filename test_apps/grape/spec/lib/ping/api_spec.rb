@@ -16,11 +16,25 @@ describe Ping::API do
       expect(last_response.body).to match(/PONG/)
     end
 
+    describe "ActiveSupport::Notifications" do
+      let(:metrics) { Sapience.metrics }
+      let(:tags) { %w(method:get format:json path:/api/ping status:200) }
+      before do
+        Sapience.configure { |c| c.app_name = "grape" }
+        Sapience.add_appender(:datadog)
+      end
+      specify do
+        expect(metrics).to receive(:increment).with("grape.request", tags: tags)
+        expect(metrics).to receive(:timing).with("grape.request.time", kind_of(Float), tags: tags)
+        get "/api/ping"
+      end
+    end
+
     it "logs something" do
       expect(logger).to receive(:info).with(
         method:       "GET",
         request_path: "/api/ping",
-        format:       "json",
+        format:       :json,
         status:       200,
         class_name:   "Ping::API",
         action:       "index",
@@ -44,7 +58,7 @@ describe Ping::API do
         expect(logger).to receive(:info).with(
           method:       "GET",
           request_path: "/api/404",
-          format:       "json",
+          format:       :json,
           status:       404,
           class_name:   "Ping::API",
           action:       "index",

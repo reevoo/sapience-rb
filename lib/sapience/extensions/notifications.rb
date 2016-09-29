@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/notifications"
+
 module Sapience
   module Extensions
     class Notifications
@@ -8,8 +11,8 @@ module Sapience
       end
 
       def self.subscribe(pattern, &block)
-        ActiveSupport::Notifications.subscribe(pattern) do |*args|
-          block.call ActiveSupport::Notifications::Event.new(*args)
+        ::ActiveSupport::Notifications.subscribe(pattern) do |*args|
+          block.call ::ActiveSupport::Notifications::Event.new(*args)
         end
       end
 

@@ -1,6 +1,7 @@
 require "grape"
 require "grape/api"
 require "sapience/grape"
+require "active_support/notifications"
 
 module Ping
   class API < ::Grape::API

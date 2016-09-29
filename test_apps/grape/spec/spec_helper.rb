@@ -3,6 +3,7 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "sapience/grape"
 require "rspec/its"
 require "ping"
+require "pry"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

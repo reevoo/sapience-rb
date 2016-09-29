@@ -118,6 +118,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   appraisal
   byebug
   dogstatsd-ruby

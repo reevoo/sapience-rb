@@ -7,6 +7,7 @@ gem "puma", "~> 3.0"
 gem "sapience", :path => "../../.."
 gem "sentry-raven"
 gem "dogstatsd-ruby"
+gem "activesupport"
 
 group :development, :test do
   gem "byebug", :platform => :mri
