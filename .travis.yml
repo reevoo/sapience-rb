@@ -1,11 +1,11 @@
 sudo: required
 dist: trusty
 language: ruby
-install:
-  - bundle install --path vendor/bundle --jobs 8 --retry 3
+install: echo "NO OP due to using docker"
 cache:
+  bundler: true
   directories:
-    - vendor/bundle
+    - $HOME/docker
 
 services:
   - docker

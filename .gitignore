@@ -11,3 +11,5 @@ log/
 
 **/examples.txt
 **/*.gem
+
+/vendor/

@@ -16,8 +16,6 @@ services:
       POSTGRES_USER: sapience
       POSTGRES_PASSWORD: tests
 
-
-
   base:
     image: ruby:2.3
     cpu_shares: 4
@@ -32,6 +30,7 @@ services:
     # Enable sending signals (CTRL+C, CTRL+P + CTRL+Q) into the container:
     tty: true
     volumes:
+      # - vendor/bundle:/usr/local/bundle
       # Mount our app code directory (".") into our app containers at the
       # "/usr/src/app" folder:
       - .:/usr/src/app
