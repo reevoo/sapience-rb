@@ -9,6 +9,8 @@ describe "Posts", type: :request do
           Rails.logger.level = :debug
           Sapience.add_appender(:datadog)
           FactoryGirl.create_list(:post, 10)
+          allow_any_instance_of(Sapience::Extensions::ActiveRecord::Notifications)
+            .to receive(:record).and_return(true)
         end
 
         it "records a batch of metrics" do

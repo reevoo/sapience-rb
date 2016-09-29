@@ -334,7 +334,22 @@ describe Sapience do
 
   describe ".metrics" do
     specify do
-      expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
+      expect(described_class.metrics).to eq(nil)
+    end
+
+    context "when adding a metrics appender" do
+      specify do
+        described_class.add_appender(:datadog)
+        expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
+      end
+    end
+  end
+
+  describe ".metrics=" do
+    let!(:metrics) { described_class.add_appender(:datadog) }
+    specify do
+      described_class.metrics = Sapience::Appender::Datadog.new(app_name: "custom")
+      expect(described_class.metrics).not_to eq(metrics)
     end
   end
 

@@ -12,7 +12,6 @@ describe TestWorker do
       body: "Hot",
     }
   end
-  let(:logger) { Sapience[described_class] }
 
   before do
     @sneakers_worker = ExternalSneaker.new("rake sneakers:run", described_class)
@@ -35,7 +34,7 @@ describe TestWorker do
     until File.exist?(described_class::VERIFICATION_FILE)
       sleep 0.1
       count += 1
-      expect(true).to be(false) if count > 120
+      expect(true).to be(false) if count > 240
     end
     expect(true).to be(true)
   end

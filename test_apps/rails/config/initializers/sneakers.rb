@@ -1,5 +1,6 @@
 require "serverengine"
 require "sneakers"
+require "sapience"
 
 Sneakers.configure(
   amqp:          ENV.fetch("AMQP") { "amqp://guest:guest@localhost:5672" },
@@ -7,8 +8,7 @@ Sneakers.configure(
   log:           Sapience[Sneakers], # Log file
   exchange:      "sapience", # AMQP exchange
   durable:       false, # Is queue durable?
-  ack:           false, # Must we acknowledge?
+  ack:           true, # Must we acknowledge?
   metrics:       Sapience.metrics,
   heartbeat:     nil,
 )
-Sapience.logger.level = Logger::DEBUG

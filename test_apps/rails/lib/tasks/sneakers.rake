@@ -4,8 +4,6 @@ task :environment
 
 namespace :sneakers do
   desc "Start processing jobs with all workers"
-  task run: :environment
-  desc "Start processing jobs with all workers"
   task work: :environment do
     silence_warnings do
       Rails.application.eager_load! unless Rails.application.config.eager_load

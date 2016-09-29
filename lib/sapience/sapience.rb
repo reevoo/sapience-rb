@@ -276,7 +276,7 @@ module Sapience
   end
 
   def self.metrics
-    @@metrics ||= Sapience.add_appender(:datadog)
+    @@metrics ||= nil
   end
 
   def self.logger=(logger)

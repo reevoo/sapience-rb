@@ -33,7 +33,6 @@ module Sapience
         @tags = options.delete(:tags)
         @uri  = URI.parse(url)
         fail('Statsd only supports udp. Example: "udp://localhost:8125"') if @uri.scheme != "udp"
-
         super(options, &block)
       end
 
@@ -98,7 +97,7 @@ module Sapience
       end
 
       def namespace
-        ns = Sapience.namify(Sapience.app_name)
+        ns = Sapience.namify(app_name)
         ns << ".#{Sapience.namify(Sapience.environment)}" if Sapience.environment
         ns
       end
