@@ -18,7 +18,7 @@ module Sapience
 
         private
 
-        def record(event)
+        def record(event) # rubocop:disable AbcSize
           return unless record?
 
           job  = event.payload[:job]
