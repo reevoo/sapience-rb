@@ -33,12 +33,9 @@ module Sapience
   RAILS_ENV    = "RAILS_ENV".freeze
   SAPIENCE_ENV = "SAPIENCE_ENV".freeze
 
-  # TODO: Maybe when configuring with a block we should create a new config?
-  # See the TODO note on .config for more information
   def self.configure(force: false)
     yield config if block_given?
     return config if configured? && force == false
-    reload_config!
     reset_appenders!
     add_appenders(*config.appenders)
     @@configured = true
@@ -50,13 +47,6 @@ module Sapience
     @@config_hash ||= ConfigLoader.load_from_file
   end
 
-  def self.reload_config!
-    @@config_hash = ConfigLoader.load_from_file
-  end
-
-  # TODO: Should we really always read from file?
-  # What if someone wants to configure sapience with a block
-  # without reading the default.yml?
   def self.config
     @@config ||= begin
       options   = config_hash[environment]
@@ -220,7 +210,7 @@ module Sapience
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
   def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
-    options.deep_symbolize_keyz!
+    options = options.dup.deep_symbolize_keyz!
     appender_class = constantize_symbol(appender)
     validate_appender!(appender_class)
 
