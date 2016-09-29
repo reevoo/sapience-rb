@@ -7,6 +7,7 @@ default:
         formatter: default
 
 test:
+  app_name: rails_app
   log_level: fatal
   appenders:
     - stream:

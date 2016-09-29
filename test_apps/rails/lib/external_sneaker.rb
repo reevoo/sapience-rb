@@ -1,11 +1,11 @@
 require "timeout"
 
 class ExternalSneaker
-  attr_accessor :worker_pid, :start_command
+  attr_accessor :worker_pid, :start_command, :workers
 
-  def initialize(start_command)
+  def initialize(start_command, *workers)
     fail ArgumentError, "start_command was expected" if start_command.nil?
-
+    self.workers = workers.map(&:to_s).join(",")
     self.start_command = start_command
   end
 
@@ -23,7 +23,7 @@ class ExternalSneaker
   private
 
   def start_child
-    exec({ "RAILS_ENV" => Rails.env, "WORKERS" => "TestWorker" }, start_command)
+    exec({ "RAILS_ENV" => Rails.env, "WORKERS" => workers }, start_command)
   end
 
   def stop_child # rubocop:disable AbcSize

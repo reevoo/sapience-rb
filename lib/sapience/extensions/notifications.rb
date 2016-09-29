@@ -3,6 +3,10 @@ module Sapience
     class Notifications
       attr_reader :tags, :metric_name
 
+      def self.use(options = {})
+        new(options)
+      end
+
       def self.subscribe(pattern, &block)
         ActiveSupport::Notifications.subscribe(pattern) do |*args|
           block.call ActiveSupport::Notifications::Event.new(*args)

@@ -1,11 +1,7 @@
 module Sapience
   module Extensions
     module ActionController
-      class Notifications < ::Sapience::Extensions::Notifications # rubocop:disable ClassLength
-        def self.use(options = {})
-          new(options)
-        end
-
+      class Notifications < ::Sapience::Extensions::Notifications
         # Options:
         #
         # *<tt>:metric_name</tt> - the metric name, defaults to "rails.request"

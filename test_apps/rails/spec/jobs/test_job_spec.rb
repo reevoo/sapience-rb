@@ -4,8 +4,13 @@ require "sneakers"
 require "sneakers/runner"
 require "external_sneaker"
 
-describe TestWorker do
+describe TestJob do
   include FileHelper
+  include ActiveJob::TestHelper
+  let(:metrics) { Sapience.add_appender(:datadog) }
+  let(:tags) do
+    %w(name:test queue:test_queue)
+  end
   let(:message) do
     {
       title: "Cool",
@@ -14,16 +19,6 @@ describe TestWorker do
   end
   let(:logger) { Sapience[described_class] }
 
-  before do
-    @sneakers_worker = ExternalSneaker.new("rake sneakers:run", described_class)
-    @sneakers_worker.start
-    Sneakers.publish(
-      message.to_json,
-      to_queue: described_class::QUEUE_NAME,
-      routing_key: described_class::ROUTING_KEY,
-    )
-  end
-
   after do
     delete_file("config/sapience.yml")
     delete_file(described_class::VERIFICATION_FILE)
@@ -31,12 +26,11 @@ describe TestWorker do
 
   # TODO: Possible make this less flaky or run it with retry (rspec-retry)
   it "runs properly" do
-    count = 0
-    while !File.exist?(described_class::VERIFICATION_FILE)
-      sleep 0.1
-      count +=1
-      expect(true).to be(false) if count > 120
+    expect(metrics).to receive(:increment).with("activejob.perform", tags: tags)
+    expect(metrics).to receive(:timing).with("activejob.perform.time", kind_of(Float), tags: tags)
+
+    perform_enqueued_jobs do
+      TestJob.perform_later
     end
-    expect(true).to be(true)
   end
 end
