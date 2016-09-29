@@ -9,6 +9,6 @@ Sneakers.configure(
   durable:       false, # Is queue durable?
   ack:           false, # Must we acknowledge?
   metrics:       Sapience.metrics,
-  heartbeat:     nil
+  heartbeat:     nil,
 )
 Sapience.logger.level = Logger::DEBUG

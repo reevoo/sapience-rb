@@ -11,7 +11,7 @@ module Sapience
           super
           @metric_name = opts[:metric_name] || "activejob.perform"
 
-          Sapience::Extensions::Notifications.subscribe 'perform.active_job' do |event|
+          Sapience::Extensions::Notifications.subscribe "perform.active_job" do |event|
             record event
           end
         end
@@ -22,8 +22,8 @@ module Sapience
           return unless record?
 
           job  = event.payload[:job]
-          name = job.class.name.sub(/Job$/, '').underscore
-          tags = self.tags + %W|name:#{name} queue:#{job.queue_name}|
+          name = job.class.name.sub(/Job$/, "").underscore
+          tags = self.tags + %W(name:#{name} queue:#{job.queue_name})
           metrics.batch do
             metrics.increment metric_name, tags: tags
             metrics.timing "#{metric_name}.time", event.duration, tags: tags

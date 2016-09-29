@@ -1,4 +1,4 @@
-require 'sneakers/runner'
+require "sneakers/runner"
 
 task :environment
 

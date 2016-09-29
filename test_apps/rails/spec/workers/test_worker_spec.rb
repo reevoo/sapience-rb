@@ -32,9 +32,9 @@ describe TestWorker do
   # TODO: Possible make this less flaky or run it with retry (rspec-retry)
   it "runs properly" do
     count = 0
-    while !File.exist?(described_class::VERIFICATION_FILE)
+    until File.exist?(described_class::VERIFICATION_FILE)
       sleep 0.1
-      count +=1
+      count += 1
       expect(true).to be(false) if count > 120
     end
     expect(true).to be(true)
