@@ -33,4 +33,5 @@ ActiveRecord::Schema.define(version: 20160902141445) do
     t.index ["username"], name: "users_username_key", unique: true, using: :btree
   end
 
+  add_foreign_key "posts", "users", column: "author_id", name: "posts_author_fk", on_update: :restrict, on_delete: :cascade
 end

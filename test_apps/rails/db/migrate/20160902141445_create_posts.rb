@@ -3,7 +3,13 @@ class CreatePosts < ActiveRecord::Migration[5.0]
     create_table :posts do |t|
       t.string :title
       t.string :body
-      t.belongs_to :author # TODO: fix foreign key, foreign_key:
+      t.belongs_to :author, foreign_key: {
+        to_table: :users,
+        column: :author_id,
+        name: :posts_author_fk,
+        on_delete: :cascade,
+        on_update: :restrict,
+      }
 
       t.timestamps
     end
