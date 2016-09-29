@@ -1,9 +1,14 @@
 sudo: required
 dist: trusty
 language: ruby
+install:
+  - bundle install --path vendor/bundle --jobs 8 --retry 3
+cache:
+  directories:
+    - vendor/bundle
+
 services:
   - docker
-
 before_script:
   - mkdir -p coverage/rails coverage/grape coverage/sapience
 
