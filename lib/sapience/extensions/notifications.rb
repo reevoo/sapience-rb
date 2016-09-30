@@ -1,5 +1,9 @@
-require "active_support"
-require "active_support/notifications"
+begin
+  require "active_support"
+  require "active_support/notifications"
+rescue LoadError
+  warn "ActiveSupport not available"
+end
 
 module Sapience
   module Extensions
@@ -11,8 +15,12 @@ module Sapience
       end
 
       def self.subscribe(pattern, &block)
-        ::ActiveSupport::Notifications.subscribe(pattern) do |*args|
-          block.call ::ActiveSupport::Notifications::Event.new(*args)
+        if defined?(ActiveSupport::Notifications)
+          ::ActiveSupport::Notifications.subscribe(pattern) do |*args|
+            block.call ::ActiveSupport::Notifications::Event.new(*args)
+          end
+        else
+          warn "ActiveSupport not available"
         end
       end
 
