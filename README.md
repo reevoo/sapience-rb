@@ -145,6 +145,24 @@ Sapience.configure do |config|
 end
 ```
 
+### Filtering out sensitive data
+
+You may not want to log certain parameters which have sensitive information to be in the logs, e.g. `password`. 
+This can be set using the `sensitive_fields` option:
+
+    # Filter out some field you don't want to show
+    config.sensitive_fields << 'foo'
+
+Note that by default this is set to `['password', 'password_confirmation']`, so
+be careful when explicitly setting, as you may lose this filtering:
+
+    # NOTE: password and password_confirmation will no longer be filtered
+    config.sensitive_fields = ['foo']
+
+Any filtered parameter will still show in the `params` field, but it's value
+will be `[FILTERED]`.
+
+
 ## Appenders
 
 One of the things that did not suit us so well with the Semantic Logger approach was that they made a distinction between metrics and appenders. In our view anything that could potentially log something somewhere should be treated as an appender.

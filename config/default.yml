@@ -1,6 +1,7 @@
 ---
 default:
   log_executor: single_thread_executor
+  sensitive_fields: [password, password_confirmation]
   log_level: info
   appenders:
     - stream:

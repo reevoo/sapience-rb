@@ -137,7 +137,7 @@ module Sapience
     # Return the payload in text form
     # Returns nil if payload is missing or empty
     def payload_to_s
-      payload.inspect if payload?
+      filtered_payload.inspect if payload?
     end
 
     # Returns [true|false] whether the log entry has a payload
@@ -239,8 +239,9 @@ module Sapience
     end
 
     def filtered_payload
-      payload[:params][:password] = '[FILTERED]' if payload[:params] && payload[:params][:password]
-      payload[:params][:password_confirmation] = '[FILTERED]' if payload[:params] && payload[:params][:password_confirmation]
+      Sapience.config.sensitive_fields.each do |sensitive_field|
+        payload[:params][sensitive_field] = '[FILTERED]' if payload[:params] && payload[:params][sensitive_field]
+      end
       payload
     end
   end

@@ -209,11 +209,11 @@ describe Sapience::Log do
       end
 
       context "when payload contains sensitive information" do
-        let(:payload) { { params: { 'password': 'some_password', password_confirmation: 'some_password' } } }
+        let(:payload) { { params: { 'password' => 'some_password', 'password_confirmation' => 'some_password' } } }
 
         it "replaces the value of the sensitive fields to [FILTERED]" do
-          expect(subject.to_h[:params][:password]).to eq('[FILTERED]')
-          expect(subject.to_h[:params][:password_confirmation]).to eq('[FILTERED]')
+          expect(subject.to_h[:params]['password']).to eq('[FILTERED]')
+          expect(subject.to_h[:params]['password_confirmation']).to eq('[FILTERED]')
         end
       end
     end
