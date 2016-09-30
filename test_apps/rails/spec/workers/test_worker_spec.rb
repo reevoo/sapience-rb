@@ -4,7 +4,7 @@ require "sneakers"
 require "sneakers/runner"
 require "external_sneaker"
 
-describe TestWorker do
+describe TestWorker, :skip do
   include FileHelper
   let(:message) do
     {
