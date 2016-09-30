@@ -137,7 +137,18 @@ module Sapience
     # Return the payload in text form
     # Returns nil if payload is missing or empty
     def payload_to_s
-      filtered_payload.inspect if payload?
+      payload.inspect if payload?
+    end
+
+    def payload
+      if self[:payload].is_a?(Hash)
+        # replace sensitive data like passwords to [FILTERED]
+        Sapience.config.sensitive_fields.each do |sensitive_field|
+          self[:payload][:params][sensitive_field] = '[FILTERED]' if
+            self[:payload][:params] && self[:payload][:params][sensitive_field]
+        end
+      end
+      self[:payload]
     end
 
     # Returns [true|false] whether the log entry has a payload
@@ -186,7 +197,7 @@ module Sapience
       # Payload
       if payload
         if payload.is_a?(Hash)
-          h.merge!(filtered_payload)
+          h.merge!(payload)
         else
           h[:payload] = payload
         end
@@ -236,13 +247,6 @@ module Sapience
             ex.original_exception
           end
       end
-    end
-
-    def filtered_payload
-      Sapience.config.sensitive_fields.each do |sensitive_field|
-        payload[:params][sensitive_field] = '[FILTERED]' if payload[:params] && payload[:params][sensitive_field]
-      end
-      payload
     end
   end
   # rubocop:enable LineLength
