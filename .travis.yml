@@ -6,13 +6,13 @@ cache:
   directories:
     - $HOME/docker
     - $BUNDLE_PATH
+    - ./vendor/bundle
 
 services:
   - docker
 
 before_install:
   - gem install bundler
-  - rm -rf ./.bundle ./vendor/bundle
 
 install: bundle install --jobs 8 --retry 5
 
