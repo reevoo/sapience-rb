@@ -5,20 +5,25 @@ cache:
   bundler: true
   directories:
     - $HOME/docker
+    - $BUNDLE_PATH
 
 services:
   - docker
 
+before_install:
+  - gem install bundler
+  - rm -rf ./.bundle ./vendor/bundle
+
+install: bundle install --jobs 8 --retry 5
+
 before_script:
   - mkdir -p coverage/rails coverage/grape coverage/sapience
+
+script:
   - bundle exec rake reevoocop
-
-env:
-  - TEST_SUITE=rspec INSTALL=false
-  - TEST_SUITE=rails INSTALL=false
-  - TEST_SUITE=grape INSTALL=false
-
-script: "docker-compose run $TEST_SUITE"
+  - docker-compose run rspec
+  - docker-compose run rails
+  - docker-compose run grape
 
 after_success:
   - chown -R $(whoami) coverage
