@@ -244,8 +244,8 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 ## Environment variables
 
-`APP_NAME` - If you want to provide an application name for sapience it can be done here.
-`SAPIENCE_ENV` - For applications that don't use rack or rails
+- `APP_NAME` - If you want to provide an application name for sapience it can be done here.
+- `SAPIENCE_ENV` - For applications that don't use rack or rails
 
 ## Contributing
 
