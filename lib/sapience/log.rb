@@ -1,7 +1,7 @@
 module Sapience
   # Log Struct
   #
-  #   Structure for holding all log entries
+  #   Structure for holding all log entries. We're using a struct because we want it to be fast and lightweight.
   #
   # level
   #   Log level of the supplied log call
@@ -138,6 +138,23 @@ module Sapience
     # Returns nil if payload is missing or empty
     def payload_to_s
       payload.inspect if payload?
+    end
+
+    # This filtering is specifically designed for Rack-based payloads which may
+    # have sensitive information such as "password" or "credit_card" in
+    # its hash. We need to obfuscate these fields.
+    def payload # rubocop:disable AbcSize
+      return self[:payload] unless self[:payload].is_a?(Hash) && self[:payload][:params].is_a?(Hash)
+      return @payload unless @payload.nil?
+
+      # We don't want to mutate the existing object so dup
+      @payload = self[:payload].dup
+
+      Sapience.config.filter_parameters.each do |filter|
+        @payload[:params][filter] = "[FILTERED]" if @payload[:params].key?(filter)
+      end
+
+      @payload
     end
 
     # Returns [true|false] whether the log entry has a payload

@@ -16,13 +16,13 @@ We have taken a great deal of inspiration from the amazing [Semantic Logger](htt
 
 First of all we need to require the right file for the project. There are currently two frameworks supported (rails and grape).
 
-### Rails  
+### Rails
 
 ```ruby
 gem "sapience", require: "sapience/rails"
 ```
 
-### Grape 
+### Grape
 
 ```ruby
 gem "sapience", require: "sapience/grape"
@@ -37,11 +37,11 @@ module Aslan
   module API
     class Base < Grape::API
       use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
-      
+
       # To log all requests even when no route was found try the following:
       route :any, "*path" do
         error!({ error: "No route found" }, 404)
-      end 
+      end
     end
   end
 end
@@ -54,7 +54,7 @@ The sapience configuration can be controlled by a `config/sapience.yml` file or 
 
 The `app_name` is required to be configured. Sapience will fail on startup if app_name isn't configured properly.
 
-```ruby 
+```ruby
 Sapience.configure do |config|
   config.default_level   = :info
   config.backtrace_level = :error
@@ -67,11 +67,14 @@ Sapience.configure do |config|
 end
 ```
 
-Sapience provides a default configuration that will be used unless another file or configuration is specified. You can provide a custom 
+Sapience provides a default configuration that will be used unless another file or configuration is specified. You can provide a custom
 
 ```yaml
 ---
 default:
+  filter_parameters:
+    - password
+    - password_confirmation
   log_executor: single_thread_executor
   log_level: info
   appenders:
@@ -145,6 +148,39 @@ Sapience.configure do |config|
 end
 ```
 
+#### Filtering out sensitive data
+
+**NOTE: This is intended for (and will currently only work with) Rack-like applications, which include a `params` key in their `payload` hash**
+
+You may not want to log certain parameters which have sensitive information to be in the logs, e.g. `password`.  This can be set using the `filter_parameters` option when using `configure`:
+
+```ruby
+Sapience.configure do |config|
+  # Filter the value of "foo" from rack's parameter hash
+  config.filter_parameters << 'foo'
+end
+```
+
+Note that by default this is set to `['password', 'password_confirmation']`, so be careful when explicitly setting, as you may lose this filtering:
+
+```ruby
+Sapience.configure do |config|
+  # NOTE: password and password_confirmation will no longer be filtered
+  config.filter_parameters = ['foo']
+end
+```
+
+Similarly, *be particularly careful* when setting as `yaml` because this will no longer filter `password` and `password_confirmation`:
+
+```yaml
+some_environment:
+  # NOTE: password and password_confirmation will no longer be filtered if they're not included in this list
+  filter_parameters:
+    - foo
+```
+
+Any filtered parameter will still show in the `params` field, but it's value will be `[FILTERED]`.
+
 ## Appenders
 
 One of the things that did not suit us so well with the Semantic Logger approach was that they made a distinction between metrics and appenders. In our view anything that could potentially log something somewhere should be treated as an appender.
@@ -154,7 +190,7 @@ There are a number of appenders that each listen to different events and act on 
 
 ### Stream
 
-Stream appenders are basically a log stream. You can add as many stream appenders as you like logging to different locations. 
+Stream appenders are basically a log stream. You can add as many stream appenders as you like logging to different locations.
 
 ```ruby
 Sapience.add_appender(:stream, file: "log/sapience.log", formatter: :json)
@@ -167,16 +203,16 @@ The sentry appender handles sending errors to [sentry](https://sentry.io). It's 
 
 ```ruby
 Sapience.add_appender(
-  :sentry, 
-  dsn: "https://username:password@app.getsentry.com/00000", 
-  level: :error, 
+  :sentry,
+  dsn: "https://username:password@app.getsentry.com/00000",
+  level: :error,
   backtrace_level: :error
 )
 ```
 
 #### Test exceptions
 
-If you want to quickly verify that your appenders are handling exceptions properly. You can use the following method to 
+If you want to quickly verify that your appenders are handling exceptions properly. You can use the following method to
 generate and log an exception at any given level.
 
 ```ruby
@@ -203,7 +239,7 @@ metrics.decrement("company/project/metric-name", 5)
 metrics.histogram("company/project/metric-name", 2_500)
 metrics.gauge("company/project/metric-name", 1_000, {})
 metrics.event("company/project/metric-name", "description about event", {})
-metrics.batch do 
+metrics.batch do
   metrics.event("company/project/metric-name", "description about event", {})
   metrics.increment("company/project/another-metric-name", 2)
 end
@@ -226,15 +262,15 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 `formatter: :color` - gives colorized output. Useful for `test` and `development` environments.
 
-### Default 
+### Default
 
 `formatter: :default` - logs a string. Inspired by how access logs for Nginx are logged.
 
-### JSON 
+### JSON
 
 `formatter: :json` - logs are saved as a single line json. Useful for production like environments.
 
-### RAW 
+### RAW
 
 `formatter: :raw` - logs are saved as a single line ruby hash. Useful for production like environments and is used internally for the Sentry appender.
 

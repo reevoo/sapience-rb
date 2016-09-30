@@ -6,12 +6,13 @@ require "English"
 # Example:
 #
 # Sapience.configure do |config|
-#   config.default_level   = ENV.fetch('SAPIENCE_DEFAULT_LEVEL') { :info }.to_sym
-#   config.backtrace_level = ENV.fetch('SAPIENCE_BACKTRACE_LEVEL') { :info }.to_sym
-#   config.app_name        = 'TestApplication'
-#   config.host            = ENV.fetch('SAPIENCE_HOST', nil)
-#   config.ap_options      = { multiline: false }
-#   config.appenders       = [
+#   config.default_level     = ENV.fetch('SAPIENCE_DEFAULT_LEVEL') { :info }.to_sym
+#   config.backtrace_level   = ENV.fetch('SAPIENCE_BACKTRACE_LEVEL') { :info }.to_sym
+#   config.app_name          = 'TestApplication'
+#   config.host              = ENV.fetch('SAPIENCE_HOST', nil)
+#   config.ap_options        = { multiline: false }
+#   config.filter_parameters << "credit_card"
+#   config.appenders         = [
 #     { stream: { io: STDOUT, formatter: :color } },
 #     { statsd: { url: 'udp://localhost:2222' } },
 #     { sentry: { dsn: 'https://foobar:443' } },

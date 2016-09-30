@@ -8,15 +8,16 @@ module Sapience
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
-    attr_accessor :app_name, :ap_options, :appenders, :log_executor
+    attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
-      log_level:   :info,
-      host:        nil,
-      ap_options:  { multiline: false },
-      appenders:   [{ stream: { io: STDOUT, formatter: :color } }],
-      log_executor: :single_thread_executor,
+      log_level:         :info,
+      host:              nil,
+      ap_options:        { multiline: false },
+      appenders:         [{ stream: { io: STDOUT, formatter: :color } }],
+      log_executor:      :single_thread_executor,
+      filter_parameters: %w(password password_confirmation),
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
@@ -25,13 +26,14 @@ module Sapience
       @options             = DEFAULT.merge(options.dup.deep_symbolize_keyz!)
       @options[:log_executor] &&= @options[:log_executor].to_sym
       validate_log_executor!(@options[:log_executor])
-      self.default_level   = @options[:log_level].to_sym
-      self.backtrace_level = @options[:log_level].to_sym
-      self.host            = @options[:host]
-      self.app_name        = @options[:app_name]
-      self.ap_options      = @options[:ap_options]
-      self.appenders       = @options[:appenders]
-      self.log_executor    = @options[:log_executor]
+      self.default_level     = @options[:log_level].to_sym
+      self.backtrace_level   = @options[:log_level].to_sym
+      self.host              = @options[:host]
+      self.app_name          = @options[:app_name]
+      self.ap_options        = @options[:ap_options]
+      self.appenders         = @options[:appenders]
+      self.log_executor      = @options[:log_executor]
+      self.filter_parameters = @options[:filter_parameters]
     end
 
     # Sets the global default log level

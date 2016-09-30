@@ -1,3 +1,5 @@
+- Added `filter_parameters` configuration to obfuscate sensitive information such as passwords for rack-like applications
+
 ## v1.0.8
 
 - Delayed configuration of Sentry until the configuration is valid
@@ -34,11 +36,11 @@
 
 ## v0.2.13
 
-- Set Rails.logger even some gems disables logging on initialisation. 
+- Set Rails.logger even some gems disables logging on initialisation.
 
 ## v0.2.12
 
-- Adds support for Rails apps with disabled ActiveRecord 
+- Adds support for Rails apps with disabled ActiveRecord
 
 ## v0.2.11
 
@@ -77,7 +79,7 @@
 
 ## v0.2.0
 
-- Rename Appender::File to Appender::Stream. Accept option stream instead of file in `sapience.yml`  
+- Rename Appender::File to Appender::Stream. Accept option stream instead of file in `sapience.yml`
 
 ## v0.1.12
 

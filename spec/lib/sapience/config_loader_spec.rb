@@ -15,6 +15,7 @@ describe Sapience::ConfigLoader do
           expect(load_from_file).to eq(
           "default"    => {
             "log_executor" => "single_thread_executor",
+            "filter_parameters" => %w(password password_confirmation),
             "log_level" => "info",
             "appenders" => [{
               "stream" => {
@@ -80,6 +81,7 @@ describe Sapience::ConfigLoader do
           expect(load_from_file).to eq(
             "default" => {
               "log_executor" => "single_thread_executor",
+              "filter_parameters" => %w(password password_confirmation),
               "log_level" => "info",
               "appenders" => [
                 {
