@@ -1,7 +1,7 @@
 module Sapience
   # Log Struct
   #
-  #   Structure for holding all log entries
+  #   Structure for holding all log entries. We're using a struct because we want it to be fast and lightweight.
   #
   # level
   #   Log level of the supplied log call
@@ -186,7 +186,7 @@ module Sapience
       # Payload
       if payload
         if payload.is_a?(Hash)
-          h.merge!(payload)
+          h.merge!(filtered_payload)
         else
           h[:payload] = payload
         end
@@ -236,6 +236,12 @@ module Sapience
             ex.original_exception
           end
       end
+    end
+
+    def filtered_payload
+      payload[:params][:password] = '[FILTERED]' if payload[:params] && payload[:params][:password]
+      payload[:params][:password_confirmation] = '[FILTERED]' if payload[:params] && payload[:params][:password_confirmation]
+      payload
     end
   end
   # rubocop:enable LineLength
