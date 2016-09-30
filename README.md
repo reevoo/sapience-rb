@@ -1,6 +1,6 @@
 # Sapience
 
-**Hasslefree autoconfiguration for logging, metrics and exception collection.**
+**Hasslefree auto-configuration for logging, metrics and exception collection.**
 
 [![Build Status](https://travis-ci.org/reevoo/sapience-rb.svg?branch=master)](https://travis-ci.org/reevoo/sapience-rb)[![Code Climate](https://codeclimate.com/github/reevoo/sapience-rb/badges/gpa.svg)](https://codeclimate.com/github/reevoo/sapience-rb)[![Test Coverage](https://codeclimate.com/github/reevoo/sapience-rb/badges/coverage.svg)](https://codeclimate.com/github/reevoo/sapience-rb/coverage)[![Issue Count](https://codeclimate.com/github/reevoo/sapience-rb/badges/issue_count.svg)](https://codeclimate.com/github/reevoo/sapience-rb)
 
@@ -8,9 +8,9 @@
 
 We searched long and hard for a way to control our logging, error collection and metrics from a single place. The closest we could find that does everything we need is [Semantic Logger](https://github.com/rocketjob/semantic_logger). Unfortunately we couldn't find a good way to control the settings for our projects and would have had to spread our configuration over different initializers and rails configurations for each project. There was no easy way to gain that top level control over the configuration.
 
-This project aims to make it easier to centralize the configuration of these three areas by handling the configuration a little differently.
+This project aims to make it easier to centralise the configuration of these three areas by handling the configuration a little differently.
 
-We have taken a hug deal of inspiration from the amazing [Semantic Logger](https://github.com/rocketjob/semantic_logger) and implemented something similar to [Rubocop](https://github.com/bbatsov/rubocop) for handling and overriding how to find configuration. If you want some inspiration for how we do something similar for our projects for Rubocop check: [Reevoocop](https://github.com/reevoo/reevoocop).
+We have taken a great deal of inspiration from the amazing [Semantic Logger](https://github.com/rocketjob/semantic_logger) and implemented something similar to [Rubocop](https://github.com/bbatsov/rubocop) for handling and overriding how to find configuration. If you want some inspiration for how we do something similar for our projects for Rubocop check: [Reevoocop](https://github.com/reevoo/reevoocop).
 
 ## Setup
 
@@ -107,7 +107,7 @@ production:
 
 #### Configuration Inheritance
 
-We will use our default (or overriden - see [reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb) for more info) configuration as a base. Any configuration specified inside a `config/sapience.yml` file will then me merged into the default or overridded config.
+We will use our default (or overriden - see [reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb) for more info) configuration as a base. Any configuration specified inside a `config/sapience.yml` file will then me merged into the default or overridden config.
 
 The merge will take place not at the top level but at the environment level. This means that everything inside the environment keys will be replaced with a more specific application config.
 
@@ -115,7 +115,7 @@ Then if a configure block is used that will take presedence.
 
 #### App name
 
-Sapience requires an application name to be set for your loggs and such. We decided not to guess what name you want to give your application so there will be no magic involved here. There are 3 different ways of configuring the app_name for Sapience.
+Sapience requires an application name to be set for your logs and such. We decided not to guess what name you want to give your application so there will be no magic involved here. There are 3 different ways of configuring the app_name for Sapience.
 
 ##### Environment variables
 
@@ -147,9 +147,9 @@ end
 
 ## Appenders
 
-One of the things that did not suite us so well with the Semantic Logger approach was that they made a distinction between metrics and appenders. In our view anything that should potentially log something somewhere should be treated as an appender.
+One of the things that did not suit us so well with the Semantic Logger approach was that they made a distinction between metrics and appenders. In our view anything that could potentially log something somewhere should be treated as an appender.
 
-There are a number of appenders that all listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
+There are a number of appenders that each listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
 
 
 ### Stream
@@ -163,7 +163,7 @@ Sapience.add_appender(:stream, io: STDOUT, formatter: :color, level: :trace)
 
 ### Sentry
 
-The sentry appender handles sending errors to sentry. It's backtrace and log level can be configured by for instance `level: :info` and `backtrace_level: :debug`. The `level` configuration tells sentry to log starting at that level while the `backtrace_level` tells sentry to only collect backtrace starting at that level.
+The sentry appender handles sending errors to [sentry](https://sentry.io). It's backtrace and log level can be configured by for instance `level: :info` and `backtrace_level: :debug`. The `level` configuration tells sentry to log starting at that level while the `backtrace_level` tells sentry to only collect backtrace starting at that level.
 
 ```ruby
 Sapience.add_appender(
