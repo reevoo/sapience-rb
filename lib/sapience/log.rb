@@ -141,14 +141,16 @@ module Sapience
     end
 
     def payload
-      if self[:payload].is_a?(Hash)
-        # replace sensitive data like passwords to [FILTERED]
-        Sapience.config.sensitive_fields.each do |sensitive_field|
-          self[:payload][:params][sensitive_field] = '[FILTERED]' if
-            self[:payload][:params] && self[:payload][:params][sensitive_field]
+      @_payload ||= begin
+        if self[:payload].is_a?(Hash)
+          # replace sensitive data like passwords to [FILTERED]
+          Sapience.config.sensitive_fields.each do |sensitive_field|
+            self[:payload][:params][sensitive_field] = '[FILTERED]' if
+              self[:payload][:params] && self[:payload][:params][sensitive_field]
+          end
         end
+        self[:payload]
       end
-      self[:payload]
     end
 
     # Returns [true|false] whether the log entry has a payload
