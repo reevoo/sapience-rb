@@ -46,7 +46,7 @@ module Sapience
         options[:level] ||= :error
         @sentry_dsn = options.delete(:dsn)
         Raven.configure do |config|
-          config.dsn = @sentry_dsn
+          config.dsn = sentry_dsn if valid?
           config.tags = { environment: Sapience.environment }
         end
         super(options, &block)

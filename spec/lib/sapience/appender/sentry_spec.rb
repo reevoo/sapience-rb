@@ -21,7 +21,6 @@ describe Sapience::Appender::Sentry do
 
   subject { appender }
 
-
   its(:name) do
     is_expected.to eq(described_class.name)
   end
@@ -167,6 +166,18 @@ describe Sapience::Appender::Sentry do
 
   context "when dsn is invalid uri" do
     subject { add_appender(dsn: "poop") }
+    its(:valid?) { is_expected.to eq(false) }
+  end
+
+  context "when dsn is empty string" do
+    subject { add_appender(dsn: "") }
+    specify do
+      config = instance_spy(Raven::Configuration)
+      allow(Raven).to receive(:configure).and_yield(config)
+      expect(config).to receive(:tags=).with(environment: Sapience.environment)
+      expect(config).not_to receive(:dsn=)
+      expect { subject }.not_to raise_error
+    end
     its(:valid?) { is_expected.to eq(false) }
   end
 end
