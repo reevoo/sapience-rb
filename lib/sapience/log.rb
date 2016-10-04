@@ -145,7 +145,7 @@ module Sapience
         if self[:payload].is_a?(Hash)
           # replace sensitive data like passwords to [FILTERED]
           Sapience.config.sensitive_fields.each do |sensitive_field|
-            self[:payload][:params][sensitive_field] = '[FILTERED]' if
+            self[:payload][:params][sensitive_field] = "[FILTERED]" if
               self[:payload][:params] && self[:payload][:params][sensitive_field]
           end
         end

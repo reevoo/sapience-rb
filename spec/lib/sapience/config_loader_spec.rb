@@ -15,7 +15,7 @@ describe Sapience::ConfigLoader do
           expect(load_from_file).to eq(
           "default"    => {
             "log_executor" => "single_thread_executor",
-            "sensitive_fields"=>["password", "password_confirmation"],
+            "sensitive_fields" => %w(password password_confirmation),
             "log_level" => "info",
             "appenders" => [{
               "stream" => {
@@ -81,7 +81,7 @@ describe Sapience::ConfigLoader do
           expect(load_from_file).to eq(
             "default" => {
               "log_executor" => "single_thread_executor",
-              "sensitive_fields"=>["password", "password_confirmation"],
+              "sensitive_fields" => %w(password password_confirmation),
               "log_level" => "info",
               "appenders" => [
                 {
