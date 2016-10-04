@@ -24,6 +24,21 @@ describe Sapience::Appender::Datadog do
     is_expected.to eq(described_class.name)
   end
 
+  describe "#valid?" do
+    context "when uri scheme is udp" do
+      its(:valid?) do
+        is_expected.to eq(true)
+      end
+    end
+
+    context "when uri scheme is not udp" do
+      let(:url) { "https://0.0.0.0:2222" }
+      its(:valid?) do
+        is_expected.to eq(false)
+      end
+    end
+  end
+
   describe "#provider" do
     context "without url" do
       let(:url) { nil }
@@ -67,6 +82,13 @@ describe Sapience::Appender::Datadog do
         metric_amount: metric_amount,
         tags:          ["baz"],
       )
+    end
+
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.log(log)).to eq(false)
+      end
     end
 
     context "without metric" do
@@ -134,6 +156,13 @@ describe Sapience::Appender::Datadog do
   describe "#timing" do
     let(:duration) { 200 }
 
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.timing(metric, duration)).to eq(false)
+      end
+    end
+
     it "calls timing" do
       expect(statsd).to receive(:timing).with(metric, duration, {})
       subject.timing(metric, duration)
@@ -153,6 +182,13 @@ describe Sapience::Appender::Datadog do
   end
 
   describe "#increment" do
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.increment(metric)).to eq(false)
+      end
+    end
+
     context "without options" do
       it "increment by 1" do
         expect(statsd).to receive(:increment).with(metric, {})
@@ -173,6 +209,13 @@ describe Sapience::Appender::Datadog do
   end
 
   describe "#decrement" do
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.decrement(metric)).to eq(false)
+      end
+    end
+
     context "without options" do
       it "decrements" do
         expect(statsd).to receive(:decrement).with(metric, {})
@@ -195,6 +238,13 @@ describe Sapience::Appender::Datadog do
   describe "#histogram" do
     let(:metric_amount) { 444 }
 
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.histogram(metric, metric_amount)).to eq(false)
+      end
+    end
+
     it "calls timing" do
       expect(statsd).to receive(:histogram).with(metric, metric_amount, {})
       subject.histogram(metric, metric_amount)
@@ -204,6 +254,13 @@ describe Sapience::Appender::Datadog do
   describe "#count" do
     let(:metric_amount) { 33 }
 
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.count(metric, metric_amount)).to eq(false)
+      end
+    end
+
     it "calls count" do
       expect(statsd).to receive(:count).with(metric, metric_amount, {})
       subject.count(metric, metric_amount)
@@ -211,6 +268,13 @@ describe Sapience::Appender::Datadog do
   end
 
   describe "#time" do
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.time(metric)).to eq(false)
+      end
+    end
+
     it "calls count" do
       expect(statsd).to receive(:time).with(metric, {}).and_yield
       subject.time(metric) do
@@ -225,6 +289,13 @@ describe Sapience::Appender::Datadog do
       {
         foo: "bar",
       }
+    end
+
+    context "when not valid?" do
+      let(:url) { "https://0.0.0.0:2222" }
+      specify do
+        expect(subject.gauge(metric, metric_amount, hash)).to eq(false)
+      end
     end
 
     it "calls gauge" do

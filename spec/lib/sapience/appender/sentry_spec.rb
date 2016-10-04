@@ -166,9 +166,7 @@ describe Sapience::Appender::Sentry do
   end
 
   context "when dsn is invalid uri" do
-    specify do
-      expect { add_appender(dsn: "poop") }
-        .to raise_error(ArgumentError, "The :dsn key (poop) is not a valid URI")
-    end
+    subject { add_appender(dsn: "poop") }
+    its(:valid?) { is_expected.to eq(false) }
   end
 end

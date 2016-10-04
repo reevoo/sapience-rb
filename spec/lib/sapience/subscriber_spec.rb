@@ -11,6 +11,14 @@ describe Sapience::Subscriber do
   let(:appender) { Sapience::Appender::Stream.new(appender_options) }
   subject { appender }
 
+  describe "#valid?" do
+    subject { described_class.new }
+    specify do
+      expect { subject.valid? }
+        .to raise_error(NotImplementedError, "needs to be implemented in appender")
+    end
+  end
+
   describe "#extract_formatter" do
     context "when formatter is a string" do
       let(:formatter) { "raw" }

@@ -55,6 +55,10 @@ module Sapience
       end
       # rubocop:enable LineLength
 
+      def valid?
+        !@logger.nil?
+      end
+
       # Pass log calls to the underlying Rails, log4j or Ruby logger
       #  trace entries are mapped to debug since :trace is not supported by the
       #  Ruby or Rails Loggers

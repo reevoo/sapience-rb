@@ -13,6 +13,8 @@ end
 module Sapience
   module Appender
     class Sentry < Sapience::Subscriber
+      VALIDATION_MESSAGE = "DSN is not valid, please add appender with :dsn key or set SENTRY_DSN".freeze # rubocop:disable LineLength
+      URI_REGEXP = URI::DEFAULT_PARSER.regexp[:ABS_URI]
       # Create Appender
       #
       # Parameters
@@ -42,8 +44,9 @@ module Sapience
         validate_options!(options)
 
         options[:level] ||= :error
+        @sentry_dsn = options.delete(:dsn)
         Raven.configure do |config|
-          config.dsn  = options.delete(:dsn)
+          config.dsn = @sentry_dsn
           config.tags = { environment: Sapience.environment }
         end
         super(options, &block)
@@ -51,12 +54,19 @@ module Sapience
 
       def validate_options!(options = {})
         fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
-        dsn_valid = options[:dsn].to_s =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
-        fail ArgumentError, "The :dsn key (#{options[:dsn]}) is not a valid URI" unless dsn_valid
+      end
+
+      def valid?
+        (sentry_dsn =~ URI_REGEXP) != nil
+      end
+
+      def sentry_dsn
+        (@sentry_dsn || ENV["SENTRY_DSN"]).to_s
       end
 
       # Send an error notification to sentry
       def log(log) # rubocop:disable AbcSize
+        return false unless valid?
         return false unless should_log?(log)
 
         context = formatter.call(log, self)

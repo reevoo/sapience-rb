@@ -11,6 +11,8 @@ end
 module Sapience
   module Appender
     class Datadog < Sapience::Subscriber
+      VALIDATION_MESSAGE = "Statsd only supports udp. Example: 'udp://localhost:8125'".freeze
+
       # Create Appender
       #
       # Parameters:
@@ -32,7 +34,6 @@ module Sapience
         url   = options.delete(:url) || "udp://localhost:8125"
         @tags = options.delete(:tags)
         @uri  = URI.parse(url)
-        fail('Statsd only supports udp. Example: "udp://localhost:8125"') if @uri.scheme != "udp"
         super(options, &block)
       end
 
@@ -40,8 +41,13 @@ module Sapience
         @_provider ||= ::Datadog::Statsd.new(@uri.host, @uri.port, dog_options)
       end
 
+      def valid?
+        @uri.scheme == "udp"
+      end
+
       # Send an error notification to sentry
       def log(log)
+        return false unless valid?
         metric = log.metric
         return false unless metric
 
@@ -58,33 +64,41 @@ module Sapience
         if block_given?
           start = Time.now
           yield
+          return false unless valid?
           provider.timing(metric, ((Time.now - start) * 1000).floor, options)
         else
+          return false unless valid?
           provider.timing(metric, duration, options)
         end
       end
 
       def increment(metric, options = {})
+        return false unless valid?
         provider.increment(metric, options)
       end
 
       def decrement(metric, options = {})
+        return false unless valid?
         provider.decrement(metric, options)
       end
 
       def histogram(metric, amount, options = {})
+        return false unless valid?
         provider.histogram(metric, amount, options)
       end
 
       def gauge(metric, amount, options = {})
+        return false unless valid?
         provider.gauge(metric, amount, options)
       end
 
       def count(metric, amount, options = {})
+        return false unless valid?
         provider.count(metric, amount, options)
       end
 
       def time(metric, options = {}, &block)
+        return false unless valid?
         provider.time(metric, options, &block)
       end
 
@@ -93,6 +107,7 @@ module Sapience
       end
 
       def event(title, text, options = {})
+        return false unless valid?
         provider.event(title, text, options)
       end
 

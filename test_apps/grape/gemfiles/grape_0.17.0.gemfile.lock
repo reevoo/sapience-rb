@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    sapience (1.0.3)
+    sapience (1.0.5)
       concurrent-ruby (~> 1.0)
 
 GEM
@@ -21,7 +21,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     builder (3.2.2)
-    byebug (9.0.5)
+    byebug (9.0.6)
     coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -31,7 +31,7 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     dogstatsd-ruby (2.0.0)
-    enumerable-lazy (0.0.1)
+    enumerable-lazy (0.0.2)
     equalizer (0.0.11)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
@@ -80,7 +80,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.3)
+    rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -93,7 +93,7 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     ruby-progressbar (1.8.1)
-    sentry-raven (2.0.1)
+    sentry-raven (2.0.2)
       faraday (>= 0.7.6, < 0.10.x)
     simplecov (0.12.0)
       docile (~> 1.1.0)

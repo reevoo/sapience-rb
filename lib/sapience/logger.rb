@@ -13,6 +13,7 @@ module Sapience
       return unless appender_thread
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
+          next unless appender.valid?
           begin
             logger.trace "Appender thread: Flushing appender: #{appender.class.name}"
             appender.flush
@@ -30,13 +31,13 @@ module Sapience
       return unless appender_thread
       appender_thread << lambda do
         Sapience.appenders.each do |appender|
+          next unless appender.valid?
           begin
             close_appender(appender)
           rescue StandardError => exc
             logger.error "Appender thread: Failed to close appender: #{appender.inspect}", exc
           end
         end
-
         logger.trace "Appender thread: All appenders flushed"
       end
     end
@@ -70,6 +71,16 @@ module Sapience
       true
     end
 
+    def self.start_invalid_appenders_task
+      @@invalid_appenders_task = Concurrent::TimerTask.new(execution_interval: 120, timeout_interval: 5) do
+        Sapience.appenders.each do |appender|
+          next if appender.valid?
+          logger.warn { "#{appender.class} is not valid. #{appender::VALIDATION_MESSAGE}" }
+        end
+      end
+      invalid_appenders_task.execute
+    end
+
     # Returns true if the appender_thread is active
     def self.appender_thread_active?
       @@appender_thread && @@appender_thread.running?
@@ -80,6 +91,10 @@ module Sapience
     # rubocop:disable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
     def self.appender_thread
       @@appender_thread
+    end
+
+    def self.invalid_appenders_task
+      @@invalid_appenders_task
     end
 
     # Allow the internal logger to be overridden from its default to STDERR
@@ -122,6 +137,7 @@ module Sapience
       return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
       @@appender_thread << lambda do
         Sapience.appenders.each do |appender|
+          next unless appender.valid?
           begin
             appender.log(log)
           rescue StandardError => exc

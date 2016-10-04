@@ -5,7 +5,7 @@
 module Sapience
   module Appender
     class Stream < Sapience::Subscriber
-
+      VALIDATION_MESSAGE = "stream is not writable".freeze
       # Create a Stream Logger appender instance.
       #
       # Parameters
@@ -93,6 +93,10 @@ module Sapience
         @log.sync = true
         @log.set_encoding(Encoding::BINARY) if @log.respond_to?(:set_encoding)
         @log
+      end
+
+      def valid?
+        !@log.closed?
       end
 
       def ensure_folder_exist

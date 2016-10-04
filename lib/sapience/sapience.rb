@@ -208,27 +208,29 @@ module Sapience
   #   logger = Sapience['Example']
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
-  def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block)
+  def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block) # rubocop:disable AbcSize
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
     options = options.dup.deep_symbolize_keyz!
     appender_class = constantize_symbol(appender)
-    validate_appender!(appender_class)
+    validate_appender_class!(appender_class)
 
     appender       = appender_class.new(options)
+    warn "appender #{appender} with (#{options.inspect}) is not valid" unless appender.valid?
     @@appenders << appender
 
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
+    Sapience::Logger.start_invalid_appenders_task
     Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
     Sapience.metrics = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
   end
 
-  def self.validate_appender!(appender)
-    return if known_appenders.include?(appender)
+  def self.validate_appender_class!(appender_class)
+    return if known_appenders.include?(appender_class)
 
     fail NotImplementedError,
-      "Unknown appender '#{appender}'. Supported appenders are (#{known_appenders.join(", ")})"
+      "Unknown appender '#{appender_class}'. Supported appenders are (#{known_appenders.join(", ")})"
   end
 
   def self.known_appenders

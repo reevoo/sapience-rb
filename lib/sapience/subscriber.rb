@@ -19,6 +19,24 @@ module Sapience
       # NOOP
     end
 
+    # TODO: Implement this mehtod in all appenders
+    # TODO: Output relevant message when appender isn't valid
+    # TODO: Check this valid? method before using appender, output above error message if not valid?
+    # TODO: Wait with adding appenders until they are needed solve this by below
+    # TODO: Implement possibility of finding and deleting appenders by env
+    def valid?
+      fail NotImplementedError, "needs to be implemented in appender"
+    end
+
+    # TODO: Implement a format string with class name and interesting values
+    # see:
+    #   - https://www.rubysteps.com/articles/2015/customize-your-ruby-classes-with-to-s-and-inspect/
+    #   - http://stackoverflow.com/questions/9524698/override-to-s-while-keeping-output-of-inspect
+    #   - http://stackoverflow.com/questions/2625667/why-do-this-ruby-object-have-both-to-s-and-inspect-methods-that-appear-to-do-the
+    def to_s
+      name
+    end
+
     def name
       self.class.name
     end
