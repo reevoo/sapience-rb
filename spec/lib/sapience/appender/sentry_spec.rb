@@ -25,13 +25,34 @@ describe Sapience::Appender::Sentry do
     is_expected.to eq(described_class.name)
   end
 
-  it "configures tags for Raven" do
-    config = double(:config)
-    expect(Raven).to receive(:configure).and_yield(config)
-    expect(config).to receive(:dsn=).with(dsn)
-    expect(config).to receive(:tags=).with(environment: "development")
+  describe "#log" do
+    let(:config) { instance_spy(Raven::Configuration) }
+    let(:log) do
+      LogFactory.build(
+        level: :error,
+        thread_name: "Test",
+        name: "another",
+        message: "My message",
+        payload: {},
+      )
+    end
+    it "configures tags for Raven" do
+      expect(Raven).to receive(:configure).and_yield(config)
+      expect(config).to receive(:dsn=).with(dsn)
+      expect(config).to receive(:tags=).with(environment: "development")
+      appender.log(log)
+    end
 
-    add_appender(options)
+    context "when dsn is empty string" do
+      let(:appender) { add_appender(dsn: "") }
+      specify do
+        allow(Raven).to receive(:configure).and_yield(config)
+        expect(config).not_to receive(:tags=)
+        expect(config).not_to receive(:dsn=)
+        appender.log(log)
+      end
+      its(:valid?) { is_expected.to eq(false) }
+    end
   end
 
   shared_examples "capturing backtrace" do
@@ -166,18 +187,6 @@ describe Sapience::Appender::Sentry do
 
   context "when dsn is invalid uri" do
     subject { add_appender(dsn: "poop") }
-    its(:valid?) { is_expected.to eq(false) }
-  end
-
-  context "when dsn is empty string" do
-    subject { add_appender(dsn: "") }
-    specify do
-      config = instance_spy(Raven::Configuration)
-      allow(Raven).to receive(:configure).and_yield(config)
-      expect(config).to receive(:tags=).with(environment: Sapience.environment)
-      expect(config).not_to receive(:dsn=)
-      expect { subject }.not_to raise_error
-    end
     its(:valid?) { is_expected.to eq(false) }
   end
 end

@@ -45,28 +45,18 @@ module Sapience
 
         options[:level] ||= :error
         @sentry_dsn = options.delete(:dsn)
-        Raven.configure do |config|
-          config.dsn = sentry_dsn if valid?
-          config.tags = { environment: Sapience.environment }
-        end
+        @configured = false
         super(options, &block)
-      end
-
-      def validate_options!(options = {})
-        fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
       end
 
       def valid?
         (sentry_dsn =~ URI_REGEXP) != nil
       end
 
-      def sentry_dsn
-        (@sentry_dsn || ENV["SENTRY_DSN"]).to_s
-      end
-
       # Send an error notification to sentry
       def log(log) # rubocop:disable AbcSize
         return false unless valid?
+        configure_sentry unless @configured
         return false unless should_log?(log)
 
         context = formatter.call(log, self)
@@ -87,6 +77,22 @@ module Sapience
       end
 
       private
+
+      def validate_options!(options = {})
+        fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
+      end
+
+      def sentry_dsn
+        (@sentry_dsn || ENV["SENTRY_DSN"]).to_s
+      end
+
+      def configure_sentry
+        Raven.configure do |config|
+          config.dsn = sentry_dsn
+          config.tags = { environment: Sapience.environment }
+        end
+        @configured = true
+      end
 
       # Use Raw Formatter by default
       def default_formatter
