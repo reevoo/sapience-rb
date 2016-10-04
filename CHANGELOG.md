@@ -1,3 +1,7 @@
+## v1.0.8
+
+- Delayed configuration of Sentry until the configuration is valid
+
 ## v1.0.3
 
 - Rename `SAPIENCE_APP_NAME` to `APP_NAME`
