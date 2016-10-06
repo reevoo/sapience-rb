@@ -269,6 +269,9 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/reevoo/sapience. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
+When creating a PR be sure to add a changelog entry. There should always be an entry for unreleased at the top. If one is missing add a new version with `## v1.0.10 (unreleased)` and whatever changes your PR contains as well.
+
+This way the maintainers of the gem doesn't have to guess what to add afterward the PR has been merged.
 
 ## License
 
