@@ -30,8 +30,10 @@ describe Sapience::Appender::Sentry do
         name: "another",
         message: "My message",
         payload: {},
+        exception: Exception.new,
       )
     end
+
     it "configures tags for Raven" do
       expect(Raven).to receive(:configure).and_yield(config)
       expect(config).to receive(:dsn=).with(dsn)
