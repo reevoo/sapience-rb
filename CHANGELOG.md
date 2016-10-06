@@ -1,4 +1,7 @@
+## v1.0.9
+
 - Added `filter_parameters` configuration to obfuscate sensitive information such as passwords for rack-like applications
+- Require Grape version >= 0.16.2, raise if lesser version is found
 
 ## v1.0.8
 
