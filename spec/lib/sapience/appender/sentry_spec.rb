@@ -1,8 +1,9 @@
 require "spec_helper"
 describe Sapience::Appender::Sentry do
+  subject(:appender) { described_class.new(options) }
+
   let(:level) { :trace }
   let(:dsn) { "https://foobar:443" }
-  let(:appender) { add_appender(options) }
   let(:message) { "AppenderRavenTest log message" }
   force_config(backtrace_level: :error)
   let(:options) do
@@ -13,16 +14,11 @@ describe Sapience::Appender::Sentry do
 
   before { Sapience.configure { |c| c.app_name = "test_app" } }
 
-  after { Sapience.remove_appenders }
+  its(:name) { is_expected.to eq(described_class.name) }
 
-  def add_appender(options = {})
-    Sapience.add_appender(:sentry, options)
-  end
-
-  subject { appender }
-
-  its(:name) do
-    is_expected.to eq(described_class.name)
+  it "can be added as a Sapience appender" do
+    expect { Sapience.add_appender(:sentry, options) }.to change { Sapience.appenders.count }.by(1)
+    Sapience.remove_appenders
   end
 
   describe "#log" do
@@ -44,14 +40,16 @@ describe Sapience::Appender::Sentry do
     end
 
     context "when dsn is empty string" do
-      let(:appender) { add_appender(dsn: "") }
-      specify do
+      let(:dsn) { "" }
+
+      it "does not configure tags or dsn" do
         allow(Raven).to receive(:configure).and_yield(config)
         expect(config).not_to receive(:tags=)
         expect(config).not_to receive(:dsn=)
         appender.log(log)
       end
-      its(:valid?) { is_expected.to eq(false) }
+
+      it { is_expected.to_not be_valid }
     end
   end
 
@@ -186,7 +184,7 @@ describe Sapience::Appender::Sentry do
   end
 
   context "when dsn is invalid uri" do
-    subject { add_appender(dsn: "poop") }
-    its(:valid?) { is_expected.to eq(false) }
+    let(:dsn) { "poop" }
+    it { is_expected.to_not be_valid }
   end
 end
