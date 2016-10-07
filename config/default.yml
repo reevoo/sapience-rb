@@ -1,5 +1,8 @@
 ---
 default:
+  filter_parameters:
+    - password
+    - password_confirmation
   log_executor: single_thread_executor
   log_level: info
   appenders:

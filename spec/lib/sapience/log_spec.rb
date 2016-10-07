@@ -207,6 +207,42 @@ describe Sapience::Log do
       its(:to_h) do
         is_expected.to match(expected)
       end
+
+      context "when payload contains sensitive information" do
+        let(:payload) do
+          {
+            params: {
+              "password" => "some_password",
+              "password_confirmation" => "some_password",
+              "foo" => "bar",
+            },
+          }
+        end
+
+        it "replaces the value of default fields to [FILTERED]" do
+          expect(subject.to_h[:params]).to eq(
+            "password" => "[FILTERED]",
+            "password_confirmation" => "[FILTERED]",
+            "foo" => "bar",
+          )
+        end
+
+        context "with configuration" do
+          describe "overriding configuration" do
+            before(:each) do
+              allow(Sapience.config).to receive(:filter_parameters).and_return(["foo"])
+            end
+
+            it "filters overridden fields" do
+              expect(subject.to_h[:params]).to eq(
+                "password" => "some_password",
+                "password_confirmation" => "some_password",
+                "foo" => "[FILTERED]",
+              )
+            end
+          end
+        end
+      end
     end
 
     context "when payload is a String" do
