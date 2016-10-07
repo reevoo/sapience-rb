@@ -11,6 +11,10 @@ end
 
 module Sapience
   class Grape
+    UnsupportedVersion = Class.new(Exception)
+    if Gem.loaded_specs["grape"].version < Gem::Version.create("0.16.2")
+      fail UnsupportedVersion, "Expecting grape version >= 0.16.2"
+    end
     Sapience.configure
     ::Grape::API.send(:include, Sapience::Loggable)
     Sapience::Extensions::Grape::Notifications.use
