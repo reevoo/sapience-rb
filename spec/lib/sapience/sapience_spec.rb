@@ -334,7 +334,7 @@ describe Sapience do
 
   describe ".metrics" do
     specify do
-      expect(described_class.metrics).to eq(nil)
+      expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
     end
 
     context "when adding a metrics appender" do
