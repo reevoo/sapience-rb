@@ -1,3 +1,7 @@
+## v1.0.10
+
+- Automatically add default `datadog` appender when calling `Sapience.metrics` 
+
 ## v1.0.9
 
 - Added `filter_parameters` configuration to obfuscate sensitive information such as passwords for rack-like applications
