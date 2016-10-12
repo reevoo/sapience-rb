@@ -26,7 +26,7 @@ describe Ping::API do
       specify do
         expect(metrics).to receive(:increment).with("grape.request", tags: tags)
         expect(metrics).to receive(:timing).with("grape.request.time", kind_of(Float), tags: tags)
-        get "/api/ping"
+        get "/api/ping", {}, "CONTENT-TYPE" => "application/json"
       end
     end
 

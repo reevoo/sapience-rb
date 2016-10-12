@@ -1,10 +1,13 @@
 require "grape/middleware/base"
+require_relative "../request_format_helper"
 
 module Sapience
   module Extensions
     module Grape
       module Middleware
         class Logging < ::Grape::Middleware::Base
+          include RequestFormatHelper
+
           ActiveSupport::Notifications.subscribe("sql.active_record") do |*args|
             event = ActiveSupport::Notifications::Event.new(*args)
             Grape::Timings.append_db_runtime(event)
@@ -39,7 +42,7 @@ module Sapience
             {
               method: request.request_method,
               request_path: request.path,
-              format: response_format,
+              format: request_format(request.env),
               status: response.try(:status) || 404,
               class_name: env["api.endpoint"].options[:for].to_s,
               action: "index",
@@ -59,16 +62,6 @@ module Sapience
           end
 
           private
-
-          def content_type
-            request.env.fetch("CONTENT_TYPE") do
-              request.env["CONTENT-TYPE"]
-            end
-          end
-
-          def response_format
-            content_type.to_s.split("/").last
-          end
 
           def request
             @request ||= ::Rack::Request.new(env)

@@ -1,7 +1,10 @@
+require_relative "request_format_helper"
+
 module Sapience
   module Extensions
     module Grape
       class Notifications < ::Sapience::Extensions::Notifications
+        include RequestFormatHelper
         # Options:
         #
         # *<tt>:metric_name</tt> - the metric name, defaults to "grape.request"
@@ -25,7 +28,7 @@ module Sapience
           route    = endpoint.route
           version  = route.version
           method   = route.request_method.downcase
-          format   = payload[:endpoint].instance_variable_get(:@app).instance_variable_get(:@app).options[:format]
+          format   = request_format(endpoint.env)
           path = route.pattern.path.dup
 
           path.sub!(/\(\.#{format}\)$/, "")

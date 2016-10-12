@@ -1,3 +1,8 @@
+## v1.0.12
+
+- Fix NoMethodError in Grape::Notification
+- Exclude test apps from Gem
+
 ## v1.0.11
 
 - Fix a NoMethodError with logging the response format in grape
