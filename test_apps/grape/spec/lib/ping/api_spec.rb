@@ -12,7 +12,7 @@ describe Ping::API do
     let(:logger) { Grape::API.logger }
 
     specify do
-      get "/api/ping"
+      get "/api/ping", {}, "CONTENT-TYPE" => "application/json"
       expect(last_response.body).to match(/PONG/)
     end
 
@@ -34,7 +34,7 @@ describe Ping::API do
       expect(logger).to receive(:info).with(
         method:       "GET",
         request_path: "/api/ping",
-        format:       :json,
+        format:       "json",
         status:       200,
         class_name:   "Ping::API",
         action:       "index",
@@ -50,7 +50,7 @@ describe Ping::API do
                       ),
       )
 
-      get "/api/ping"
+      get "/api/ping", {}, "CONTENT-TYPE" => "application/json"
     end
 
     context "no routes defined" do
@@ -58,7 +58,7 @@ describe Ping::API do
         expect(logger).to receive(:info).with(
           method:       "GET",
           request_path: "/api/404",
-          format:       :json,
+          format:       "json",
           status:       404,
           class_name:   "Ping::API",
           action:       "index",
@@ -74,7 +74,7 @@ describe Ping::API do
                         ),
         )
 
-        get "/api/404"
+        get "/api/404", {}, "CONTENT-TYPE" => "application/json"
       end
     end
   end

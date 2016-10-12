@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    sapience (1.0.9)
+    sapience (1.0.10)
       concurrent-ruby (~> 1.0)
 
 GEM
@@ -137,4 +137,4 @@ DEPENDENCIES
   simplecov-json
 
 BUNDLED WITH
-   1.13.1
+   1.13.2

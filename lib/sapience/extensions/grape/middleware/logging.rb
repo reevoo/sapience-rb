@@ -39,7 +39,7 @@ module Sapience
             {
               method: request.request_method,
               request_path: request.path,
-              format: env["api.endpoint"].instance_variable_get(:@app).instance_variable_get(:@app).options[:format],
+              format: response_format,
               status: response.try(:status) || 404,
               class_name: env["api.endpoint"].options[:for].to_s,
               action: "index",
@@ -59,6 +59,16 @@ module Sapience
           end
 
           private
+
+          def content_type
+            request.env.fetch("CONTENT_TYPE") do
+              request.env["CONTENT-TYPE"]
+            end
+          end
+
+          def response_format
+            content_type.to_s.split("/").last
+          end
 
           def request
             @request ||= ::Rack::Request.new(env)
