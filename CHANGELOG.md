@@ -1,3 +1,7 @@
+## v1.0.11
+
+- Fix a NoMethodError with logging the response format in grape
+
 ## v1.0.10
 
 - Automatically add default `datadog` appender when calling `Sapience.metrics` 
