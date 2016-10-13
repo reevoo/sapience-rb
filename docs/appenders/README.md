@@ -4,7 +4,7 @@ One of the things that did not suit us so well with the Semantic Logger approach
 
 There are a number of appenders that each listen to different events and act on its data. It is possible to specify the `level` and `backtrace_level` for each appender by providing (example) `level: :error` to the add_appender method.
 
-- [Stream](stream.md)
-- [Sentry](sentry.md)
-- [Datadog](datadog.md)
-- [Wrapper](wrapper.md)
+- [Stream Appender](stream.md)
+- [Sentry Appender](sentry.md)
+- [Datadog Appender](datadog.md)
+- [Wrapper Appender](wrapper.md)

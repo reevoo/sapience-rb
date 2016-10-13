@@ -1,5 +1,11 @@
 ### Wrapper
 
+- [Appenders](README.md)
+  - [Stream Appender](stream.md)
+  - [Sentry Appender](sentry.md)
+  - [Datadog Appender](datadog.md)
+  - [Wrapper Appender](wrapper.md)
+
 The wrapper is useful when you already have a logger you want to use but want to use Sapience. The wrapper appender will when called use the logger provided to store the log data.
 
 ```ruby

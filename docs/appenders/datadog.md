@@ -1,5 +1,11 @@
 ## Datadog
 
+- [Appenders](README.md)
+  - [Stream Appender](stream.md)
+  - [Sentry Appender](sentry.md)
+  - [Datadog Appender](datadog.md)
+  - [Wrapper Appender](wrapper.md)
+
 Datadog is a slightly modified version of statsd. On top of the standard statsd API it has support for events.
 
 ```ruby
