@@ -68,7 +68,7 @@ module Sapience
           message = {
             error_class:   context.delete(:name),
             error_message: context.delete(:message),
-            context: context,
+            extra: context,
           }
           message[:backtrace] = log.backtrace if log.backtrace
           Raven.capture_message(message[:error_message], message)
