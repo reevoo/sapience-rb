@@ -38,7 +38,7 @@ module Aslan
     class Base < Grape::API
       use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
 
-      # To log all requests even when no route was found add the following:
+      # To log all requests even when no route was found use the following:
       route :any, "*path" do
         error!({ error: "No route found" }, 404)
       end
@@ -91,7 +91,7 @@ API.logger = Sapience.logger
 Note: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
 rack logger so you don't get double logging.
 
-### Configuration
+### [Configuration](docs/configuration/README.md)
 
 The sapience configuration can be controlled by a `config/sapience.yml` file or if you like us have many projects that use the same configuration you can create your own gem with a shared config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb)
 
@@ -105,6 +105,7 @@ Sapience.configure do |config|
   config.appenders       = [
     { stream: { io: STDOUT, formatter: :color } },
     { sentry: { dsn: "https://username:password@sentry.io/00000" } },
+    { datadog: { url: "udp://localhost:8125" } },
   ]
   config.log_executor    = :single_thread_executor
 end
@@ -135,8 +136,8 @@ test:
 
 development:
   log_executor: single_thread_executor
-  log_level_active_record: debug
   log_level: debug
+  log_level_active_record: debug
   appenders:
     - stream:
         file_name: log/development.log
@@ -323,6 +324,8 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 You need to create the test postgres db, by running the command below:
 
 `createdb rails_app_test`
+
+Then run the command below:
 
 `bin/tests`
 
