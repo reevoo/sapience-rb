@@ -1,3 +1,7 @@
+## v1.0.13
+
+- Fix a problem with logging extra parameters to sentry
+
 ## v1.0.12
 
 - Fix NoMethodError in Grape::Notification

@@ -64,7 +64,7 @@ describe Sapience::Appender::Sentry do
           a_hash_including(
             error_class: "Sapience::Appender::Sentry",
             error_message: "AppenderRavenTest log message",
-            context: {
+            extra: {
               pid: a_kind_of(Integer),
               thread: a_kind_of(String),
               time: a_kind_of(Time),
@@ -113,7 +113,7 @@ describe Sapience::Appender::Sentry do
           a_hash_including(
             error_class: "Sapience::Appender::Sentry",
             error_message: "AppenderRavenTest log message",
-            context: {
+            extra: {
               pid: a_kind_of(Integer),
               thread: a_kind_of(String),
               time: a_kind_of(Time),
