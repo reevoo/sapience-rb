@@ -96,6 +96,7 @@ rack logger so you don't get double logging.
 - [Configuration](docs/configuration/README.md)
 - [Appenders](docs/appenders/README.md)
 - [Formatters](docs/formatters/README.md)
+- [Logger](docs/logger/README.md)
 - [Contributing](docs/contributing/README.md)
 
 ## License
