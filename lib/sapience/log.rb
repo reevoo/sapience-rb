@@ -145,6 +145,7 @@ module Sapience
     # its hash. We need to obfuscate these fields.
     def payload # rubocop:disable AbcSize
       return self[:payload] unless self[:payload].is_a?(Hash) && self[:payload][:params].is_a?(Hash)
+      @payload ||= nil
       return @payload unless @payload.nil?
 
       # We don't want to mutate the existing object so dup
