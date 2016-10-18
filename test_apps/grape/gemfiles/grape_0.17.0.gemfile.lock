@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    sapience (1.0.11)
+    sapience (1.0.13)
       concurrent-ruby (~> 1.0)
 
 GEM

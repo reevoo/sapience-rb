@@ -88,10 +88,19 @@ module Sapience
 
       def configure_sentry
         Raven.configure do |config|
-          config.dsn = sentry_dsn
-          config.tags = { environment: Sapience.environment }
+          config.dsn    = sentry_dsn
+          config.tags   = { environment: Sapience.environment }
+          config.logger = sentry_logger
         end
         @configured = true
+      end
+
+      def sentry_logger
+        @sentry_logger ||= begin
+          logger = Sapience[self.class]
+          logger.level = :error
+          logger
+        end
       end
 
       # Use Raw Formatter by default

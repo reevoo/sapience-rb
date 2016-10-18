@@ -38,6 +38,7 @@ describe Sapience::Appender::Sentry do
       expect(Raven).to receive(:configure).and_yield(config)
       expect(config).to receive(:dsn=).with(dsn)
       expect(config).to receive(:tags=).with(environment: "development")
+      expect(config).to receive(:logger=).with(appender.send(:sentry_logger))
       appender.log(log)
     end
 
