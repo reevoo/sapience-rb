@@ -1,3 +1,7 @@
+## v1.0.14
+
+- Reduce log output noise from the sentry logger
+
 ## v1.0.13
 
 - Fix a problem with logging extra parameters to sentry
