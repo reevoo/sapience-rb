@@ -9,7 +9,7 @@ module Sapience
 
         def identity(event)
           lsevent = logstash_event(event)
-          logger << lsevent.to_json + "\n" if logger && lsevent
+          debug(lsevent.to_json + "\n") if logger && lsevent
         end
         alias_method :sql, :identity
 
@@ -24,7 +24,6 @@ module Sapience
           data.merge! extract_sql(data)
 
           data.merge! tags(data)
-          debug(data)
         end
 
         def runtimes(event)
