@@ -13,3 +13,5 @@ log/
 **/*.gem
 
 /vendor/
+
+/tmp/
