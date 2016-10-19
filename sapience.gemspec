@@ -42,4 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "active_model_serializers", "~> 0.10.0"
   spec.add_development_dependency "codeclimate-test-reporter"
   spec.add_development_dependency "gem-release"
+  spec.add_development_dependency "memory_profiler"
+  spec.add_development_dependency "rspec-prof"
 end

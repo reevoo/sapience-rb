@@ -5,12 +5,14 @@ require "sapience"
 require "logger"
 require "rspec/its"
 require "pry-nav"
+require "memory_profiler"
 require "active_support/testing/time_helpers"
 
 require_relative "support/mock_logger"
 require_relative "support/log_factory"
 require_relative "support/file_helper"
 require_relative "support/config_helper"
+require_relative "support/rspec_prof"
 
 TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
 
@@ -35,6 +37,20 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+  # config.before(:all) do |example|
+  #   MemoryProfiler.report(allow_files: "sapience") { example.run }
+  #     .pretty_print(to_file: "tmp/full_profile.mem")
+  # end
+
+  # config.before(:suite) do
+  #   RubyProf.start
+  # end
+
+  # config.after(:suite) do
+  #   result = RubyProf.stop
+  #   printer = RubyProf::MultiPrinter.new(result)
+  #   printer.print(path: "tmp", profile: "profile")
+  # end
 
   config.before(:each) do
     allow(ENV).to receive(:[]).and_call_original
