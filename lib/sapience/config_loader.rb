@@ -46,11 +46,12 @@ module Sapience
       end
 
       def root_dir
-        if defined?(::Rack::Directory)
-          Rack::Directory.new("").root
-        else
-          Dir.pwd
-        end
+        @root_dir ||=
+          if defined?(::Rack::Directory)
+            Rack::Directory.new("").root
+          else
+            Dir.pwd
+          end
       end
 
       def load_yaml_configuration(absolute_path)

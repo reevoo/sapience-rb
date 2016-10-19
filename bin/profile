@@ -14,19 +14,18 @@ FILTERED_METHODS = [
 puts "Starting RubyProf"
 RubyProf.start
 
-begin
-  puts "Configuring Sapience"
-  Sapience.configure(force: true)
-  puts "Adding Sentry Appender"
-  Sapience.add_appender(:sentry, dsn: "https://5630e2b96b364d448a68914f3ddb91ce:1d4a94c64a1f4fe39736046fc0261ebb@sentry.io/107100")
-rescue Exception => e
-  puts e
-end
+puts "Configuring Sapience"
+Sapience.configure(force: true)
+puts "Adding Sentry Appender"
+Sapience.add_appender(
+  :sentry,
+  dsn: "https://5630e2b96b364d448a68914f3ddb91ce:1d4a94c64a1f4fe39736046fc0261ebb@sentry.io/107100",
+)
 
 logger = Sapience["Profile"]
 puts "Logging 10 000 infos"
-10000.times do
-  logger.info("something", { oh: "my" })
+10_000.times do
+  logger.info("something",  oh: "my")
 end
 
 puts "Logging 100 errors"
