@@ -23,6 +23,7 @@ module Sapience
       @level || Sapience.config.default_level
     end
 
+    # TODO: Move this to logger.rb?
     # Implement the log level calls
     #   logger.debug(message, hash|exception=nil, &block)
     #
@@ -259,6 +260,7 @@ module Sapience
       (level_index <= (log.level_index || 0)) && include_message?(log)
     end
 
+    # TODO: Move this to logger.rb?
     # Log message at the specified level
     # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
     def log_internal(level, index, message = nil, payload = nil, exception = nil)
