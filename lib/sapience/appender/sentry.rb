@@ -52,7 +52,7 @@ module Sapience
       end
 
       def valid?
-        @valid == true && (sentry_dsn =~ URI_REGEXP) != nil
+        @valid == true && sentry_dsn =~ URI_REGEXP
       end
 
       # Send an error notification to sentry
@@ -61,6 +61,17 @@ module Sapience
         configure_sentry unless @configured
         return false unless should_log?(log)
 
+        record_log(log)
+        true
+      rescue Exception => e # rubocop:disable Lint/RescueException
+        @valid = false
+        Sapience.logger.error { e }
+        false
+      end
+
+      private
+
+      def record_log(log)
         context = formatter.call(log, self)
         if log.exception
           context.delete(:exception)
@@ -74,14 +85,7 @@ module Sapience
           message[:backtrace] = log.backtrace if log.backtrace
           Raven.capture_message(message[:error_message], message)
         end
-        true
-      rescue Exception => e
-        @valid = false
-        Sapience.logger.error { e }
-        false
       end
-
-      private
 
       def validate_options!(options = {})
         fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)

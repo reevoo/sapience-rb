@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    sapience (1.0.13)
+    sapience (1.0.15)
       concurrent-ruby (~> 1.0)
 
 GEM
@@ -93,7 +93,7 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     ruby-progressbar (1.8.1)
-    sentry-raven (2.0.2)
+    sentry-raven (2.1.0)
       faraday (>= 0.7.6, < 0.10.x)
     simplecov (0.12.0)
       docile (~> 1.1.0)
