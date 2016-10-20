@@ -1,4 +1,5 @@
 require "spec_helper"
+
 describe Sapience::Appender::Sentry do
   subject(:appender) { described_class.new(options) }
 
@@ -10,6 +11,16 @@ describe Sapience::Appender::Sentry do
     {
       level: level, dsn: dsn
     }
+  end
+  let(:log) do
+    LogFactory.build(
+      level: :error,
+      thread_name: "Test",
+      name: "another",
+      message: "My message",
+      payload: {},
+      exception: Exception.new,
+    )
   end
 
   before { Sapience.configure { |c| c.app_name = "test_app" } }
@@ -23,16 +34,6 @@ describe Sapience::Appender::Sentry do
 
   describe "#log" do
     let(:config) { instance_spy(Raven::Configuration) }
-    let(:log) do
-      LogFactory.build(
-        level: :error,
-        thread_name: "Test",
-        name: "another",
-        message: "My message",
-        payload: {},
-        exception: Exception.new,
-      )
-    end
 
     it "configures tags for Raven" do
       expect(Raven).to receive(:configure).and_yield(config)
@@ -189,5 +190,24 @@ describe Sapience::Appender::Sentry do
   context "when dsn is invalid uri" do
     let(:dsn) { "poop" }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "integration" do
+    let(:dsn) do
+      "https://5630e2b96b364d448a68914f3ddb91ce:1d4a94c64a1f4fe39736046fc0261ebb@sentry.io/107100"
+    end
+
+    it "does not call itself" do
+      raven_client = instance_spy(Raven::Client)
+      allow(Raven::Client).to receive(:new).and_return(raven_client)
+      allow(raven_client).to receive(:send_event).and_raise(Interrupt, "can't call sentry.io")
+
+      expect(Raven).to receive(:capture_exception).and_call_original.once
+      expect(subject).to be_valid
+      subject.log(log)
+      expect(subject).not_to be_valid
+      subject.log(log)
+      expect(subject).not_to be_valid
+    end
   end
 end

@@ -44,13 +44,15 @@ module Sapience
         validate_options!(options)
 
         options[:level] ||= :error
+        @sentry_logger_level = options[:level]
         @sentry_dsn = options.delete(:dsn)
         @configured = false
+        @valid      = true
         super(options, &block)
       end
 
       def valid?
-        (sentry_dsn =~ URI_REGEXP) != nil
+        @valid == true && (sentry_dsn =~ URI_REGEXP) != nil
       end
 
       # Send an error notification to sentry
@@ -60,7 +62,6 @@ module Sapience
         return false unless should_log?(log)
 
         context = formatter.call(log, self)
-
         if log.exception
           context.delete(:exception)
           Raven.capture_exception(log.exception, context)
@@ -74,6 +75,10 @@ module Sapience
           Raven.capture_message(message[:error_message], message)
         end
         true
+      rescue Exception => e
+        @valid = false
+        Sapience.logger.error { e }
+        false
       end
 
       private
@@ -87,6 +92,7 @@ module Sapience
       end
 
       def configure_sentry
+        return if @configured == true
         Raven.configure do |config|
           config.dsn    = sentry_dsn
           config.tags   = { environment: Sapience.environment }
@@ -95,10 +101,11 @@ module Sapience
         @configured = true
       end
 
+      # Sapience logger
       def sentry_logger
         @sentry_logger ||= begin
           logger = Sapience[self.class]
-          logger.level = :error
+          logger.level = @sentry_logger_level
           logger
         end
       end
