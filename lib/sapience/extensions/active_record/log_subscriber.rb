@@ -8,14 +8,14 @@ module Sapience
         include Sapience::Loggable
 
         def identity(event)
-          lsevent = logstash_event(event)
-          debug(lsevent.to_json + "\n") if logger && lsevent
+          event = normalize(event)
+          debug(event) if logger && event
         end
         alias_method :sql, :identity
 
         private
 
-        def logstash_event(event)
+        def normalize(event)
           data = event.payload
 
           return if "SCHEMA" == data[:name]

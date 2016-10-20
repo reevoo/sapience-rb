@@ -24,11 +24,6 @@ describe Sapience::Extensions::ActiveRecord::LogSubscriber do
       allow(subject).to receive(:logger).and_return(logger)
     end
 
-    specify do
-      expect(logger).to receive(:<<).with("true\n")
-      subject.identity(event)
-    end
-
     it "logs data" do
       expected = {
         name:     name,
