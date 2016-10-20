@@ -3,6 +3,11 @@ require "sapience/ansi_colors"
 require "sapience/core_ext/hash"
 require "sapience/core_ext/symbol"
 require "sapience/core_ext/thread"
+require "sapience/descendants"
+require "sapience/log_methods"
+require "sapience/appender"
+require "sapience/metrics"
+require "sapience/error_handler"
 require "sapience/sapience"
 require "sapience/extensions/notifications"
 
@@ -25,9 +30,10 @@ require "sapience/loggable"
 require "sapience/subscriber"
 
 require "sapience/appender/stream"
-require "sapience/appender/sentry"
 require "sapience/appender/wrapper"
-require "sapience/appender/datadog"
+require "sapience/metrics/datadog"
+require "sapience/error_handler/silent"
+require "sapience/error_handler/sentry"
 
 # @formatter:on
 

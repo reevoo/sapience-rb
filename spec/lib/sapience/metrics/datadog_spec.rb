@@ -1,5 +1,5 @@
 require "spec_helper"
-describe Sapience::Appender::Datadog do
+describe Sapience::Metrics::Datadog do
   subject { described_class.new(options) }
 
   let(:url) { "udp://0.0.0.0:2222" }
@@ -18,10 +18,6 @@ describe Sapience::Appender::Datadog do
     allow(Sapience).to receive(:environment).and_return("rspec")
     allow(::Datadog::Statsd).to receive(:new).and_return(statsd)
     allow(statsd).to receive(:batch).and_yield
-  end
-
-  its(:name) do
-    is_expected.to eq(described_class.name)
   end
 
   describe "#valid?" do
@@ -67,88 +63,6 @@ describe Sapience::Appender::Datadog do
           .to receive(:new)
           .with("0.0.0.0", 2222, namespace: "sapience_rspec.rspec", tags: tags)
         subject.provider
-      end
-    end
-  end
-
-  describe "#log" do
-    let(:duration) { nil }
-    let(:metric_amount) { nil }
-
-    let(:log) do
-      LogFactory.build(
-        metric:        metric,
-        duration:      duration,
-        metric_amount: metric_amount,
-        tags:          ["baz"],
-      )
-    end
-
-    context "when not valid?" do
-      let(:url) { "https://0.0.0.0:2222" }
-      specify do
-        expect(subject.log(log)).to eq(false)
-      end
-    end
-
-    context "without metric" do
-      let(:metric) { nil }
-
-      it "returns nil" do
-        expect(subject.log(log)).to eq(false)
-      end
-
-      it "doesn't call statsd" do
-        expect(subject).not_to receive(:timing)
-        expect(subject).not_to receive(:decrement)
-        expect(subject).not_to receive(:increment)
-        subject.log(log)
-      end
-    end
-
-    context "with duration" do
-      let(:duration) { 200 }
-
-      it "calls timing" do
-        expect(subject).to receive(:timing).with(metric, duration, tags: ["baz"])
-        expect(subject.log(log)).to eq(true)
-      end
-
-      it "doesn't increment or decrement" do
-        expect(subject).not_to receive(:decrement)
-        expect(subject).not_to receive(:increment)
-        subject.log(log)
-      end
-
-      it "returns true" do
-        expect(subject.log(log)).to eq(true)
-      end
-    end
-
-    context "without duration" do
-      context "without metric_amount" do
-        it "increment by 1" do
-          expect(subject).to receive(:count).with(metric, 1, tags: ["baz"])
-          expect(subject.log(log)).to eq(true)
-        end
-      end
-
-      context "metric_amount is negative" do
-        let(:metric_amount) { -2 }
-
-        it "decrement by 2" do
-          expect(subject).to receive(:count).with(metric, -2, tags: ["baz"])
-          expect(subject.log(log)).to eq(true)
-        end
-      end
-
-      context "metric_amount is negative" do
-        let(:metric_amount) { 3 }
-
-        it "increment by 3" do
-          expect(subject).to receive(:count).with(metric, 3, tags: ["baz"])
-          expect(subject.log(log)).to eq(true)
-        end
       end
     end
   end

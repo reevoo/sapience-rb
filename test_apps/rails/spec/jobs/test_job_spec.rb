@@ -7,7 +7,7 @@ require "external_sneaker"
 describe TestJob do
   include FileHelper
   include ActiveJob::TestHelper
-  let(:metrics) { Sapience.add_appender(:datadog) }
+  let(:metrics) { Sapience.metrics }
   let(:tags) do
     %w(name:test queue:test_queue)
   end
@@ -17,7 +17,6 @@ describe TestJob do
       body: "Hot",
     }
   end
-  let(:logger) { Sapience[described_class] }
 
   after do
     delete_file("config/sapience.yml")

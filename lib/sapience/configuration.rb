@@ -1,14 +1,12 @@
 require "ostruct"
 
 module Sapience
-  UnkownLogLevel = Class.new(StandardError)
-  InvalidLogExecutor = Class.new(StandardError)
 
   # rubocop:disable ClassVars
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
-    attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters
+    attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters, :metrics, :error_handler
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
@@ -17,6 +15,8 @@ module Sapience
       ap_options:        { multiline: false },
       appenders:         [{ stream: { io: STDOUT, formatter: :color } }],
       log_executor:      :single_thread_executor,
+      metrics:           { datadog: { url: Sapience::DEFAULT_STATSD_URL } },
+      error_handler:     { silent: {} },
       filter_parameters: %w(password password_confirmation),
     }.freeze
 
@@ -34,6 +34,8 @@ module Sapience
       self.appenders         = @options[:appenders]
       self.log_executor      = @options[:log_executor]
       self.filter_parameters = @options[:filter_parameters]
+      self.metrics           = @options[:metrics]
+      self.error_handler     = @options[:error_handler]
     end
 
     # Sets the global default log level

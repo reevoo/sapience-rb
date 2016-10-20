@@ -7,7 +7,6 @@ describe "Posts", type: :request do
         before do
           # ActiveRecord::Base.logger = Logger.new(STDOUT)
           Rails.logger.level = :debug
-          Sapience.add_appender(:datadog)
           FactoryGirl.create_list(:post, 10)
           allow_any_instance_of(Sapience::Extensions::ActiveRecord::Notifications)
             .to receive(:record).and_return(true)

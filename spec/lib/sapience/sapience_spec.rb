@@ -1,6 +1,13 @@
 require "spec_helper"
 
 describe Sapience do
+  let(:sentry_options) do
+    { dsn: "https://getsentry.com:443" }
+  end
+  let(:error_handler) do
+    { sentry: sentry_options }
+  end
+
   describe ".root" do
     its(:root) do
       is_expected.to eq(Gem::Specification.find_by_name("sapience").gem_dir)
@@ -60,29 +67,6 @@ describe Sapience do
         it { is_expected.to be_a(Sapience::Appender::Stream) }
         its(:formatter) { is_expected.to be_a(Sapience::Formatters::Json) }
       end
-    end
-
-    context "when :statsd key is present" do
-      let(:appender) { :datadog }
-      let(:options) do
-        {
-          url: "udp://localhost:2222",
-        }
-      end
-
-      it { is_expected.to be_a(Sapience::Appender::Datadog) }
-    end
-
-    context "when :sentry key is present" do
-      let(:appender) { :sentry }
-      let(:options) do
-        {
-          level: :info,
-          dsn: "https://foobar:443",
-        }
-      end
-
-      it { is_expected.to be_a(Sapience::Appender::Sentry) }
     end
   end
 
@@ -232,7 +216,7 @@ describe Sapience do
     let(:app_name) { "my_app" }
     context "when configure(force: false)" do
       let(:config) do
-        instance_spy(Sapience::Configuration, app_name: app_name)
+        instance_spy(Sapience::Configuration, app_name: app_name, error_handler: error_handler)
       end
       let(:stream_options) do
         { io: STDOUT }
@@ -240,13 +224,7 @@ describe Sapience do
       let(:stream_appender) do
         { stream: stream_options }
       end
-      let(:sentry_options) do
-        { dsn: "https://getsentry.com:443" }
-      end
-      let(:sentry_appender) do
-        { sentry: sentry_options }
-      end
-      let(:appenders) { [stream_appender, sentry_appender] }
+      let(:appenders) { [stream_appender] }
 
       before do
         allow(config).to receive(:appenders).and_return(appenders)
@@ -255,7 +233,7 @@ describe Sapience do
 
       context "when some appenders exist before call" do
         before do
-          Sapience.add_appender(:datadog)
+          Sapience.add_appender(:stream, io: STDERR, level: :info)
         end
 
         it "removes previously added appenders" do
@@ -263,7 +241,7 @@ describe Sapience do
           described_class.configure do |c|
             expect(c).to eq(config)
           end
-          expect(described_class.appenders.size).to eq(2)
+          expect(described_class.appenders.size).to eq(1)
         end
       end
 
@@ -273,11 +251,6 @@ describe Sapience do
             .to receive(:add_appender)
             .with(:stream, stream_options)
             .and_call_original
-
-          expect(described_class)
-            .to receive(:add_appender)
-            .with(:sentry, sentry_options)
-            .and_call_original
         end
 
         context "when provided a block" do
@@ -285,7 +258,7 @@ describe Sapience do
             described_class.configure(force: false) do |c|
               expect(c).to eq(config)
             end
-            expect(described_class.appenders.size).to eq(2)
+            expect(described_class.appenders.size).to eq(1)
           end
         end
 
@@ -293,7 +266,7 @@ describe Sapience do
           it "adds all configured appenders" do
             described_class.configure(force: false)
             expect(described_class.configure).to eq(config)
-            expect(described_class.appenders.size).to eq(2)
+            expect(described_class.appenders.size).to eq(1)
           end
         end
       end
@@ -334,30 +307,126 @@ describe Sapience do
 
   describe ".metrics" do
     specify do
-      expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
+      expect(described_class.metrics).to be_a(Sapience::Metrics::Datadog)
     end
 
-    context "when adding a metrics appender" do
+    context "when metics section specified in config" do
+      before do
+        allow(described_class.config).to receive(:metrics).and_return(datadog: { url: Sapience::DEFAULT_STATSD_URL })
+      end
+
       specify do
-        described_class.add_appender(:datadog)
-        expect(described_class.metrics).to be_a(Sapience::Appender::Datadog)
+        expect(described_class.metrics).to be_a(Sapience::Metrics::Datadog)
+      end
+
+      context "with invalid parameters" do
+        before do
+          allow(described_class.config).to receive(:metrics).and_return(invalid: { url: Sapience::DEFAULT_STATSD_URL })
+        end
+
+        specify do
+          expect { described_class.metrics }.to raise_error(Sapience::UnknownClass)
+        end
+      end
+
+      context "with missing parameters" do
+        before do
+          allow(described_class.config).to receive(:metrics).and_return(nil)
+        end
+
+        specify do
+          expect { described_class.metrics }.to raise_error(Sapience::MissingConfiguration)
+        end
       end
     end
   end
 
   describe ".metrics=" do
-    let!(:metrics) { described_class.add_appender(:datadog) }
+    TestMetrics = Class.new
+    let!(:test_metrics) { TestMetrics.new }
     specify do
-      described_class.metrics = Sapience::Appender::Datadog.new(app_name: "custom")
-      expect(described_class.metrics).not_to eq(metrics)
+      described_class.metrics = test_metrics
+      expect(described_class.metrics).not_to be_a(Sapience::Metrics::Datadog)
+    end
+  end
+
+  describe ".error_handler" do
+    specify do
+      expect(Sapience.logger)
+        .to receive(:warn).with("Error handler is not configured. See documentation for more information.")
+      expect(described_class.error_handler).to be_a(Sapience::ErrorHandler::Silent)
+    end
+
+    context "when error_handler section specified in config" do
+      before do
+        allow(described_class.config).to receive(:error_handler).and_return(error_handler)
+      end
+
+      specify do
+        expect(described_class.error_handler).to be_a(Sapience::ErrorHandler::Sentry)
+      end
+
+
+      context "with wrong parameters" do
+        before do
+          allow(described_class.config).to receive(:error_handler).and_return(uknown: {})
+        end
+
+        specify do
+          expect { described_class.error_handler }.to raise_error(Sapience::UnknownClass)
+        end
+      end
+    end
+  end
+
+  describe ".error_handler=" do
+    TestErrorHandler = Class.new
+    let!(:test_error_handler) { TestErrorHandler.new }
+    specify do
+      described_class.error_handler = test_error_handler
+      expect(described_class.error_handler).to be_a(TestErrorHandler)
+    end
+  end
+
+  describe ".capture_exception" do
+    let(:sentry) { Sapience::ErrorHandler::Sentry.new(dsn: "https://foobar:443@sentry.io/00000") }
+    let(:some_exception) { double(:some_exception) }
+    let(:payload) do
+      { test: "data" }
+    end
+
+    before do
+      Sapience.error_handler = sentry
+    end
+
+    specify do
+      expect(sentry).to receive(:capture_exception).with(some_exception, payload)
+      described_class.capture_exception(some_exception, payload)
+    end
+  end
+
+  describe ".capture_message" do
+    let(:sentry) { Sapience::ErrorHandler::Sentry.new(dsn: "https://foobar:443@sentry.io/00000") }
+    let(:message) { "test message" }
+    let(:payload) do
+      { test: "data" }
+    end
+
+    before do
+      Sapience.error_handler = sentry
+    end
+
+    specify do
+      expect(sentry).to receive(:capture_message).with(message, payload)
+      described_class.capture_message(message, payload)
     end
   end
 
   describe ".test_exception" do
     # TODO: This test is flaky
     specify do
-      Sapience.add_appender(:sentry, dsn: "https://foobar:443@sentry.io/00000")
-      expect(Raven).to receive(:capture_exception) do |exception, _context|
+      Sapience.error_handler = Sapience::ErrorHandler::Sentry.new(dsn: "https://foobar:443@sentry.io/00000")
+      expect(Raven).to receive(:capture_type) do |exception, _context|
         expect(exception).to be_a_kind_of(Sapience::TestException)
         expect(exception.message).to eq("Sapience Test Exception")
       end.and_return(true)

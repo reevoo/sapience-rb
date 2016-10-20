@@ -3,6 +3,7 @@ module Sapience
   class Base
     # Class name to be logged
     attr_accessor :name, :filter
+    include Sapience::LogMethods
 
     # Set the logging level for this logger
     #
@@ -67,50 +68,6 @@ module Sapience
     #    # Log an exception
     #    logger.info("Parsing received XML", exc)
     #
-    Sapience::LEVELS.each_with_index do |level, index|
-      class_eval <<-EOT, __FILE__, __LINE__ + 1
-        def #{level}(message=nil, payload=nil, exception=nil, &block)
-          if level_index <= #{index}
-            log_internal(:#{level}, #{index}, message, payload, exception, &block)
-            true
-          else
-            false
-          end
-        end
-
-        def #{level}?
-          level_index <= #{index}
-        end
-
-        def measure_#{level}(message, params = {}, &block)
-          if level_index <= #{index}
-            measure_internal(:#{level}, #{index}, message, params, &block)
-          else
-            block.call(params) if block
-          end
-        end
-
-        def benchmark_#{level}(message, params = {}, &block)
-          if level_index <= #{index}
-            measure_internal(:#{level}, #{index}, message, params, &block)
-          else
-            block.call(params) if block
-          end
-        end
-      EOT
-    end
-
-    # Dynamically supply the log level with every measurement call
-    def measure(level, message, params = {}, &block)
-      index = Sapience.config.level_to_index(level)
-      if level_index <= index
-        measure_internal(level, index, message, params, &block)
-      else
-        block.call(params) if block
-      end
-    end
-
-    alias_method :benchmark, :measure
 
     # :nodoc:
     def tagged(*tags, &block)

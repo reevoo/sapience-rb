@@ -9,9 +9,9 @@ end
 #   Sapience.add_appender(:datadog, {url: "udp://localhost:2222"})
 #
 module Sapience
-  module Appender
-    class Datadog < Sapience::Subscriber
-      VALIDATION_MESSAGE = "Statsd only supports udp. Example: 'udp://localhost:8125'".freeze
+  class Metrics
+    class Datadog < Sapience::Metrics
+      VALIDATION_MESSAGE = "Statsd only supports udp. Example: '#{Sapience::DEFAULT_STATSD_URL}'".freeze
 
       # Create Appender
       #
@@ -29,12 +29,11 @@ module Sapience
       #       tag1:true
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
-      def initialize(options = {}, &block)
+      def initialize(options = {})
         fail("Options should be a Hash") unless options.is_a?(Hash)
-        url   = options.delete(:url) || "udp://localhost:8125"
+        url   = options.delete(:url) || Sapience::DEFAULT_STATSD_URL
         @tags = options.delete(:tags)
         @uri  = URI.parse(url)
-        super(options, &block)
       end
 
       def provider
@@ -43,21 +42,6 @@ module Sapience
 
       def valid?
         @uri.scheme == "udp"
-      end
-
-      # Send an error notification to sentry
-      def log(log)
-        return false unless valid?
-        metric = log.metric
-        return false unless metric
-
-        if log.duration
-          timing(metric, log.duration, tags: log.tags)
-        else
-          amount = (log.metric_amount || 1).round
-          count(metric, amount, tags: log.tags)
-        end
-        true
       end
 
       def timing(metric, duration = 0, options = {})
@@ -112,7 +96,7 @@ module Sapience
       end
 
       def namespace
-        ns = Sapience.namify(app_name)
+        ns = Sapience.namify(Sapience.app_name)
         ns << ".#{Sapience.namify(Sapience.environment)}" if Sapience.environment
         ns
       end
