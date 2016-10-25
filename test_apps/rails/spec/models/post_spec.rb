@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Post, type: :model do
-  let!(:metrics) { Sapience.add_appender(:datadog, app_name: "active_record") }
+  let!(:metrics) { Sapience.metrics }
   let(:tags) { %w(query:post.load) }
 
   before(:each) {  create :post }

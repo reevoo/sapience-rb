@@ -1,3 +1,11 @@
+## v2.0.0
+
+- Prevent Raven from recursively capturing its own exceptions
+- Make logger interface explicit (no metaprogramming)
+- Separate error handling and metrics from appenders
+- Added `Sapience.capture_exception` and `Sapience.capture_message` methods
+- Added `logger.error!` and `logger.fatal!` that also sends any exception to the configured error handler
+
 ## v1.0.14
 
 - Reduce log output noise from the sentry logger

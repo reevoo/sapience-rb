@@ -24,15 +24,22 @@ module Sapience
   UnknownClass   = Class.new(NameError)
   AppNameMissing = Class.new(NameError)
   TestException  = Class.new(StandardError)
-  @@configured = false
+  UnkownLogLevel = Class.new(StandardError)
+  InvalidLogExecutor = Class.new(StandardError)
+  MissingConfiguration = Class.new(StandardError)
+  @@configured   = false
 
   # Logging levels in order of most detailed to most severe
-  LEVELS = [:trace, :debug, :info, :warn, :error, :fatal].freeze
-  APP_NAME     = "APP_NAME".freeze
-  DEFAULT_ENV  = "default".freeze
-  RACK_ENV     = "RACK_ENV".freeze
-  RAILS_ENV    = "RAILS_ENV".freeze
-  SAPIENCE_ENV = "SAPIENCE_ENV".freeze
+  LEVELS                  = [:trace, :debug, :info, :warn, :error, :fatal].freeze
+  APP_NAME                = "APP_NAME".freeze
+  DEFAULT_ENV             = "default".freeze
+  RACK_ENV                = "RACK_ENV".freeze
+  RAILS_ENV               = "RAILS_ENV".freeze
+  SAPIENCE_ENV            = "SAPIENCE_ENV".freeze
+  APPENDER_NAMESPACE      = Sapience::Appender
+  METRICS_NAMESPACE       = Sapience::Metrics
+  ERROR_HANDLER_NAMESPACE = Sapience::ErrorHandler
+  DEFAULT_STATSD_URL      = "udp://localhost:8125".freeze
 
   def self.configure(force: false)
     yield config if block_given?
@@ -50,7 +57,7 @@ module Sapience
 
   def self.config
     @@config ||= begin
-      options   = config_hash[environment]
+      options = config_hash[environment]
       options ||= default_options(config_hash)
       Configuration.new(options)
     end
@@ -68,13 +75,14 @@ module Sapience
   end
 
   def self.reset!
-    @@config = nil
-    @@logger = nil
-    @@metrics = nil
-    @@environment = nil
-    @@app_name = nil
-    @@configured = false
-    @@config_hash = nil
+    @@config        = nil
+    @@logger        = nil
+    @@metrics       = nil
+    @@error_handler = nil
+    @@environment   = nil
+    @@app_name      = nil
+    @@configured    = false
+    @@config_hash   = nil
     clear_tags!
     reset_appenders!
   end
@@ -211,11 +219,11 @@ module Sapience
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
   def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block) # rubocop:disable AbcSize
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
-    options = options.dup.deep_symbolize_keyz!
+    options        = options.dup.deep_symbolize_keyz!
     appender_class = constantize_symbol(appender)
     validate_appender_class!(appender_class)
 
-    appender       = appender_class.new(options)
+    appender = appender_class.new(options)
     warn "appender #{appender} with (#{options.inspect}) is not valid" unless appender.valid?
     @@appenders << appender
 
@@ -223,7 +231,6 @@ module Sapience
     Sapience::Logger.start_appender_thread
     Sapience::Logger.start_invalid_appenders_task
     Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
-    Sapience.metrics = appender if appender.is_a?(Sapience::Appender::Datadog)
     appender
   end
 
@@ -279,7 +286,39 @@ module Sapience
   end
 
   def self.metrics
-    @@metrics ||= add_appender(:datadog)
+    @@metrics ||= create_class(config.metrics, METRICS_NAMESPACE)
+  end
+
+  def self.error_handler=(error_handler)
+    @@error_handler = error_handler
+  end
+
+  def self.error_handler
+    @@error_handler ||= create_class(config.error_handler, ERROR_HANDLER_NAMESPACE)
+  end
+
+  def self.capture_exception(exception, payload = {})
+    error_handler.capture_exception(exception, payload)
+  end
+
+  def self.capture_message(message, payload = {})
+    error_handler.capture_message(message, payload)
+  end
+
+  def self.create_class(config_section, namespace)
+    namespace_string = namespace.to_s.split("::").last
+
+    fail MissingConfiguration, "No #{namespace_string} configured" unless config_section
+    klass_name = config_section.keys.first
+    options    = config_section.values.first
+
+    klass = constantize_symbol(klass_name, namespace)
+
+    if namespace.descendants.include?(klass)
+      klass.new(options)
+    else
+      fail NotImplementedError, "Unknown #{namespace_string} '#{klass_name}'"
+    end
   end
 
   def self.logger=(logger)
@@ -290,10 +329,10 @@ module Sapience
     @@logger ||= Sapience::Logger.logger
   end
 
-  def self.test_exception(level = :error)
+  def self.test_exception(_level = :error)
     fail Sapience::TestException, "Sapience Test Exception"
   rescue Sapience::TestException => ex
-    Sapience[self].public_send(level, ex)
+    Sapience.capture_exception(ex,  test_exception: true)
   end
 
   # Wait until all queued log messages have been written and flush all active
@@ -414,7 +453,7 @@ module Sapience
     constantize_symbol(config.log_executor, "Concurrent")
   end
 
-  def self.constantize_symbol(symbol, namespace = "Sapience::Appender")
+  def self.constantize_symbol(symbol, namespace = APPENDER_NAMESPACE)
     class_name = "#{namespace}::#{symbol.to_sym.camelize}"
     constantize(class_name)
   end

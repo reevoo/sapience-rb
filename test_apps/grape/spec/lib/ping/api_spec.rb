@@ -21,7 +21,6 @@ describe Ping::API do
       let(:tags) { %w(method:get format:json path:/api/ping status:200) }
       before do
         Sapience.configure { |c| c.app_name = "grape" }
-        Sapience.add_appender(:datadog)
       end
       specify do
         expect(metrics).to receive(:increment).with("grape.request", tags: tags)
