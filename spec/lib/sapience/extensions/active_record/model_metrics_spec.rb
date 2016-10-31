@@ -36,26 +36,5 @@ describe Sapience::Extensions::ActiveRecord::ModelMetrics do
     its(:tableized_name) do
       is_expected.to eq("namespace.custom_record")
     end
-
-    describe "#before_create" do
-      it "increments the correct metric key" do
-        expect(Sapience.metrics).to receive(:increment).with(subject.class::SAPIENCE_MODEL_CREATE_METRICS_KEY)
-        subject.before_create
-      end
-    end
-
-    describe "#before_update" do
-      it "increments the correct metric key" do
-        expect(Sapience.metrics).to receive(:increment).with(subject.class::SAPIENCE_MODEL_UPDATE_METRICS_KEY)
-        subject.before_update
-      end
-    end
-
-    describe "#before_destroy" do
-      it "increments the correct metric key" do
-        expect(Sapience.metrics).to receive(:increment).with(subject.class::SAPIENCE_MODEL_DESTROY_METRICS_KEY)
-        subject.before_destroy
-      end
-    end
   end
 end

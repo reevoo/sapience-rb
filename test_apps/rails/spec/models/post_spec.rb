@@ -11,4 +11,39 @@ RSpec.describe Post, type: :model do
     expect(metrics).to receive(:timing).with("activerecord.sql.time", kind_of(Float), tags: tags)
     Post.first
   end
+
+  describe "callbacks" do
+    before do
+      allow(Sapience.metrics).to receive(:increment).and_call_original
+    end
+
+    describe "#before_create" do
+      it "increments counter" do
+        expect(Sapience.metrics)
+          .to receive(:increment)
+          .with(described_class::SAPIENCE_MODEL_CREATE_METRICS_KEY)
+        create(:post)
+      end
+    end
+
+    describe "#before_update" do
+      it "increments counter" do
+        review_email = create(:post)
+        expect(Sapience.metrics)
+          .to receive(:increment)
+          .with(described_class::SAPIENCE_MODEL_UPDATE_METRICS_KEY)
+        review_email.update_attributes! title: "New Title"
+      end
+    end
+
+    describe "#before_destroy" do
+      subject { create(:post) }
+      it "increments counter" do
+        expect(Sapience.metrics)
+          .to receive(:increment)
+          .with(described_class::SAPIENCE_MODEL_DESTROY_METRICS_KEY)
+        subject.destroy
+      end
+    end
+  end
 end

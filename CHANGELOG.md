@@ -1,3 +1,7 @@
+## v2.0.2
+
+- Fix metrics collection for 2.0.1
+
 ## v2.0.1
 
 - Add metrics for model actions (create, update, destroy)
