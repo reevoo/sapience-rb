@@ -1,4 +1,5 @@
 require "spec_helper"
+require "sapience/extensions/active_record/model_metrics"
 
 describe Sapience::Extensions::ActiveRecord::ModelMetrics do
   module Namespace
