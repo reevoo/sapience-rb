@@ -1,3 +1,7 @@
+## v2.0.1
+
+- Add metrics for model actions (create, update, destroy)
+
 ## v2.0.0
 
 - Prevent Raven from recursively capturing its own exceptions
