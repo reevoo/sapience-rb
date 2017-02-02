@@ -16,7 +16,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 Sapience.configure do |c|
-  c.app_name = "rails_app"
+  c.app_name = "rails_5_0"
 end
 ActiveRecord::Migration.maintain_test_schema!
 
