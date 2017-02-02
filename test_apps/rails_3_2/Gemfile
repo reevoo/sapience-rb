@@ -1,0 +1,28 @@
+source "https://rubygems.org"
+
+gem "rails", "3.2.22"
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem "pg"
+gem "sapience", path: "../..", require: "sapience/rails"
+gem "sentry-raven"
+gem "dogstatsd-ruby"
+gem "active_model_serializers"
+gem "sneakers"
+gem "slim-rails"
+
+
+group :test, :development do
+  gem "rspec-rails"
+  gem "factory_girl_rails"
+  gem "test-unit"
+end
+
+group :test do
+  gem "rspec-its"
+  gem "simplecov"
+  gem "simplecov-json"
+  gem "fuubar"
+end
