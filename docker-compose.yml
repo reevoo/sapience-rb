@@ -72,7 +72,7 @@ services:
   rails42:
     extends:
       service: base
-    working_dir: /usr/src/app/test_apps/rails_3_2
+    working_dir: /usr/src/app/test_apps/rails_4_2
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
     depends_on:
