@@ -23,6 +23,7 @@ script:
   - bundle exec rake reevoocop
   - docker-compose run rspec
   - docker-compose run rails32
+  - docker-compose run rails42
   - docker-compose run rails50
   - docker-compose run grape
 
