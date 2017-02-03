@@ -1,11 +1,9 @@
 source "https://rubygems.org"
 
-gem "rails", "3.2.22"
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem "rails", "4.2.6"
+gem "pg", "~> 0.15"
 
-gem "pg"
 gem "sapience", path: "../..", require: "sapience/rails"
 gem "sentry-raven"
 gem "dogstatsd-ruby"
@@ -27,4 +25,9 @@ group :test do
   gem "simplecov"
   gem "simplecov-json"
   gem "fuubar"
+end
+
+group :development do
+  gem "web-console", "~> 2.0"
+  gem "spring"
 end
