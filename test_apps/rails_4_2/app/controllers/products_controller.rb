@@ -24,7 +24,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      redirect_to @product, notice: 'Product was successfully created.'
+      redirect_to @product, notice: "Product was successfully created."
     else
       render :new
     end
@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1
   def update
     if @product.update(product_params)
-      redirect_to @product, notice: 'Product was successfully updated.'
+      redirect_to @product, notice: "Product was successfully updated."
     else
       render :edit
     end
@@ -42,17 +42,18 @@ class ProductsController < ApplicationController
   # DELETE /products/1
   def destroy
     @product.destroy
-    redirect_to products_url, notice: 'Product was successfully destroyed.'
+    redirect_to products_url, notice: "Product was successfully destroyed."
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def product_params
-      params.require(:product).permit(:name, :sku, :ean)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def product_params
+    params.require(:product).permit(:name, :sku, :ean)
+  end
 end
