@@ -22,7 +22,7 @@ namespace :coverage do
     require "simplecov-html"
     require "simplecov-json"
 
-    coverage_file_pattern = "{rails,sapience,grape}/.resultset.json"
+    coverage_file_pattern = "{rails_3_2,rails_4_2,rails_5_0,sapience,grape}/.resultset.json"
     json_files = Dir[File.join(coverage_dir, coverage_file_pattern)]
 
     merged_hash = {}
