@@ -4,13 +4,14 @@ module Sapience
 
   # rubocop:disable ClassVars
   class Configuration
-    attr_reader :default_level, :backtrace_level, :backtrace_level_index
+    attr_reader :default_level, :log_level_active_record, :backtrace_level, :backtrace_level_index
     attr_writer :host
     attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters, :metrics, :error_handler
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
-      log_level:         :info,
+      log_level:               :info,
+      log_level_active_record: :info,
       host:              nil,
       ap_options:        { multiline: false },
       appenders:         [{ stream: { io: STDOUT, formatter: :color } }],
@@ -26,7 +27,8 @@ module Sapience
       @options             = DEFAULT.merge(options.dup.deep_symbolize_keyz!)
       @options[:log_executor] &&= @options[:log_executor].to_sym
       validate_log_executor!(@options[:log_executor])
-      self.default_level     = @options[:log_level].to_sym
+      self.default_level           = @options[:log_level].to_sym
+      self.log_level_active_record = @options[:log_level_active_record].to_sym
       self.backtrace_level   = @options[:log_level].to_sym
       self.host              = @options[:host]
       self.app_name          = @options[:app_name]
@@ -43,6 +45,13 @@ module Sapience
       @default_level       = level
       # For performance reasons pre-calculate the level index
       @default_level_index = level_to_index(level)
+    end
+
+    # Sets the active record log level
+    def log_level_active_record=(level)
+      @log_level_active_record = level
+      # For performance reasons pre-calculate the level index
+      @log_level_active_record_index = level_to_index(level)
     end
 
     # Returns the symbolic level for the supplied level index
