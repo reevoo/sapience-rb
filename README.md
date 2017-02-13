@@ -275,6 +275,10 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 ## Running the tests
 
+You need to create the test postgres db, by running the command below:
+
+`createdb rails_app_test`
+
 `bin/tests`
 
 ## Environment variables
