@@ -74,7 +74,8 @@ module Sapience
         # Sapience::Extensions::ActiveSupport::MailerLogSubscriber.attach_to :action_mailer
         if defined?(ActiveRecord)
           Sapience::Extensions::ActiveRecord::Notifications.use
-          ActiveRecord::Base.logger.level = Sapience.config.log_level_active_record
+          ActiveRecord::Base.logger.level =
+              Sapience.config.log_level_active_record if defined?(ActiveRecord::Base.logger.level)
         end
 
         Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
