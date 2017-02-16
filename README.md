@@ -57,6 +57,7 @@ The `app_name` is required to be configured. Sapience will fail on startup if ap
 ```ruby
 Sapience.configure do |config|
   config.default_level   = :info
+  config.log_level_active_record = :debug
   config.backtrace_level = :error
   config.appenders       = [
     { stream: { io: STDOUT, formatter: :color } },
@@ -91,6 +92,7 @@ test:
 
 development:
   log_executor: single_thread_executor
+  log_level_active_record: debug
   log_level: debug
   appenders:
     - stream:
