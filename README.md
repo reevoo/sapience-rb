@@ -38,7 +38,7 @@ module Aslan
     class Base < Grape::API
       use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
 
-      # To log all requests even when no route was found try the following:
+      # To log all requests even when no route was found add the following:
       route :any, "*path" do
         error!({ error: "No route found" }, 404)
       end
@@ -47,6 +47,38 @@ module Aslan
 end
 
 ```
+
+Also make sure you only use "rescue_from" when you want to return a 500 status. For any other status "dont" use 
+"rescue_from".
+
+For example if you have some authentication code that raises an exception when the user is not authenticated, 
+dont use "rescue_from" to catch this exception and change the status to 403 within the rescue_from, handle this 
+exception instead on the "before" block, or alternatively within your endpoint, like below:
+
+
+```ruby
+before do
+  begin
+    current_user
+  rescue ClientPortalApiClient::Unauthorized
+    error!("User is forbidden from accessing this endpoin", 403)
+  end
+end
+```
+
+Likewise, for capturing any other exception for which you want to return a code other than 500, capture your 
+exception in the "before" block or within your endpoint, but make sure "rescue_from" is "only" used for 500 
+status, as grape will call rescue_from once is gone through all the middleware, so if you change the status 
+in a rescue_from, Sapience would not be able to log it correctly. So the below is ok because the rescue_from 
+is using status 500:
+
+```ruby
+rescue_from :all do |e|
+  error!(message: e.message, status: 500)
+end
+```
+
+
 
 ### Configuration
 
