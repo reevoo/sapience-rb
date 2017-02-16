@@ -17,5 +17,9 @@ module Ping
     get :ping do
       { ping: "PONG" }
     end
+
+    get :err do
+      fail "it failed!"
+    end
   end
 end

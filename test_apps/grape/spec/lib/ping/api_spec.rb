@@ -29,7 +29,7 @@ describe Ping::API do
       end
     end
 
-    it "logs something" do
+    it "logs 200" do
       expect(logger).to receive(:info).with(
         method:       "GET",
         request_path: "/api/ping",
@@ -53,7 +53,7 @@ describe Ping::API do
     end
 
     context "no routes defined" do
-      it "logs something" do
+      it "logs 404" do
         expect(logger).to receive(:info).with(
           method:       "GET",
           request_path: "/api/404",
@@ -64,7 +64,7 @@ describe Ping::API do
           host:         "example.org",
           ip:           "127.0.0.1",
           ua:           nil,
-          tags:         [],
+          tags:         ["{:error=>\"No route found\", :status=>404}"],
           params:       {},
           runtimes:     a_hash_including(
                           total: kind_of(Float),
@@ -74,6 +74,31 @@ describe Ping::API do
         )
 
         get "/api/404", {}, "CONTENT-TYPE" => "application/json"
+      end
+    end
+
+    context "500 in endpoint" do
+      it "logs 500" do
+        expect(logger).to receive(:info).with(
+            method:       "GET",
+            request_path: "/api/err",
+            format:       "json",
+            status:       500,
+            class_name:   "Ping::API",
+            action:       "index",
+            host:         "example.org",
+            ip:           "127.0.0.1",
+            ua:           nil,
+            tags:         ["RuntimeError", "it failed!"],
+            params:       {},
+            runtimes:     a_hash_including(
+                total: kind_of(Float),
+                view:  kind_of(Float),
+                db:    kind_of(Float),
+            ),
+        )
+
+        expect { get "/api/err", {}, "CONTENT-TYPE" => "application/json" }.to raise_error
       end
     end
   end

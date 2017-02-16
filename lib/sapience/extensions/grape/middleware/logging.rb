@@ -18,6 +18,30 @@ module Sapience
             @logger = @options[:logger]
           end
 
+          protected
+
+          def call!(env)
+            @env = env
+            before
+            error = catch(:error) do
+              begin
+                @app_response = @app.call(@env)
+              rescue => e
+                after_exception(e)
+                raise e
+              end
+              nil
+            end
+            if error
+              after_failure(error)
+              throw(:error, error)
+            else
+              @status, _, _ = *@app_response
+              after
+            end
+            @app_response
+          end
+
           def before
             reset_db_runtime
             start_time
@@ -26,16 +50,18 @@ module Sapience
           def after
             stop_time
             @logger.info(parameters)
-            nil
           end
 
-          protected
+          def after_exception(e)
+            Sapience.push_tags(e.class.name, e.message)
+            @status = 500
+            after
+          end
 
-          # TODO: Is NoMethodError :[] equal to `404`?
-          def response
-            super
-          rescue
-            nil
+          def after_failure(error)
+            Sapience.push_tags(error[:message])
+            @status = error[:status]
+            after
           end
 
           def parameters # rubocop:disable AbcSize
@@ -43,7 +69,7 @@ module Sapience
               method: request.request_method,
               request_path: request.path,
               format: request_format(request.env),
-              status: response.try(:status) || 404,
+              status: @status,
               class_name: env["api.endpoint"].options[:for].to_s,
               action: "index",
               host: request.host,
@@ -90,6 +116,7 @@ module Sapience
           def stop_time
             @stop_time ||= Time.now
           end
+
         end
       end
     end
