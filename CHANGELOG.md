@@ -1,3 +1,8 @@
+## v2.0.3
+
+- Ability to configure ActiveRecord log level independently
+- Fix issue where the Grape extension was incorrectly logging 500 response codes as 404's
+
 ## v2.0.2
 
 - Fix metrics collection for 2.0.1
