@@ -78,6 +78,14 @@ rescue_from :all do |e|
 end
 ```
 
+if you already have got your grape applications sprinkled with calls to API.logger, and you do 
+not want to have to replace all those calls to Sapience.logger manually, then just re-assign your logger
+after including the Sapience middleware, like below:
+
+```ruby
+use Sapience::Extensions::Grape::Middleware::Logging, logger: Sapience[self]
+API.logger = Sapience.logger
+```
 
 
 ### Configuration
