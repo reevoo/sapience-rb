@@ -88,6 +88,9 @@ API.logger = Sapience.logger
 ```
 
 
+Note: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
+rack logger so you don't get double logging.
+
 ### Configuration
 
 The sapience configuration can be controlled by a `config/sapience.yml` file or if you like us have many projects that use the same configuration you can create your own gem with a shared config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb)
