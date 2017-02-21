@@ -18,7 +18,7 @@ module Sapience
       # Parameters:
       #   level: :trace
       #   url: [String]
-      #     Valid URL to post to.
+      #     Valid URL to postdogstatsd-ruby to.
       #     Example:
       #       udp://localhost:8125
       #     Example, send all metrics to a particular namespace:
