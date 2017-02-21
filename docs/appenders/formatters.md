@@ -18,11 +18,3 @@ Formatters can be specified by using the key `formatter: :camelized_formatter_na
 
 `formatter: :raw` - logs are saved as a single line ruby hash. Useful for production like environments and is used internally for the Sentry appender.
 
-## Running the tests
-
-`bin/tests`
-
-## Environment variables
-
-- `APP_NAME` - If you want to provide an application name for sapience it can be done here.
-- `SAPIENCE_ENV` - For applications that don't use rack or rails

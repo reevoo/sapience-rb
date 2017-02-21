@@ -1,12 +1,3 @@
-## Configuration 
-
-The sapience configuration can be controlled by a `config/sapience.yml` file or if you like us have many projects that use the same configuration you can create your own gem with a shared config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb)
-
-The `app_name` is required to be configured. Sapience will fail on startup if app_name isn't configured properly.
-
-- [Block Configuration](block.md)
-- [YAML Configuration](yaml.md)
-
 
 #### App name
 

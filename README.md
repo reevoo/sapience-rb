@@ -12,7 +12,7 @@ This project aims to make it easier to centralise the configuration of these thr
 
 We have taken a great deal of inspiration from the amazing [Semantic Logger](https://github.com/rocketjob/semantic_logger) and implemented something similar to [Rubocop](https://github.com/bbatsov/rubocop) for handling and overriding how to find configuration. If you want some inspiration for how we do something similar for our projects for Rubocop check: [Reevoocop](https://github.com/reevoo/reevoocop).
 
-## Setup
+## Installation
 
 First of all we need to require the right file for the project. There are currently two frameworks supported (rails and grape).
 
@@ -78,7 +78,7 @@ rescue_from :all do |e|
 end
 ```
 
-if you already have got your grape applications sprinkled with calls to API.logger, and you do 
+**Note**: if you already have got your grape applications sprinkled with calls to API.logger, and you do 
 not want to have to replace all those calls to Sapience.logger manually, then just re-assign your logger
 after including the Sapience middleware, like below:
 
@@ -88,16 +88,116 @@ API.logger = Sapience.logger
 ```
 
 
-Note: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
+**Note**: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
 rack logger so you don't get double logging.
 
 
+## Configuration
 
-- [Configuration](docs/configuration/README.md)
-- [Appenders](docs/appenders/README.md)
-- [Formatters](docs/formatters/README.md)
-- [Logger](docs/logger/README.md)
-- [Contributing](docs/contributing/README.md)
+The sapience configuration can be controlled by either a "sapience.yml" file, or a block of ruby code. Note that if you provide both, the block of ruby code will take precedence.
+
+#### Configuration by sapience.yml file
+
+Add a `config/sapience.yml` file to you appplication. Or if you, like us, have many projects that use the same configuration you can create your own gem with a shared .yml config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb) for an example . See below an example of how to configure "sapience.yml":
+
+```yaml
+default:
+  app_name: My Application
+  log_level: debug
+  log_level_active_record: info
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: json
+  filter_parameters:
+    - password
+    - password_confirmation
+
+development:
+  log_level: debug
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: color
+    - stream:
+        file_name: log/development.log
+        formatter: color
+        
+staging:
+  log_level: info
+  error_handler:
+    sentry:
+      dsn: <%= ENV['SENTRY_DSN'] %>
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: json
+        
+production:
+  log_level: info
+  error_handler:
+    sentry:
+      dsn: <%= ENV['SENTRY_DSN'] %>
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: json
+```
+
+#### Configuration by a block of Ruby code
+
+```ruby
+Sapience.configure(force: true) do |config|
+  config.app_name = "My Application"
+  config.default_level   = :info
+  config.log_level_active_record = :info
+  config.backtrace_level = :error
+  config.filter_parameters = %w(password password_confirmation)
+  config.appenders       = [
+      { stream: { io: STDOUT, formatter: :color } },
+      { stream: { file_name: "log/json_output.log", formatter: :json } }
+  ]
+  config.error_handler = { sentry: { dsn: ENV["SENTRY_DSN"] } }
+  config.metrics = { datadog: { url: ENV["STATSD_URL"] } }
+  config.log_executor    = :single_thread_executor
+end
+```
+
+For further details about "app_name", "filter_parameters", "appenders", "metrics" and "error_handler" used in both the .yml and the code configurations above, see the links below:
+
+- [app_name](docs/app_name.md)
+- [filter_parameters](docs/filter_parameters.md)
+- [appenders](docs/appenders.md)
+- [metrics](docs/metrics.md)
+- [error_handler](docs/error_handler.md)
+- [logger](docs/logger.md)
+
+
+## Running the tests
+
+You need to create the test postgres db, by running the command below:
+
+`createdb rails_app_test`
+
+Then you can run them with the followign command:
+
+`bin/tests`
+
+## Environment variables
+
+- `APP_NAME` - If you want to provide an application name for sapience it can be done here.
+- `SAPIENCE_ENV` - For applications that don't use rack or rails
+
+
 
 ## License
 
