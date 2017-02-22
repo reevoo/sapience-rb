@@ -1,0 +1,33 @@
+source "https://rubygems.org"
+
+
+gem "rails", "4.2.6"
+gem "pg", "~> 0.15"
+
+gem "sapience", path: "../..", require: "sapience/rails"
+gem "sentry-raven"
+gem "dogstatsd-ruby"
+gem "active_model_serializers"
+gem "sneakers"
+gem "slim-rails"
+
+
+group :test, :development do
+  gem "rspec-rails"
+  gem "factory_girl_rails"
+  gem "test-unit"
+  gem "byebug", platform: :mri
+  gem "pry-byebug", platform: :mri
+end
+
+group :test do
+  gem "rspec-its"
+  gem "simplecov"
+  gem "simplecov-json"
+  gem "fuubar"
+end
+
+group :development do
+  gem "web-console", "~> 2.0"
+  gem "spring"
+end

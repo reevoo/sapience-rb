@@ -52,24 +52,56 @@ services:
 
 
 
-  rails:
+  rails32:
     extends:
       service: base
-    working_dir: /usr/src/app/test_apps/rails
+    working_dir: /usr/src/app/test_apps/rails_3_2
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
     depends_on:
       - rabbitmq
       - postgres
     environment:
-      APP_NAME: rails_app
+      APP_NAME: rails_3_2
       POSTGRES_HOST: postgres
       POSTGRES_USER: sapience
       POSTGRES_PASSWORD: tests
       AMQP: amqp://sapience:tests@rabbitmq:5672
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+  rails42:
+    extends:
+      service: base
+    working_dir: /usr/src/app/test_apps/rails_4_2
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rspec
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      APP_NAME: rails_4_2
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sapience
+      POSTGRES_PASSWORD: tests
+      AMQP: amqp://sapience:tests@rabbitmq:5672
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+  rails50:
+    extends:
+      service: base
+    working_dir: /usr/src/app/test_apps/rails_5_0
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rspec
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      APP_NAME: rails_5_0
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sapience
+      POSTGRES_PASSWORD: tests
+      AMQP: amqp://sapience:tests@rabbitmq:5672
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
   grape:
     extends:

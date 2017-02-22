@@ -22,7 +22,7 @@ namespace :coverage do
     require "simplecov-html"
     require "simplecov-json"
 
-    coverage_file_pattern = "{rails,sapience,grape}/.resultset.json"
+    coverage_file_pattern = "{rails_3_2,rails_4_2,rails_5_0,sapience,grape}/.resultset.json"
     json_files = Dir[File.join(coverage_dir, coverage_file_pattern)]
 
     merged_hash = {}
@@ -60,9 +60,7 @@ namespace :coverage do
     ENV["CODECLIMATE_REPO_TOKEN"] = "204dc055302da6aed94379e249aa0645636d1d1794920c62db05c5fa968215de"
     resultset_file   = File.join(coverage_dir, ".resultset.json")
     result_hash      = JSON.parse(File.read(resultset_file))
-    simplecov_result = SimpleCov::Result.from_hash(result_hash)
-
-    CodeClimate::TestReporter::Formatter.new.format(simplecov_result)
+    CodeClimate::TestReporter::Formatter.new.format(result_hash)
     unhide_coverage_config
   end
 end

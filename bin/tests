@@ -19,12 +19,21 @@ APP_NAME=grape_app bundle exec appraisal rspec
 [ $? -ne 0 ] && exit $?
 popd
 
-pushd test_apps/rails
-bundle update
-[ $? -ne 0 ] && exit $?
-APP_NAME=rails_app bundle exec rspec
-[ $? -ne 0 ] && exit $?
-popd
+projects=(rails_3_2 rails_4_2 rails_5_0)
+for project in ${projects[@]}
+do
+  directory="test_apps/$project"
+  if [ -d $directory ]; then
+    pushd $directory
+    bundle update
+    [ $? -ne 0 ] && exit $?
+    APP_NAME=$project bundle exec rake db:create db:migrate db:test:prepare
+    [ $? -ne 0 ] && exit $?
+    APP_NAME=$project bundle exec rspec
+    [ $? -ne 0 ] && exit $?
+    popd
+  fi;
+done;
 
 bundle exec rake coverage:merge
 [ $? -ne 0 ] && exit $?

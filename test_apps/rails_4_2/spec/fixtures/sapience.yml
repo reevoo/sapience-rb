@@ -1,0 +1,15 @@
+---
+default:
+  log_level: error
+  appenders:
+    - stream:
+        file_name: log/error.log
+        formatter: default
+
+test:
+  app_name: rails_app
+  log_level: fatal
+  appenders:
+    - stream:
+        file_name: log/fatal.log
+        formatter: json
