@@ -1,3 +1,7 @@
+## v2.0.4
+
+- Fix Sapience.logger. From now it logs into all configured Stream appenders.
+
 ## v2.0.3
 
 - Ability to configure ActiveRecord log level independently
