@@ -13,7 +13,7 @@ describe Sapience::Logger do
       end
 
       specify do
-        expect(described_class.logger).to be_a(Sapience::Appender::Stream)
+        expect(described_class.logger).to be_a(Sapience::Logger)
       end
     end
   end

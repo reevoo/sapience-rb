@@ -50,16 +50,13 @@ module Sapience
     end
 
     @@appender_thread = nil
+    @@logger = nil
 
     # Internal logger for Sapience
     #   For example when an appender is not working etc..
     #   By default logs to STDERR
     def self.logger
-      @@logger ||= begin
-        l      = Sapience::Appender::Stream.new(io: STDERR, level: :warn)
-        l.name = name
-        l
-      end
+      @@logger ||= Sapience[Sapience]
     end
 
     # Start the appender thread

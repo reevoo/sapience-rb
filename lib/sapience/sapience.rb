@@ -217,10 +217,10 @@ module Sapience
   #   logger = Sapience['Example']
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
-  def self.add_appender(appender, options = {}, _deprecated_level = nil, &_block) # rubocop:disable AbcSize
+  def self.add_appender(appender_class_name, options = {}, _deprecated_level = nil, &_block) # rubocop:disable AbcSize
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
     options        = options.dup.deep_symbolize_keyz!
-    appender_class = constantize_symbol(appender)
+    appender_class = constantize_symbol(appender_class_name)
     validate_appender_class!(appender_class)
 
     appender = appender_class.new(options)
@@ -230,7 +230,6 @@ module Sapience
     # Start appender thread if it is not already running
     Sapience::Logger.start_appender_thread
     Sapience::Logger.start_invalid_appenders_task
-    Sapience.logger = appender if appender.is_a?(Sapience::Appender::Stream)
     appender
   end
 
