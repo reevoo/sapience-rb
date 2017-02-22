@@ -27,6 +27,8 @@ do
     pushd $directory
     bundle update
     [ $? -ne 0 ] && exit $?
+    APP_NAME=$project bundle exec rake db:create db:migrate db:test:prepare
+    [ $? -ne 0 ] && exit $?
     APP_NAME=$project bundle exec rspec
     [ $? -ne 0 ] && exit $?
     popd
