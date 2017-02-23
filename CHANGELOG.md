@@ -1,3 +1,7 @@
+## v2.0.5
+
+- Add "flush" as an instance method in logger.
+
 ## v2.0.4
 
 - Fix Sapience.logger. From now it logs into all configured Stream appenders.

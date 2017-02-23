@@ -144,5 +144,9 @@ module Sapience
       end if @@appender_thread
     end
     # rubocop:enable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
+
+    def flush
+      self.class.flush
+    end
   end
 end
