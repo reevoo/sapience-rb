@@ -1,4 +1,5 @@
 require "sapience"
+require "sapience/extensions/notifications"
 require "sapience/extensions/grape/timings"
 require "sapience/extensions/grape/middleware/logging"
 require "sapience/extensions/grape/notifications"

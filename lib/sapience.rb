@@ -9,7 +9,6 @@ require "sapience/appender"
 require "sapience/metrics"
 require "sapience/error_handler"
 require "sapience/sapience"
-require "sapience/extensions/notifications"
 
 # @formatter:off
 

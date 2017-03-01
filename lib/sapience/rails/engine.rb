@@ -1,4 +1,5 @@
 require "sapience"
+require "sapience/extensions/notifications"
 require "sapience/extensions/action_controller/live" if defined?(ActionController::Live)
 require "sapience/extensions/action_controller/log_subscriber"
 require "sapience/extensions/action_controller/notifications"
