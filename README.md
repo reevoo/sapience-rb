@@ -13,16 +13,17 @@ This project aims to make it easier to centralise the configuration of these thr
 We have taken a great deal of inspiration from the amazing [Semantic Logger](https://github.com/rocketjob/semantic_logger) and implemented something similar to [Rubocop](https://github.com/bbatsov/rubocop) for handling and overriding how to find configuration. If you want some inspiration for how we do something similar for our projects for Rubocop check: [Reevoocop](https://github.com/reevoo/reevoocop).
 
 ## Installation
-
-First of all we need to require the right file for the project. There are currently two frameworks supported (rails and grape).
+sapience-rb integrates with rails, grape or can be used standalone.
 
 ### Rails
+Add the gem:
 
 ```ruby
 gem "sapience", require: "sapience/rails"
 ```
 
 ### Grape
+Add the gem:
 
 ```ruby
 gem "sapience", require: "sapience/grape"
@@ -91,6 +92,24 @@ API.logger = Sapience.logger
 **Note**: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
 rack logger so you don't get double logging.
 
+### Standalone
+Add the gem:
+
+```ruby
+gem "sapience"
+```
+
+Somewhere early in your code execute the following:
+```ruby
+require "sapience"
+
+Sapience.configure do |config|
+  config.app_name = "My Application"
+end
+```
+This will apply the default configuration. See section [Configuration](#configuration) for instructions on
+how to configure the library according to your needs.
+
 
 ## Configuration
 
@@ -98,7 +117,11 @@ The sapience configuration can be controlled by either a "sapience.yml" file, or
 
 #### Configuration by sapience.yml file
 
-Add a `config/sapience.yml` file to you appplication. Or if you, like us, have many projects that use the same configuration you can create your own gem with a shared .yml config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb) for an example . See below an example of how to configure "sapience.yml":
+Add a `config/sapience.yml` file to your application. The config file contains sections for different environments.
+When using with rails or grape the environment will be set by the framework. When using as standalone, use ENV
+variable `SAPIENCE_ENV` for setting the environment.
+
+Or if you, like us, have many projects that use the same configuration you can create your own gem with a shared .yml config. Have a look at [reevoo/reevoo_sapience-rb](https://github.com/reevoo/reevoo_sapience-rb) for an example . See below an example of how to configure "sapience.yml":
 
 ```yaml
 default:
@@ -186,7 +209,7 @@ You need to create the test postgres db, by running the command below:
 
 `createdb rails_app_test`
 
-Then you can run them with the followign command:
+Then you can run them with the following command:
 
 `bin/tests`
 
