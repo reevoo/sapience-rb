@@ -100,7 +100,6 @@ module Sapience
             if defined?(::Rails) && ::Rails.respond_to?(:env)
               ::Rails.env
             else
-              warn "Sapience is going to use default configuration"
               DEFAULT_ENV
             end
           end
