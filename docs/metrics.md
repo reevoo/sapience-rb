@@ -39,8 +39,9 @@ As in the examples below:
 ```ruby
 metrics = Sapience.metrics
 metrics.timing("company/project/metric-name", 100)
-metrics.increment("company/project/metric-name", 10)
-metrics.decrement("company/project/metric-name", 5)
+metrics.increment("company/project/metric-name")
+metrics.decrement("company/project/metric-name")
+metrics.count("company/project/metric-name", -3)
 metrics.histogram("company/project/metric-name", 2_500)
 metrics.gauge("company/project/metric-name", 1_000, {})
 metrics.event("company/project/metric-name", "description about event", {})
