@@ -54,7 +54,7 @@ end
 ### Metric keys and tags
 
 The metric key argument used in all tracking methods can be arbitrary string however we recommend to use combination of names
-identifing component of your system joined by dots. All the metric keys all automaticaly prepended with `app_name.environment`.
+identifing component of your system joined by dots. All the metric keys are automaticaly prepended with `app_name.environment`.
 
 We use two diferent schemas for key that can be combined in one app:
 
