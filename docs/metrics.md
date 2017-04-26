@@ -54,9 +54,9 @@ end
 ### Metric keys and tags
 
 The metric key argument used in all tracking methods can be arbitrary string however we recommend to use combination of names
-identifing component of your system joined by dots. All the metric keys are automaticaly prepended with `app_name.environment`.
+identifying component of your system joined by dots. All the metric keys are automatically prefixed with `app_name.environment`.
 
-We use two diferent schemas for key that can be combined in one app:
+We use two different schema for key that can be combined in one app:
 
 #### Fully specified key
 
@@ -64,8 +64,8 @@ We use two diferent schemas for key that can be combined in one app:
 app_name.environment.module.(component)*.event
 ```
 
-The key fully indetify the source of event and is useful in cases where you don't need to aggregate events
-occured in one component, module or whole app. Example:
+The key fully identify the source of event and is useful in cases where you don't need to aggregate events
+occurred in one component, module or whole app. Example:
 
 ```ruby
 metrics.increment('authentication.sign_in') # full key: booking_app.production.authentication.sign_in
@@ -78,8 +78,8 @@ key: app_name.environment.event_type
 tags: event:name, module:name, component:name
 ```
 
-The key inself doesn't indetify the source of tracked event and is useful in cases where you want to aggregate events
-occured in one component, module or whole app. It's handy for event types that can occur in all modules of an app.
+The key itself doesn't identify the source of tracked event and is useful in cases where you want to aggregate events
+occurred in one component, module or whole app. It's handy for event types that can occur in all modules of an app.
 We use it mainly for error metrics. Example:
 
 ```ruby
