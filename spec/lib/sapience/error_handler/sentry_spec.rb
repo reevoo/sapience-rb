@@ -99,4 +99,22 @@ describe Sapience::ErrorHandler::Sentry do
       end
     end
   end
+
+  describe "#user_context" do
+    let(:options) { {foo: 'bar'} }
+
+    it "passes the correct params" do
+      expect(Raven).to receive(:user_context).with(options)
+      subject.user_context(options)
+    end
+  end
+
+  describe "#tags_context" do
+    let(:options) { {foo: 'bar'} }
+
+    it "passes the correct params" do
+      expect(Raven).to receive(:tags_context).with(options)
+      subject.tags_context(options)
+    end
+  end
 end

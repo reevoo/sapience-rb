@@ -44,6 +44,15 @@ module Sapience
         capture(message, payload)
       end
 
+      def user_context(options = {})
+        Raven.user_context(options)
+      end
+
+      def tags_context(options = {})
+        Raven.tags_context(options)
+      end
+      alias_method :tags=, :tags_context
+
       def configured?
         @configured == true
       end
