@@ -1,4 +1,5 @@
 require "spec_helper"
+require "shared_examples_for_error_handlers"
 
 describe Sapience::ErrorHandler::Sentry do
   subject { described_class.new(init_options) }
@@ -13,6 +14,8 @@ describe Sapience::ErrorHandler::Sentry do
       dsn:   dsn,
     }
   end
+
+  it_behaves_like "error handler"
 
   describe "configuration" do
     context "when options is a valid hash" do
