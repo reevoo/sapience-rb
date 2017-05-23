@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Hasslefree autoconfiguration for logging, metrics and exception collection."
   spec.description   = "Hasslefree autoconfiguration for logging, metrics and exception collection."
-  spec.homepage      = "https://github.com/reevoo/sapience"
+  spec.homepage      = "https://github.com/reevoo/sapience-rb"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
