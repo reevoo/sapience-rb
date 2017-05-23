@@ -37,12 +37,21 @@ module Sapience
       end
 
       def capture_exception(exception, payload = {})
-        capture(exception, payload)
+        capture_type(exception, payload)
       end
 
       def capture_message(message, payload = {})
-        capture(message, payload)
+        capture_type(message, payload)
       end
+
+      def user_context(options = {})
+        Raven.user_context(options)
+      end
+
+      def tags_context(options = {})
+        Raven.tags_context(options)
+      end
+      alias_method :tags=, :tags_context
 
       def configured?
         @configured == true
@@ -58,9 +67,42 @@ module Sapience
         @configured = true
       end
 
+      # Capture, process and reraise any exceptions from the given block.
+      #
+      # @example
+      #   Raven.capture do
+      #     MyApp.run
+      #   end
+      def capture!(options = {})
+        fail ArgumentError unless block_given?
+
+        begin
+          yield
+        rescue StandardError => e
+          capture_type(e, options)
+          raise
+        end
+      end
+
+      # Capture, process and not reraise any exceptions from the given block.
+      #
+      # @example
+      #   Raven.capture do
+      #     MyApp.run
+      #   end
+      def capture(options = {})
+        fail ArgumentError unless block_given?
+
+        begin
+          yield
+        rescue StandardError => e
+          capture_type(e, options)
+        end
+      end
+
       private
 
-      def capture(data, payload)
+      def capture_type(data, payload)
         return false unless valid?
         configure_sentry
 

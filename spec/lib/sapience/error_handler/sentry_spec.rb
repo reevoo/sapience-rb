@@ -1,16 +1,16 @@
 require "spec_helper"
 
 describe Sapience::ErrorHandler::Sentry do
-  subject { described_class.new(options) }
+  subject { described_class.new(init_options) }
 
   let(:level) { :trace }
   let(:dsn) { "https://foobar:443" }
   let(:message) { "Test message" }
   force_config(backtrace_level: :error)
-  let(:options) do
+  let(:init_options) do
     {
       level: level,
-      dsn: dsn,
+      dsn:   dsn,
     }
   end
 
@@ -20,7 +20,7 @@ describe Sapience::ErrorHandler::Sentry do
     end
 
     context "when options is not a hash" do
-      let(:options) { 12_345 }
+      let(:init_options) { 12_345 }
       specify do
         expect { subject }.to raise_error(ArgumentError)
       end
@@ -96,6 +96,116 @@ describe Sapience::ErrorHandler::Sentry do
         end.and_return(true)
 
         subject.capture_exception(exception, payload)
+      end
+    end
+  end
+
+  describe "#user_context" do
+    let(:options) { { foo: "bar" } }
+
+    it "passes the correct params" do
+      expect(Raven).to receive(:user_context).with(options)
+      subject.user_context(options)
+    end
+  end
+
+  describe "#tags_context" do
+    let(:options) { { foo: "bar" } }
+
+    it "passes the correct params" do
+      expect(Raven).to receive(:tags_context).with(options)
+      subject.tags_context(options)
+    end
+  end
+
+  describe "#capture!" do
+    let(:options) do
+      {
+        extra: {
+          foo: "bar",
+        },
+      }
+    end
+    let(:exception) { StandardError.new("My test exception") }
+
+    it "processes, captures and re-raises" do
+      expect do
+        subject.capture!(options) do
+          fail exception
+        end
+      end.to raise_error(exception)
+    end
+
+    it "passes param options to Raven" do
+      expect(Raven).to receive(:capture_type).with(exception, options)
+
+      begin
+        subject.capture!(options) do
+          fail exception
+        end
+      rescue # rubocop:disable Lint/HandleExceptions
+      end
+    end
+
+    context "when param options does not have key 'extra'" do
+      let(:options) do
+        {
+          foo: "bar",
+        }
+      end
+
+      it "passes options to Raven under key 'extra'" do
+        expect(Raven).to receive(:capture_type).with(exception, extra: options)
+
+        begin
+          subject.capture!(options) do
+            fail exception
+          end
+        rescue # rubocop:disable Lint/HandleExceptions
+        end
+      end
+    end
+  end
+
+  describe "#capture" do
+    let(:options) do
+      {
+        extra: {
+          foo: "bar",
+        },
+      }
+    end
+    let(:exception) { StandardError.new("My test exception") }
+
+    it "processes and does not raise an exception" do
+      expect do
+        subject.capture(options) do
+          fail exception
+        end
+      end.to_not raise_error
+    end
+
+    it "passes param 'options' to Raven" do
+      expect(Raven).to receive(:capture_type).with(exception, options)
+
+      subject.capture(options) do
+        fail exception
+      end
+    end
+
+    context "when param 'options' does not have key 'extra'" do
+      let(:options) do
+        {
+          foo: "bar",
+        }
+      end
+
+      it "passes options to Raven under key 'extra'" do
+        expect(Raven).to receive(:capture_type).with(exception, extra: options)
+
+        subject.capture(options) do
+          fail exception
+        end
       end
     end
   end

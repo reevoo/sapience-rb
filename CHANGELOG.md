@@ -1,3 +1,8 @@
+## v2.1.0
+
+- Add `Sapience::ErrorHandler:Sentry#capture`
+- Add `Sapience::ErrorHandler:Sentry#capture!`
+
 ## v2.0.5
 
 - Add "flush" as an instance method in logger.
