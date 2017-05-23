@@ -1,3 +1,10 @@
+## v2.2.0
+
+- Add `Sapience::ErrorHandler::Silent#capture`
+- Add `Sapience::ErrorHandler::Silent#capture!`
+- Add `Sapience::ErrorHandler::Silent#user_context`
+- Add `Sapience::ErrorHandler::Silent#tags_context`
+
 ## v2.1.0
 
 - Add `Sapience::ErrorHandler:Sentry#capture`
