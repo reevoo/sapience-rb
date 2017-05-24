@@ -20,6 +20,19 @@ module Sapience
       def capture_message(_message, _payload = {})
         nil
       end
+
+      def capture(_options: {})
+        nil
+      end
+      alias_method :capture!, :capture
+
+      def user_context(_options = {})
+        nil
+      end
+
+      def tags_context(_options = {})
+        nil
+      end
     end
   end
 end
