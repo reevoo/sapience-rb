@@ -116,12 +116,14 @@ describe Sapience::Logger do
   describe "#log" do
     include_context "logs"
     let(:appender) { Sapience.add_appender(:stream, file_name: "log/test.log", formatter: :color) }
+    let(:ex) { StandardError.new("We failed") }
     subject(:logger) { described_class.new("Test", :info) }
 
     specify "handles standard error" do
       allow(described_class).to receive(:logger).and_return(appender)
-      allow(appender).to receive(:log).with(log).and_raise(StandardError, "We failed")
-      expect(appender).to receive(:error).with("Appender thread: Failed to log to appender: #{appender.inspect}", a_kind_of(StandardError))
+      allow(appender).to receive(:log).with(log).and_raise(ex)
+
+      expect($stderr).to receive(:write).with("Appender thread: Failed to log to appender: #{appender.inspect}\n #{ex.inspect}")
       subject.log(log, "whaatever", "sapience")
     end
 

@@ -138,7 +138,7 @@ module Sapience
           begin
             appender.log(log)
           rescue StandardError => exc
-            self.class.logger.error "Appender thread: Failed to log to appender: #{appender.inspect}", exc
+            $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
           end
         end
       end if @@appender_thread
