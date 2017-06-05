@@ -1,3 +1,7 @@
+## v2.2.1
+
+- Log directly to STDOUT for internal errors
+
 ## v2.2.0
 
 - Add `Sapience::ErrorHandler::Silent#capture`
