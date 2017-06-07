@@ -1,3 +1,9 @@
+## v2.2.2
+
+- Set immediate_executor by default to avoid Errno::EIO error for multithreaded processes. 
+  This could happen when orphaned process (whose parent has died) attempts to get stdio from parent process, 
+  or when stream is closed.
+
 ## v2.2.1
 
 - Log directly to STDOUT for internal errors
