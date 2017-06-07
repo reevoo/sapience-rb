@@ -1,3 +1,7 @@
+## v2.3.0
+
+- add Capistrano deploy notification recipe
+
 ## v2.2.2
 
 - Set immediate_executor by default to avoid Errno::EIO error for multithreaded processes. 
