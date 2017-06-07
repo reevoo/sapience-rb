@@ -14,7 +14,7 @@ describe Sapience::ConfigLoader do
         it "uses the default configuration" do
           expect(load_from_file).to eq(
           "default"    => {
-            "log_executor" => "single_thread_executor",
+            "log_executor" => "immediate_executor",
             "filter_parameters" => %w(password password_confirmation),
             "log_level" => "info",
             "appenders" => [{
@@ -25,7 +25,6 @@ describe Sapience::ConfigLoader do
             }],
           },
           "development" => {
-            "log_executor" => "single_thread_executor",
             "log_level" => "debug",
             "appenders" => [{
               "stream" => {
@@ -35,7 +34,6 @@ describe Sapience::ConfigLoader do
             }],
           },
           "production"  => {
-            "log_executor" => "single_thread_executor",
             "log_level" => "warn",
             "appenders" => [{
               "stream" => {
@@ -45,7 +43,6 @@ describe Sapience::ConfigLoader do
             }],
           },
           "test"        => {
-            "log_executor" => "immediate_executor",
             "log_level" => "warn",
             "appenders" => [{
               "stream" => {
@@ -80,7 +77,7 @@ describe Sapience::ConfigLoader do
         it "uses the default configuration" do
           expect(load_from_file).to eq(
             "default" => {
-              "log_executor" => "single_thread_executor",
+              "log_executor" => "immediate_executor",
               "filter_parameters" => %w(password password_confirmation),
               "log_level" => "info",
               "appenders" => [
@@ -93,7 +90,6 @@ describe Sapience::ConfigLoader do
               ],
             },
             "development" => {
-              "log_executor" => "single_thread_executor",
               "log_level" => "debug",
               "appenders" => [
                 {
@@ -105,7 +101,6 @@ describe Sapience::ConfigLoader do
               ],
             },
             "production" => {
-              "log_executor" => "single_thread_executor",
               "log_level" => "warn",
               "appenders" => [
                 {
@@ -117,7 +112,6 @@ describe Sapience::ConfigLoader do
               ],
             },
             "test" => {
-              "log_executor" => "immediate_executor",
               "log_level" => "warn",
               "appenders" => [
                 {
