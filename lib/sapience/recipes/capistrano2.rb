@@ -1,14 +1,15 @@
 # encoding: utf-8
 
 begin
-  require 'capistrano/framework'
-  require 'capistrano/version'
+
+  require 'pry'
+  binding.pry
 
   make_notify_task = Proc.new do
     namespace :sapience do
       # notifies pre-configured metrics system of a deployment
       desc "Record a deployment event"
-      task :deploy_notification do
+      task deploy_notification: :environment do
         run_locally do
           begin
             # allow overrides to be defined for revision, description, changelog, appname, and user
@@ -36,7 +37,7 @@ begin
       make_notify_task.call
     end
   end
-rescue LoadError
-  warn 'Capistrano deploy notification recipe is not available. Please add this gem to your Gemfile.'
+rescue LoadError => ex
+  warn 'WARNING!!! Capistrano deploy notification recipe is not available. Please add this gem to your Gemfile.'
 end
 
