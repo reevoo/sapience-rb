@@ -1,6 +1,6 @@
 ## v2.3.0
 
-- add Capistrano deploy notification recipe
+- add deploy notification rake task
 
 ## v2.2.2
 

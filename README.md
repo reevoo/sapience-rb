@@ -197,16 +197,13 @@ Then you can run them with the followign command:
 - `APP_NAME` - If you want to provide an application name for sapience it can be done here.
 - `SAPIENCE_ENV` - For applications that don't use rack or rails
 
-## Capistrano integration
+## Deploy notification integration
 
-Add in your `Capfile`
+Add in your `Rakefile`
 
-`require 'sapience/capistrano'`
+`require 'sapience/tasks'`
 
-
-Add in your `deploy.rb`
-
-Use task `sapience.deploy_notification`
+Use task `sapience:deploy_notification[sha]`
 
 ## License
 
