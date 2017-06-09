@@ -37,9 +37,9 @@ describe Sapience::Logger do
           .to receive(:trace)
           .with("Appender thread: All appenders flushed")
 
-        expect(described_class.logger)
-          .to receive(:error)
-          .with("Appender thread: Failed to flush appender: #{appender.inspect}", exception)
+        expect($stderr)
+          .to receive(:write)
+          .with("Appender thread: Failed to flush to appender: #{appender.inspect}\n #{exception.inspect}")
 
         expect(appender).to receive(:flush).and_raise(exception)
         expect { described_class.flush }.not_to raise_error

@@ -256,7 +256,7 @@ describe Sapience::Metrics::Datadog do
       end
 
       it "emit event with options" do
-        expect(statsd).to receive(:event).with(title, text, {foo: "bar"})
+        expect(statsd).to receive(:event).with(title, text, foo: "bar")
         subject.event(title, text, options_hash)
       end
 

@@ -91,7 +91,7 @@ module Sapience
       end
 
       def event(title, text, options)
-        options = options || {}
+        options ||= {}
         return false unless valid?
         title = "#{namespace}.#{title}" if options.delete(:namespace)
         provider.event(title, text, options)
