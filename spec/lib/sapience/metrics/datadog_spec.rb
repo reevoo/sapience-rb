@@ -260,10 +260,7 @@ describe Sapience::Metrics::Datadog do
         subject.event(title, text, options_hash)
       end
 
-      context "namespace = true" do
-        let(:options_hash) do
-          { namespace: true }
-        end
+      context "namespace provided" do
         let(:title) { "my_title" }
 
         before do
@@ -271,9 +268,89 @@ describe Sapience::Metrics::Datadog do
           allow(Sapience).to receive(:environment).and_return("test")
         end
 
-        it "add prefix for the title" do
-          expect(statsd).to receive(:event).with("test_app.test.my_title", text, {})
-          subject.event(title, text, options_hash)
+        context "with title option" do
+          let(:options_hash) do
+            { namespaced_keys: [:title] }
+          end
+
+          it "add prefix for the title" do
+            expect(statsd).to receive(:event).with("test_app.test.my_title", text, {})
+            subject.event(title, text, options_hash)
+          end
+
+          context "and custom namespace" do
+            let(:options_hash) do
+              {
+                namespaced_keys: [:title],
+                namespace_prefix: "custom_prefix",
+              }
+            end
+
+            it "add prefix for the title" do
+              expect(statsd).to receive(:event).with("custom_prefix.my_title", text, {})
+              subject.event(title, text, options_hash)
+            end
+          end
+        end
+
+        context "with namespace option" do
+          context "and aggregation_key value" do
+            let(:options_hash) do
+              { namespaced_keys: [:aggregation_key] }
+            end
+
+            context "without aggregation_key option" do
+              it "add prefix for the aggregation_key and take text from title" do
+                expect(statsd).to receive(:event).with("my_title", text, aggregation_key: "test_app.test.my_title")
+                subject.event(title, text, options_hash)
+              end
+            end
+
+            context "with aggregation_key option" do
+              let(:options_hash) do
+                {
+                  namespaced_keys: [:aggregation_key],
+                  aggregation_key: "my_key",
+                }
+              end
+
+              it "add prefix for the aggregation_key" do
+                expect(statsd).to receive(:event).with("my_title", text, aggregation_key: "test_app.test.my_key")
+                subject.event(title, text, options_hash)
+              end
+            end
+          end
+
+          context "with aggregation_key and title values" do
+            let(:options_hash) do
+              { namespaced_keys: [:title, :aggregation_key] }
+            end
+
+            context "without aggregation_key option" do
+              it "add prefix for title and aggregation_key" do
+                expect(statsd)
+                  .to receive(:event)
+                  .with("test_app.test.my_title", text, aggregation_key: "test_app.test.my_title")
+                subject.event(title, text, options_hash)
+              end
+            end
+
+            context "with aggregation_key option" do
+              let(:options_hash) do
+                {
+                  namespaced_keys: [:title, :aggregation_key],
+                  aggregation_key: "my_key",
+                }
+              end
+
+              it "add prefix for the title" do
+                expect(statsd)
+                  .to receive(:event)
+                  .with("test_app.test.my_title", text, aggregation_key: "test_app.test.my_key")
+                subject.event(title, text, options_hash)
+              end
+            end
+          end
         end
       end
     end
