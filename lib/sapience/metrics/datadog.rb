@@ -90,11 +90,30 @@ module Sapience
         provider.batch(&block)
       end
 
-      def event(title, text, options)
-        options ||= {}
+      # Create Event
+      #
+      # @param [String] title the title of the event
+      # @param [String] text  the description
+      # @param [Hash] opts event options
+      # @option opts [Array] :namespaced_keys the keys we want to be namespaced. Valid: :title or :aggregation_key
+      # @option opts [String] :namespace_prefix custom namespace (to override default from Sapience `app_name.environment`)
+      # @option opts [String] :aggregation_key custom aggregation_key (to override default based on `title`, only applies when :aggregation_key includes into namespaced_keys option)
+      #
+      # @example Create an Event
+      #   Sapience.metrics.event('article-published', "article #123")
+      #
+      # @example Create a namespaced Event with default namespacing
+      #   Sapience.metrics.event('article-published', "article #123", {namespaced_keys: [:title, :aggregation_key]})
+      #
+      # @example Create a namespaced Event with custom namespacing
+      #   Sapience.metrics.event('article-published', "article #123", {namespace_prefix: 'custom_namespace',  namespaced_keys: [:title, :aggregation_key]})
+      #
+      # @example Create an Event with a custom aggregation_key
+      #   Sapience.metrics.event('article-published', "article #123", {aggregation_key: 'custom_aggregation_key')
+
+      def event(title, text = '', opts)
         return false unless valid?
-        title = "#{namespace}.#{title}" if options.delete(:namespace)
-        provider.event(title, text, options)
+        opts ||= {}
       end
 
       def namespace
