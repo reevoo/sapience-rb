@@ -1,3 +1,7 @@
+## v2.3.1
+
+- Add namespaced events
+
 ## v2.2.3
 
 - Set immediate_executor by default to avoid Errno::EIO error for multithreaded processes. 
