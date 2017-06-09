@@ -237,4 +237,45 @@ describe Sapience::Metrics::Datadog do
       end
     end
   end
+
+  describe "#event" do
+    let(:title) { "Some Title" }
+    let(:text) { "Some Text" }
+    let(:options_hash) { nil }
+
+    context "without options" do
+      it "emit event" do
+        expect(statsd).to receive(:event).with(title, text, {})
+        subject.event(title, text, options_hash)
+      end
+    end
+
+    context "with options" do
+      let(:options_hash) do
+        { foo: "bar" }
+      end
+
+      it "emit event with options" do
+        expect(statsd).to receive(:event).with(title, text, {foo: "bar"})
+        subject.event(title, text, options_hash)
+      end
+
+      context "namespace = true" do
+        let(:options_hash) do
+          { namespace: true }
+        end
+        let(:title) { "my_title" }
+
+        before do
+          allow(Sapience).to receive(:app_name).and_return("test_app")
+          allow(Sapience).to receive(:environment).and_return("test")
+        end
+
+        it "add prefix for the title" do
+          expect(statsd).to receive(:event).with("test_app.test.my_title", text, {})
+          subject.event(title, text, options_hash)
+        end
+      end
+    end
+  end
 end

@@ -45,6 +45,7 @@ metrics.count("metric-key", -3)
 metrics.histogram("metric-key", 2_500)
 metrics.gauge("metric-key", 1_000, {})
 metrics.event("metric-key", "description about event", {})
+metrics.event("metric-key", "description about event", {namespace: true})
 metrics.batch do
   metrics.event("metric-key", "description about event", {})
   metrics.increment("another-metric-key", 2)
@@ -84,4 +85,25 @@ We use it mainly for error metrics. Example:
 
 ```ruby
 metrics.increment('error', tags: %w(error_class:AccessDenied module:authentication component:permissions))
+```
+
+### Event Metric
+
+For the `event` metric the first parameter is `title` - string.
+By default it is not namespaced, however with option `namespace: true` it will automatically namespace it.  
+
+
+```ruby 
+metrics.event("metric-key", "description about event", {namespace: true})
+
+```
+Output: `app_name.environment.metric-key`
+
+#### Event Grouping
+
+In order to group similar events, use option: `aggregation_key`
+
+```ruby 
+metrics.event("metric-key", "description about event", {namespace: true, aggregation_key:true})
+
 ```

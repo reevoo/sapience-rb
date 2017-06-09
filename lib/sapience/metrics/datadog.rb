@@ -90,8 +90,10 @@ module Sapience
         provider.batch(&block)
       end
 
-      def event(title, text, options = {})
+      def event(title, text, options)
+        options = options || {}
         return false unless valid?
+        title = "#{namespace}.#{title}" if options.delete(:namespace)
         provider.event(title, text, options)
       end
 
