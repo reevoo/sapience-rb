@@ -18,7 +18,7 @@ module Sapience
             logger.trace "Appender thread: Flushing appender: #{appender.class.name}"
             appender.flush
           rescue StandardError => exc
-            logger.error "Appender thread: Failed to flush appender: #{appender.inspect}", exc
+            $stderr.write("Appender thread: Failed to flush to appender: #{appender.inspect}\n #{exc.inspect}")
           end
         end
 
