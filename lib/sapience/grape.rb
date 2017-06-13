@@ -17,6 +17,6 @@ module Sapience
     end
     Sapience.configure
     ::Grape::API.send(:include, Sapience::Loggable)
-    Sapience::Extensions::Grape::Notifications.use
+    # Sapience::Extensions::Grape::Notifications.use
   end
 end

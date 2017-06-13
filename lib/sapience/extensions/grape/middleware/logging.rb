@@ -8,10 +8,10 @@ module Sapience
         class Logging < ::Grape::Middleware::Base
           include RequestFormatHelper
 
-          ActiveSupport::Notifications.subscribe("sql.active_record") do |*args|
-            event = ActiveSupport::Notifications::Event.new(*args)
-            Grape::Timings.append_db_runtime(event)
-          end if defined?(ActiveRecord)
+          # ActiveSupport::Notifications.subscribe("sql.active_record") do |*args|
+          #   event = ActiveSupport::Notifications::Event.new(*args)
+          #   Grape::Timings.append_db_runtime(event)
+          # end if defined?(ActiveRecord)
 
           def initialize(app, options = {})
             super
