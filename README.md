@@ -104,7 +104,6 @@ Add a `config/sapience.yml` file to you appplication. Or if you, like us, have m
 default:
   app_name: My Application
   log_level: debug
-  log_level_active_record: info
   appenders:
     - stream:
         io: STDOUT
@@ -159,7 +158,6 @@ production:
 Sapience.configure(force: true) do |config|
   config.app_name = "My Application"
   config.default_level   = :info
-  config.log_level_active_record = :info
   config.backtrace_level = :error
   config.filter_parameters = %w(password password_confirmation)
   config.appenders       = [

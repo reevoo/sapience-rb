@@ -9,17 +9,6 @@ describe Sapience::Configuration do
     end
   end
 
-  describe "#log_level_active_record" do
-    it "sets the default level to :info" do
-      expect(Sapience.config.log_level_active_record).to eq(:info)
-    end
-
-    it "can override the default level" do
-      Sapience.config.log_level_active_record = :debug
-      expect(Sapience.config.log_level_active_record).to eq(:debug)
-    end
-  end
-
   describe "#level_to_index" do
     def level_to_index
       subject.level_to_index(level)
