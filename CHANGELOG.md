@@ -1,3 +1,9 @@
+## v2.3.2
+
+- Changing the log level of ActiveRecord has the side effect of changing the
+  log level of Rails.logger. We don't want that therefore we remove the
+  assignment.
+
 ## v2.3.1
 
 - Add namespaced events

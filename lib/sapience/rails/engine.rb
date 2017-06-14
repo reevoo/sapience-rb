@@ -72,12 +72,7 @@ module Sapience
         Bugsnag.configure { |config| config.logger = Sapience[Bugsnag] } if defined?(Bugsnag)
         Sapience::Extensions::ActionController::LogSubscriber.attach_to :action_controller
         # Sapience::Extensions::ActiveSupport::MailerLogSubscriber.attach_to :action_mailer
-        if defined?(ActiveRecord)
-          Sapience::Extensions::ActiveRecord::Notifications.use
-          ActiveRecord::Base.logger.level =
-              Sapience.config.log_level_active_record if defined?(ActiveRecord::Base.logger.level)
-        end
-
+        Sapience::Extensions::ActiveRecord::Notifications.use if defined?(ActiveRecord)
         Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
         # Sapience::Extensions::ActiveJob::LogSubscriber.attach_to :active_job
         Sapience::Extensions::ActionController::Notifications.use
