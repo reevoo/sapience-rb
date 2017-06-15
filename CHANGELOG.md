@@ -1,3 +1,8 @@
+## v2.3.3
+
+- Put back single_thread_executor and leave immediate_executor only for test environment
+
+
 ## v2.3.2
 
 - Changing the log level of ActiveRecord has the side effect of changing the

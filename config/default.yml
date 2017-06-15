@@ -3,7 +3,7 @@ default:
   filter_parameters:
     - password
     - password_confirmation
-  log_executor: immediate_executor
+  log_executor: single_thread_executor
   log_level: info
   appenders:
     - stream:
@@ -12,6 +12,7 @@ default:
 
 test:
   log_level: warn
+  log_executor: immediate_executor
   appenders:
     - stream:
         file_name: log/test.log
