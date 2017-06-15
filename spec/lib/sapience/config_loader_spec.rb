@@ -14,7 +14,7 @@ describe Sapience::ConfigLoader do
         it "uses the default configuration" do
           expect(load_from_file).to eq(
           "default"    => {
-            "log_executor" => "immediate_executor",
+            "log_executor" => "single_thread_executor",
             "filter_parameters" => %w(password password_confirmation),
             "log_level" => "info",
             "appenders" => [{
@@ -44,6 +44,7 @@ describe Sapience::ConfigLoader do
           },
           "test"        => {
             "log_level" => "warn",
+            "log_executor" => "immediate_executor",
             "appenders" => [{
               "stream" => {
                 "file_name" => "log/test.log",
@@ -77,7 +78,7 @@ describe Sapience::ConfigLoader do
         it "uses the default configuration" do
           expect(load_from_file).to eq(
             "default" => {
-              "log_executor" => "immediate_executor",
+              "log_executor" => "single_thread_executor",
               "filter_parameters" => %w(password password_confirmation),
               "log_level" => "info",
               "appenders" => [
@@ -113,6 +114,7 @@ describe Sapience::ConfigLoader do
             },
             "test" => {
               "log_level" => "warn",
+              "log_executor" => "immediate_executor",
               "appenders" => [
                 {
                   "stream" => {
