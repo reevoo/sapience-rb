@@ -29,7 +29,8 @@ module Sapience
       #       tag1:true
       # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
-      def initialize(options = {})
+      def initialize(opts = {})
+        options = opts.dup
         fail("Options should be a Hash") unless options.is_a?(Hash)
         url   = options.delete(:url) || Sapience::DEFAULT_STATSD_URL
         @tags = options.delete(:tags)
