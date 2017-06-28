@@ -109,6 +109,7 @@ module Sapience
         options = payload[:extra] ? payload : { extra: payload }
 
         Raven.capture_type(data, options) if @configured
+        true
       rescue Exception => ex # rubocop:disable RescueException
         Sapience.logger.error("Raven.capture_type failed with", payload, ex)
       end

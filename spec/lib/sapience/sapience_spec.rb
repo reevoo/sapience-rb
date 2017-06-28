@@ -154,7 +154,7 @@ describe Sapience do
   describe ".app_name" do
     subject { described_class }
 
-    context "when APP_NAME is set" do
+    context "when APP_NAME environment variable is set" do
       let(:app) { "my_app" }
       before do
         allow(ENV).to receive(:[]).with(Sapience::APP_NAME).and_return(app)
@@ -162,6 +162,11 @@ describe Sapience do
 
       its(:app_name) do
         is_expected.to eq("my_app")
+      end
+
+      it "sets the app_name in config" do
+        subject.app_name
+        expect(Sapience.config.app_name).to eq(app)
       end
     end
 

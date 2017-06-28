@@ -1,7 +1,10 @@
+## v2.3.5
+
+- Set Sapience.config.app_name when APP_NAME environment variable is set 
+
 ## v2.3.3
 
 - Put back single_thread_executor and leave immediate_executor only for test environment
-
 
 ## v2.3.2
 
