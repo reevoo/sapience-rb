@@ -80,7 +80,6 @@ module Sapience
     @@metrics       = nil
     @@error_handler = nil
     @@environment   = nil
-    @@app_name      = nil
     @@configured    = false
     @@config_hash   = nil
     clear_tags!
@@ -109,12 +108,9 @@ module Sapience
   end
 
   def self.app_name
-    @@app_name ||= config.app_name
-    @@app_name ||= config_hash.fetch(environment) { {} }["app_name"]
-    @@app_name ||= config_hash.fetch(DEFAULT_ENV) { {} }["app_name"]
-    @@app_name ||= ENV[APP_NAME]
-    fail AppNameMissing, "app_name is not configured. See documentation for more information" unless @@app_name
-    @@app_name
+    config.app_name ||= app_name_builder
+    fail AppNameMissing, "app_name is not configured. See documentation for more information" unless config.app_name
+    config.app_name
   end
 
   def self.namify(appname, sep = "_")
@@ -470,5 +466,11 @@ module Sapience
 
   def self.root
     @_root ||= Gem::Specification.find_by_name("sapience").gem_dir
+  end
+
+  def self.app_name_builder
+    config_hash.fetch(environment) { {} }["app_name"] ||
+      config_hash.fetch(DEFAULT_ENV) { {} }["app_name"] ||
+      ENV[APP_NAME]
   end
 end
