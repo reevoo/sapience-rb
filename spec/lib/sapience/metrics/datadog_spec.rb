@@ -355,4 +355,93 @@ describe Sapience::Metrics::Datadog do
       end
     end
   end
+
+  describe "#success" do
+    let(:module_name) { "custom_module_name" }
+    let(:action) { "custom_action" }
+
+    context "without options" do
+      it "sets correct tags and metric key" do
+        expect(statsd).to receive(:increment).with("success", tags: %w(module:custom_module_name action:custom_action))
+        subject.success(module_name, action)
+      end
+    end
+
+    context "with options" do
+      let(:hash) do
+        { foo: "bar" }
+      end
+
+      it "sets correct tags and metric key" do
+        expect(statsd)
+          .to receive(:increment).with(
+            "success",
+
+            foo: "bar",
+            tags: %w(module:custom_module_name action:custom_action),
+
+          )
+        subject.success(module_name, action, hash)
+      end
+
+      context "and tags option provided" do
+        let(:hash) do
+          { tags: %w(event:my_event) }
+        end
+
+        it "sets correct tags" do
+          expect(statsd)
+            .to receive(:increment).with(
+              "success",
+              tags: %w(event:my_event module:custom_module_name action:custom_action),
+            )
+          subject.success(module_name, action, hash)
+        end
+
+        context "and module tag exist" do
+          let(:hash) do
+            { tags: %w(event:my_event module:module_from_option) }
+          end
+
+          it "overrides module tag from options" do
+            expect(statsd)
+              .to receive(:increment).with(
+                "success",
+                tags: %w(event:my_event module:custom_module_name action:custom_action),
+              )
+            subject.success(module_name, action, hash)
+          end
+
+          it "logs a warning" do
+            expect(Sapience.logger).to receive(:warn).with(
+                "WARNING: tag 'module' already exist, overwritten with custom_module_name",
+              )
+            subject.success(module_name, action, hash)
+          end
+        end
+
+        context "and action tag exist" do
+          let(:hash) do
+            { tags: %w(event:my_event action:action_from_option) }
+          end
+
+          it "overrides module tag from options" do
+            expect(statsd)
+              .to receive(:increment).with(
+                "success",
+                tags: %w(event:my_event module:custom_module_name action:custom_action),
+              )
+            subject.success(module_name, action, hash)
+          end
+
+          it "logs a warning" do
+            expect(Sapience.logger).to receive(:warn).with(
+              "WARNING: tag 'action' already exist, overwritten with custom_action",
+            )
+            subject.success(module_name, action, hash)
+          end
+        end
+      end
+    end
+  end
 end

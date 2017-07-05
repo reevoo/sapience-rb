@@ -135,6 +135,18 @@ module Sapience
         provider.event(title, text, opts)
       end
 
+      def success(module_name, action, opts = {})
+        increment("success", add_tags(module_name, action, opts))
+      end
+
+      def error(module_name, action, opts = {})
+        increment("error", add_tags(module_name, action, opts))
+      end
+
+      def exception(module_name, action, opts = {})
+        increment("exception", add_tags(module_name, action, opts))
+      end
+
       def namespace
         ns = Sapience.namify(Sapience.app_name)
         ns << ".#{Sapience.namify(Sapience.environment)}" if Sapience.environment
@@ -146,6 +158,23 @@ module Sapience
           namespace: namespace,
           tags: @tags,
         }
+      end
+
+      private
+
+      def add_tags(module_name, action, opts)
+        tags = opts.fetch(:tags, [])
+        clean_up_tags(tags, :module, module_name)
+        clean_up_tags(tags, :action, action)
+        tags << "module:#{module_name}" << "action:#{action}"
+        opts[:tags] = tags
+        opts
+      end
+
+      def clean_up_tags(tags, key, value)
+        old_tags = tags.dup
+        tags.delete_if { |a| a =~ /^#{key}:/ }
+        ::Sapience.logger.warn("WARNING: tag '#{key}' already exist, overwritten with #{value}") if tags != old_tags
       end
     end
   end
