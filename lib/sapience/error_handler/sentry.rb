@@ -23,8 +23,9 @@ module Sapience
       #   dsn: [String]
       #     Url to configure Sentry-Raven.
       #     Default: nil
-      def initialize(options = {})
-        fail ArgumentError, "Options should be a Hash" unless options.is_a?(Hash)
+      def initialize(opts = {})
+        fail ArgumentError, "Options should be a Hash" unless opts.is_a?(Hash)
+        options = opts.dup
 
         options[:level] ||= :error
         @sentry_logger_level = options[:level]
