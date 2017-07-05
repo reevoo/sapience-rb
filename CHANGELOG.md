@@ -1,3 +1,10 @@
+## v2.4.0
+
+- Add shortcut metrics
+    - `Sapience.metrics.success(module_name<string>, action<string>, opts<hash>)`
+    - `Sapience.metrics.error(module_name<string>, action<string>, opts<hash>)`
+    - `Sapience.metrics.exception(module_name<string>, action<string>, opts<hash>)`
+
 ## v2.3.5
 
 - Set Sapience.config.app_name when APP_NAME environment variable is set 
