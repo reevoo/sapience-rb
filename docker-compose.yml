@@ -17,7 +17,7 @@ services:
       POSTGRES_PASSWORD: tests
 
   base:
-    image: ruby:2.3
+    image: ruby:2.4
     cpu_shares: 4
     # Specify the directory from where all commands sent to the container will be
     # issued to where the code is mounted:

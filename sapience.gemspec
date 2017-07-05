@@ -44,4 +44,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "gem-release"
   spec.add_development_dependency "memory_profiler"
   spec.add_development_dependency "rspec-prof"
+  spec.add_development_dependency "appraisal"
 end

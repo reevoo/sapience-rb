@@ -219,9 +219,7 @@ describe Sapience::Logger do
             end
 
             it "logs payload and message from block" do
-              logger.send(level) do
-                { message: "Hello world", tracking_number: "123456", even: 2, more: "data" }
-              end
+              logger.send(level, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
 
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
@@ -236,24 +234,24 @@ describe Sapience::Logger do
             end
 
             it "logs duration" do
-              logger.send(level, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              duration_match = "\\(123\\.5ms\\)"
+              duration_match = "\\(123\\.4ms\\)"
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
 
             it "does not log when below min_duration" do
-              logger.send(level, min_duration: 200, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, min_duration: 200, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               expect(mock_logger.message).to(be_nil)
             end
 
             it "logs duration" do
               metric_name = "/my/custom/metric"
-              logger.send(level, metric: metric_name, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, metric: metric_name, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              duration_match = "\\(123\\.5ms\\)"
+              duration_match = "\\(123\\.4ms\\)"
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
           end
