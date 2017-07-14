@@ -8,24 +8,24 @@ gem "puma", "~> 3.0"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+gem "activesupport"
+gem "dogstatsd-ruby"
 gem "sapience", path: "../.."
 gem "sentry-raven"
-gem "dogstatsd-ruby"
-gem "activesupport"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platform: :mri
   # gem "pry-nav", platform: :mri
-  gem "pry-byebug", platform: :mri
-  gem "rspec"
-  gem "racksh"
   gem "appraisal"
+  gem "pry-byebug", platform: :mri
+  gem "racksh"
+  gem "rspec"
 end
 
 group :test do
+  gem "fuubar"
   gem "rspec-its"
   gem "simplecov"
   gem "simplecov-json"
-  gem "fuubar"
 end

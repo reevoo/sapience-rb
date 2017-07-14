@@ -21,7 +21,7 @@ module Sapience
       warn:  BOLD,
       error: RED,
       fatal: RED,
-    }
+    }.freeze
   end
 
 end

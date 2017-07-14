@@ -78,7 +78,7 @@ module Sapience
             YAML.safe_load(yaml_code, [Regexp], [], false, filename)
           end
         else
-          YAML.load(yaml_code, filename)
+          YAML.safe_load(yaml_code, filename)
         end
       end
     end

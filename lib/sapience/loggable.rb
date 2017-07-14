@@ -1,5 +1,4 @@
 module Sapience
-  # rubocop:disable TrivialAccessors
   module Loggable
     def self.included(base)
       base.send(:extend, Extensions)

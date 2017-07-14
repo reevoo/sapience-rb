@@ -30,12 +30,12 @@ module Sapience
   @@configured = false
 
   # Logging levels in order of most detailed to most severe
-  LEVELS                  = [:trace, :debug, :info, :warn, :error, :fatal].freeze
   APP_NAME                = "APP_NAME".freeze
   DEFAULT_ENV             = "default".freeze
   RACK_ENV                = "RACK_ENV".freeze
   RAILS_ENV               = "RAILS_ENV".freeze
   SAPIENCE_ENV            = "SAPIENCE_ENV".freeze
+  LEVELS                  = %i[trace debug info warn error fatal].freeze
   APPENDER_NAMESPACE      = Sapience::Appender
   METRICS_NAMESPACE       = Sapience::Metrics
   ERROR_HANDLER_NAMESPACE = Sapience::ErrorHandler
@@ -395,7 +395,7 @@ module Sapience
   # Remove specified number of tags from the current tag list
   def self.pop_tags(quantity = 1)
     t = Thread.current[:sapience_tags]
-    t.pop(quantity) unless t.nil?
+    t&.pop(quantity)
   end
 
   # Silence noisy log levels by changing the default_level within the block
