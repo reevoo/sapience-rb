@@ -1,3 +1,9 @@
+## v2.5.0
+
+- Bump Ruby to version 2.3.4
+- Add fronzen_string_literal: true to be compatible with coming Ruby 3
+- Reevoocop changes
+
 ## v2.4.0
 
 - Add shortcut metrics
