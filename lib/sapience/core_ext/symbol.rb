@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Symbol
   unless :sym.respond_to?(:camelize)
     def camelize(uppercase_first_letter = true)

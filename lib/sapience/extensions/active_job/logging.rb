@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Patch ActiveJob logger
 require "active_job/logging"
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 # rubocop:disable LineLength
@@ -136,7 +137,7 @@ describe Sapience::Logger do
     end
   end
 
-  [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
+  [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter| # rubocop:disable Performance/StartWith
     describe "filter: #{filter.class.name}" do
       force_config(default_level: :trace, backtrace_level: nil)
       before do

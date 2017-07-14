@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Load AwesomePrint if available
 begin
   require "awesome_print"
@@ -27,7 +28,7 @@ module Sapience
         colors      = Sapience::AnsiColors
         level_color = colors::LEVEL_MAP[log.level]
 
-        message = time_format.nil? ? "" : "#{format_time(log.time)} "
+        message = time_format.nil? ? +"" : +"#{format_time(log.time)} "
 
         # Header with date, time, log level and process info
         message << "#{level_color}#{log.level_to_s}#{colors::CLEAR} [#{log.process_info}]"

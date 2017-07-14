@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # rubocop:disable ClassLength
   class Base
@@ -297,6 +298,7 @@ module Sapience
     # Measure the supplied block and log the message
     # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
     def measure_internal(level, index, message, params)
+      params.dup
       start     = Time.now
       exception = nil
       begin

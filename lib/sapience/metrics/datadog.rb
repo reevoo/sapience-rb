@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "uri"
 begin
   require "datadog/statsd"
@@ -11,7 +12,7 @@ end
 module Sapience
   class Metrics
     class Datadog < Sapience::Metrics
-      VALIDATION_MESSAGE = "Statsd only supports udp. Example: '#{Sapience::DEFAULT_STATSD_URL}'".freeze
+      VALIDATION_MESSAGE = "Statsd only supports udp. Example: '#{Sapience::DEFAULT_STATSD_URL}'"
 
       # Create Appender
       #

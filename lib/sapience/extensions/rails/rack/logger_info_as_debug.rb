@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Drop rack Started message to debug level message
 class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   module Loggable
     def self.included(base)

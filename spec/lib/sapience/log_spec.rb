@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "active_record"
 
@@ -115,7 +116,7 @@ describe Sapience::Log do
   end
 
   describe "#formatted_time" do
-    before { travel_to Time.new(2004, 11, 24, 01, 04, 44) }
+    before { travel_to Time.new(2004, 11, 24, 0o1, 0o4, 44) }
     after { travel_back }
     its(:formatted_time) do
       is_expected.to eq("2004-11-24 01:04:44.000000")

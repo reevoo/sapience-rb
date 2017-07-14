@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Abstract Subscriber
 #
 #   Abstract base class for appender and metrics subscribers.

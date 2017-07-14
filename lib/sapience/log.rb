@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # Log Struct
   #
@@ -54,7 +55,7 @@ module Sapience
 
     # Returns [String] the exception backtrace including all of the child / caused by exceptions
     def backtrace_to_s
-      trace = ""
+      trace = +""
       each_exception do |exception, i|
         if i == 0
           trace << (exception.backtrace || []).join("\n")
@@ -80,7 +81,7 @@ module Sapience
       minutes, ms = ms.divmod(MILLISECONDS_IN_MINUTE)
       seconds, ms = ms.divmod(MILLISECONDS_IN_SECOND)
 
-      str = ""
+      str = +""
       str << "#{days}d" if days > 0
       str << " #{hours}h" if hours > 0
       str << " #{minutes}m" if minutes > 0

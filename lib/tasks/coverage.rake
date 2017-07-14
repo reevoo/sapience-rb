@@ -1,5 +1,6 @@
-COVERAGE_FILE = ".simplecov".freeze
-COVERAGE_BKP_FILE = ".simplecov.bkp".freeze
+# frozen_string_literal: true
+COVERAGE_FILE = ".simplecov"
+COVERAGE_BKP_FILE = ".simplecov.bkp"
 
 def coverage_dir
   p File.join(Dir.pwd, "coverage")

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "application_job"
 require_relative "../../../../spec/support/file_helper"
 

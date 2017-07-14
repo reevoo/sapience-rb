@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 shared_context "logs" do
   let(:level) { :info }
   let(:thread_name) { "Custom Thread" }

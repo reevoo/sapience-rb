@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "sapience/extensions/active_record/model_metrics"
 

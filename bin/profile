@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 require "bundler/setup"
 require "ruby-prof"
 require "sapience"
@@ -8,7 +9,7 @@ FILTERED_METHODS = [
   /Integer#times/,
   /Kernel#(\w*)/,
   /NilClass#(\w*)/,
-]
+].freeze
 
 # puts "Starting RubyProf"
 # RubyProf.start

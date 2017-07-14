@@ -12,7 +12,7 @@ module Sapience
   # during a run of the sapience program, if files in several
   # directories are inspected.
   module ConfigLoader
-    SAPIENCE_FILE = "sapience.yml".freeze
+    SAPIENCE_FILE = "sapience.yml"
     SAPIENCE_HOME = File.realpath(File.join(File.dirname(__FILE__), "..", ".."))
     DEFAULT_FILE  = File.join(SAPIENCE_HOME, "config", "default.yml")
 

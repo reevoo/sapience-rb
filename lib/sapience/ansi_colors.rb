@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # Formatting & colors used by optional color formatter
   module AnsiColors

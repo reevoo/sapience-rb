@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "concurrent"
 require "socket"
 require "sapience/descendants"
@@ -30,16 +31,16 @@ module Sapience
   @@configured = false
 
   # Logging levels in order of most detailed to most severe
-  APP_NAME                = "APP_NAME".freeze
-  DEFAULT_ENV             = "default".freeze
-  RACK_ENV                = "RACK_ENV".freeze
-  RAILS_ENV               = "RAILS_ENV".freeze
-  SAPIENCE_ENV            = "SAPIENCE_ENV".freeze
+  APP_NAME                = "APP_NAME"
+  DEFAULT_ENV             = "default"
+  RACK_ENV                = "RACK_ENV"
+  RAILS_ENV               = "RAILS_ENV"
+  SAPIENCE_ENV            = "SAPIENCE_ENV"
   LEVELS                  = %i[trace debug info warn error fatal].freeze
   APPENDER_NAMESPACE      = Sapience::Appender
   METRICS_NAMESPACE       = Sapience::Metrics
   ERROR_HANDLER_NAMESPACE = Sapience::ErrorHandler
-  DEFAULT_STATSD_URL      = "udp://localhost:8125".freeze
+  DEFAULT_STATSD_URL      = "udp://localhost:8125"
 
   def self.configure(force: false)
     yield config if block_given?

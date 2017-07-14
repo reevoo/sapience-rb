@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "grape/middleware/base"
 require_relative "../request_format_helper"
 

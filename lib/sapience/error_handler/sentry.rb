@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 begin
   require "sentry-raven"
 rescue LoadError
@@ -12,7 +13,7 @@ end
 module Sapience
   class ErrorHandler
     class Sentry < Sapience::ErrorHandler
-      VALIDATION_MESSAGE = "DSN is not valid, please add appender with :dsn key or set SENTRY_DSN".freeze
+      VALIDATION_MESSAGE = "DSN is not valid, please add appender with :dsn key or set SENTRY_DSN"
       URI_REGEXP = URI::DEFAULT_PARSER.regexp[:ABS_URI]
       #
       #   level: [:trace | :debug | :info | :warn | :error | :fatal]

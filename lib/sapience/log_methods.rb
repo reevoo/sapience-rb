@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   module LogMethods
     def trace(message = nil, payload = nil, exception = nil, &block)

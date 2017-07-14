@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Patch ActiveModelSerializers logger
 
 require "active_model_serializers/logging"

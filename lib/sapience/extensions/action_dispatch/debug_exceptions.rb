@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log actual exceptions, not a string representation
 
 class ActionDispatch::DebugExceptions # rubocop:disable ClassAndModuleChildren

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ActionCable::Connection::TaggedLoggerProxy # rubocop:disable ClassAndModuleChildren
   alias orig_tag tag
 

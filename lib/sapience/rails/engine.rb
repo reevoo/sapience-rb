@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "sapience"
 require "sapience/extensions/action_controller/live" if defined?(ActionController::Live)
 require "sapience/extensions/action_controller/log_subscriber"

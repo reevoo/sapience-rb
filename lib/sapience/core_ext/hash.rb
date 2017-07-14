@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Hash
   # Returns a Hash with all keys symbolized
   def deep_symbolize_keyz!

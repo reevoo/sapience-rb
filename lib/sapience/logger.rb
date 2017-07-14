@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "concurrent"
 
 # rubocop:disable ClassVars
@@ -132,16 +133,18 @@ module Sapience
     def log(log, message = nil, progname = nil, &block)
       # Compatibility with ::Logger
       return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
-      @@appender_thread << lambda do
-        Sapience.appenders.each do |appender|
-          next unless appender.valid?
-          begin
-            appender.log(log)
-          rescue StandardError => exc
-            $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
+      if @@appender_thread
+        @@appender_thread << lambda do
+          Sapience.appenders.each do |appender|
+            next unless appender.valid?
+            begin
+              appender.log(log)
+            rescue StandardError => exc
+              $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
+            end
           end
         end
-      end if @@appender_thread
+      end
     end
     # rubocop:enable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
 

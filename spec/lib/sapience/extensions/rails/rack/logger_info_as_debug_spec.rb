@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "rails/rack/logger"
 require "sapience/extensions/rails/rack/logger_info_as_debug"

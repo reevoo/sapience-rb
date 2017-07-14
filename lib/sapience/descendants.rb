@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   module Descendants
     def descendants # :nodoc:
