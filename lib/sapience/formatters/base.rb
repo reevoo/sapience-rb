@@ -16,7 +16,7 @@ module Sapience
         @time_format     = options.key?(:time_format) ? options.delete(:time_format) : default_format
         @log_host        = options.key?(:log_host) ? options.delete(:log_host) : true
         @log_application = options.key?(:log_application) ? options.delete(:log_application) : true
-        fail(ArgumentError, "Unknown options: #{options.inspect}") if options.size > 0
+        fail(ArgumentError, "Unknown options: #{options.inspect}") unless options.empty?
       end
 
       # Return the Time as a formatted string

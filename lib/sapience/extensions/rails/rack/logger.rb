@@ -1,6 +1,6 @@
 # Replace rack started message with a semantic equivalent
 class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
-  alias_method :started_request_message_original, :started_request_message
+  alias started_request_message_original started_request_message
   def started_request_message(request)
     {
       message: "Started",

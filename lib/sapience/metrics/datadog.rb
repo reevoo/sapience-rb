@@ -27,7 +27,7 @@ module Sapience
       #   tags: [String]
       #     Example:
       #       tag1:true
-      # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+      # rubocop:disable CyclomaticComplexity, PerceivedComplexity
 
       def initialize(opts = {})
         options = opts.dup

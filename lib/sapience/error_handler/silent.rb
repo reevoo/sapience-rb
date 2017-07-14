@@ -24,7 +24,7 @@ module Sapience
       def capture(_options: {})
         nil
       end
-      alias_method :capture!, :capture
+      alias capture! capture
 
       def user_context(_options = {})
         nil

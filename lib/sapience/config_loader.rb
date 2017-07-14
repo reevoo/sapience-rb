@@ -24,7 +24,7 @@ module Sapience
 
     def self.merge_configs(left_config = {}, right_config = {})
       left_config.each do |key, config = {}|
-        right = right_config.fetch(key) { Hash.new }
+        right = right_config.fetch(key) { {} }
         config.merge!(right)
       end
 

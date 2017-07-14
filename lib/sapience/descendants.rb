@@ -1,5 +1,4 @@
 module Sapience
-  # rubocop:disable ClassVars
   module Descendants
     def descendants # :nodoc:
       descendants = []

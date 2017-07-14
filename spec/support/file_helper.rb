@@ -12,7 +12,7 @@ module FileHelper
 
     File.open(file_path, "w") do |file|
       case content
-      when ""
+      when "" # rubocop:disable Lint/EmptyWhen
         # Write nothing. Create empty file.
       when String
         file.puts content

@@ -4,7 +4,7 @@ describe Product, type: :model do
   let!(:metrics) { Sapience.metrics }
   let(:tags) { %w(query:product.load) }
 
-  before(:each) {  create :product }
+  before(:each) { create :product }
 
   it "records som sql metrics" do
     expect(metrics).to receive(:increment).with("activerecord.sql", tags: tags)

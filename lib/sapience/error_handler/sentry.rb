@@ -9,7 +9,6 @@ end
 # Example:
 #   Sapience.add_appender(:stream, {io: STDOUT, formatter: :color})
 #
-# rubocop:disable Style/ClassAndModuleChildren
 module Sapience
   class ErrorHandler
     class Sentry < Sapience::ErrorHandler
@@ -52,7 +51,7 @@ module Sapience
       def tags_context(options = {})
         Raven.tags_context(options)
       end
-      alias_method :tags=, :tags_context
+      alias tags= tags_context
 
       def configured?
         @configured == true
@@ -118,7 +117,6 @@ module Sapience
       def sentry_dsn
         (@sentry_dsn || ENV["SENTRY_DSN"]).to_s
       end
-
 
       # Sapience logger
       def sentry_logger

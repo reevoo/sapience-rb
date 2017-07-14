@@ -9,7 +9,7 @@ module ActiveModelSerializers::Logging # rubocop:disable ClassAndModuleChildren
 
   private
 
-  alias_method :orig_tag_logger, :tag_logger
+  alias orig_tag_logger tag_logger
 
   def tag_logger(*tags, &block)
     logger.tagged(*tags, &block)

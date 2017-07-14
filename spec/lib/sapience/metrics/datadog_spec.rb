@@ -323,7 +323,7 @@ describe Sapience::Metrics::Datadog do
 
           context "with aggregation_key and title values" do
             let(:options_hash) do
-              { namespaced_keys: [:title, :aggregation_key] }
+              { namespaced_keys: %i[title aggregation_key] }
             end
 
             context "without aggregation_key option" do
@@ -338,7 +338,7 @@ describe Sapience::Metrics::Datadog do
             context "with aggregation_key option" do
               let(:options_hash) do
                 {
-                  namespaced_keys: [:title, :aggregation_key],
+                  namespaced_keys: %i[title aggregation_key],
                   aggregation_key: "my_key",
                 }
               end

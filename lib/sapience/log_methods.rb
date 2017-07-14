@@ -77,32 +77,32 @@ module Sapience
     def measure_trace(message, params = {}, &block)
       measure(:trace, message, params, &block)
     end
-    alias_method :benchmark_trace, :measure_trace
+    alias benchmark_trace measure_trace
 
     def measure_debug(message, params = {}, &block)
       measure(:debug, message, params, &block)
     end
-    alias_method :benchmark_debug, :measure_debug
+    alias benchmark_debug measure_debug
 
     def measure_info(message, params = {}, &block)
       measure(:info, message, params, &block)
     end
-    alias_method :benchmark_info, :measure_info
+    alias benchmark_info measure_info
 
     def measure_warn(message, params = {}, &block)
       measure(:warn, message, params, &block)
     end
-    alias_method :benchmark_warn, :measure_warn
+    alias benchmark_warn measure_warn
 
     def measure_error(message, params = {}, &block)
       measure(:error, message, params, &block)
     end
-    alias_method :benchmark_error, :measure_error
+    alias benchmark_error measure_error
 
     def measure_fatal(message, params = {}, &block)
       measure(:fatal, message, params, &block)
     end
-    alias_method :benchmark_fatal, :measure_fatal
+    alias benchmark_fatal measure_fatal
 
     # Dynamically supply the log level with every measurement call
     def measure(level, message, params = {}, &block)
@@ -110,11 +110,11 @@ module Sapience
       if level_index <= index
         measure_internal(level, index, message, params, &block)
       else
-        block.call(params) if block
+        block&.call(params)
       end
     end
 
-    alias_method :benchmark, :measure
+    alias benchmark measure
 
     def level_to_index(level)
       Sapience.config.level_to_index(level)

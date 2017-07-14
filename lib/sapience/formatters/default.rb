@@ -12,7 +12,7 @@ module Sapience
         message << "#{log.level_to_s} [#{log.process_info}]"
 
         # Tags
-        message << " " << log.tags.collect { |tag| "[#{tag}]" }.join(" ") if log.tags && (log.tags.size > 0)
+        message << " " << log.tags.collect { |tag| "[#{tag}]" }.join(" ") if log.tags && !log.tags.empty?
 
         # Duration
         message << " (#{log.duration_human})" if log.duration

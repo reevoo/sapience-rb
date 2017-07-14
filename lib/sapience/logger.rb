@@ -4,7 +4,7 @@ require "concurrent"
 module Sapience
   # Logger stores the class name to be used for all log messages so that every
   # log message written by this instance will include the class name
-  class Logger < Base # rubocop:disable ClassLength, ClassVars
+  class Logger < Base
     include Sapience::Concerns::Compatibility
 
     # Flush all queued log entries disk, database, etc.
@@ -85,7 +85,7 @@ module Sapience
 
     # Separate appender thread responsible for reading log messages and
     # calling the appenders in it's thread
-    # rubocop:disable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
+    # rubocop:disable LineLength
     def self.appender_thread
       @@appender_thread
     end

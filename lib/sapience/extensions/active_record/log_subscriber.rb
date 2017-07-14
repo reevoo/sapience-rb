@@ -11,14 +11,14 @@ module Sapience
           event = normalize(event)
           debug(event) if logger && event
         end
-        alias_method :sql, :identity
+        alias sql identity
 
         private
 
         def normalize(event)
           data = event.payload
 
-          return if "SCHEMA" == data[:name]
+          return if data[:name] == "SCHEMA"
 
           data.merge! runtimes(event)
           data.merge! extract_sql(data)

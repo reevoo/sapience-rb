@@ -27,7 +27,7 @@ module Sapience
   UnkownLogLevel = Class.new(StandardError)
   InvalidLogExecutor = Class.new(StandardError)
   MissingConfiguration = Class.new(StandardError)
-  @@configured   = false
+  @@configured = false
 
   # Logging levels in order of most detailed to most severe
   LEVELS                  = [:trace, :debug, :info, :warn, :error, :fatal].freeze
@@ -115,7 +115,7 @@ module Sapience
 
   def self.namify(appname, sep = "_")
     return unless appname.is_a?(String)
-    return unless appname.length > 0
+    return if appname.empty?
 
     # Turn unwanted chars into the separator
     appname = appname.dup
@@ -213,7 +213,7 @@ module Sapience
   #   logger = Sapience['Example']
   #   logger.info "Hello World"
   #   logger.debug("Login time", user: 'Joe', duration: 100, ip_address: '127.0.0.1')
-  def self.add_appender(appender_class_name, options = {}, _deprecated_level = nil, &_block) # rubocop:disable AbcSize
+  def self.add_appender(appender_class_name, options = {}, _deprecated_level = nil, &_block)
     fail ArgumentError, "options should be a hash" unless options.is_a?(Hash)
     options        = options.dup.deep_symbolize_keyz!
     appender_class = constantize_symbol(appender_class_name)
@@ -458,7 +458,7 @@ module Sapience
     if RUBY_VERSION.to_i >= 2
       Object.const_get(class_name)
     else
-      class_name.split("::").inject(Object) { |o, name| o.const_get(name) } # rubocop:disable SingleLineBlockParams
+      class_name.split("::").inject(Object) { |o, name| o.const_get(name) }
     end
   rescue NameError
     raise UnknownClass, "Could not find class: #{class_name}."

@@ -3,18 +3,18 @@ require "action_controller/log_subscriber"
 module Sapience
   module Extensions
     module ActionController
-      class LogSubscriber < ::ActionController::LogSubscriber # rubocop:disable ClassLength
-        alias_method :orig_start_processing, :start_processing
-        alias_method :orig_process_action, :process_action
+      class LogSubscriber < ::ActionController::LogSubscriber
+        alias orig_start_processing start_processing
+        alias orig_process_action process_action
 
         # Log as debug to hide Processing messages in production
         def start_processing(event)
           debug { "Processing ##{event.payload[:action]}" }
         end
 
-        def process_action(event) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+        def process_action(event)
           return unless logger.info?
-          data      = request(event.payload)
+          data = request(event.payload)
           data.merge! request_id(event)
           data.merge! runtimes(event)
           data.merge! exception(event.payload)

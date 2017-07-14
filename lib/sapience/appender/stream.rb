@@ -58,7 +58,6 @@ module Sapience
       #
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
-      # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, &block)
         unless options[:io] || options[:file_name]
           fail ArgumentError, "missing mandatory argument :file_name or :io"

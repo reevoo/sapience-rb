@@ -22,7 +22,7 @@ module Sapience
       initializer :initialize_logger, group: :all, before: :bootstrap_hook do
         Sapience.configure
 
-        [:active_record, :action_controller, :action_mailer, :action_view].each do |name|
+        %i[active_record action_controller action_mailer action_view].each do |name|
           ActiveSupport.on_load(name) { include Sapience::Loggable }
         end
         ActiveSupport.on_load(:action_cable) { self.logger = Sapience["ActionCable"] }

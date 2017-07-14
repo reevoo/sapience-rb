@@ -23,10 +23,10 @@ module Sapience
     # Initial default Level for all new instances of Sapience::Logger
     def initialize(options = {}) # rubocop:disable AbcSize
       fail ArgumentError, "options need to be a hash #{options.inspect}" unless options.is_a?(Hash)
-      @options             = DEFAULT.merge(options.dup.deep_symbolize_keyz!)
+      @options = DEFAULT.merge(options.dup.deep_symbolize_keyz!)
       @options[:log_executor] &&= @options[:log_executor].to_sym
       validate_log_executor!(@options[:log_executor])
-      self.default_level           = @options[:log_level].to_sym
+      self.default_level = @options[:log_level].to_sym
       self.backtrace_level   = @options[:log_level].to_sym
       self.host              = @options[:host]
       self.app_name          = @options[:app_name]
@@ -52,7 +52,7 @@ module Sapience
 
     # Internal method to return the log level as an internal index
     # Also supports mapping the ::Logger levels to Sapience levels
-    def level_to_index(level) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
+    def level_to_index(level)
       return if level.nil?
 
       case level
@@ -89,7 +89,6 @@ module Sapience
     def default_level_index
       Thread.current[:sapience_silence] || @default_level_index
     end
-
 
     # Sets the level at which backtraces should be captured
     # for every log message.

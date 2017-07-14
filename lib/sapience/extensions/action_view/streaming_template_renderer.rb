@@ -4,7 +4,7 @@ class ActionView::StreamingTemplateRenderer # rubocop:disable ClassAndModuleChil
   class Body
     private
 
-    alias_method :log_error_original, :log_error
+    alias log_error_original log_error
 
     def log_error(exception) #:nodoc:
       ActionView::Base.logger.fatal(exception)
