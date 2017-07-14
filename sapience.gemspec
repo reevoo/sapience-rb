@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: true
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "sapience/version"
@@ -44,4 +45,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "gem-release"
   spec.add_development_dependency "memory_profiler"
   spec.add_development_dependency "rspec-prof"
+  spec.add_development_dependency "appraisal"
 end

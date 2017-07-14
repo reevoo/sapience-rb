@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "rails"
 require "sapience/extensions/active_record/log_subscriber"

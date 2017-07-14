@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   module Formatters
     class Default < Base
@@ -6,13 +7,13 @@ module Sapience
       #    2011-07-19 14:36:15.660235 D [1149:ScriptThreadProcess] Rails -- Hello World
       def call(log, _logger) # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity
         # Date & time
-        message = time_format.nil? ? "" : "#{format_time(log.time)} "
+        message = time_format.nil? ? +"" : +"#{format_time(log.time)} "
 
         # Log level and process info
         message << "#{log.level_to_s} [#{log.process_info}]"
 
         # Tags
-        message << " " << log.tags.collect { |tag| "[#{tag}]" }.join(" ") if log.tags && (log.tags.size > 0)
+        message << " " << log.tags.collect { |tag| "[#{tag}]" }.join(" ") if log.tags && !log.tags.empty?
 
         # Duration
         message << " (#{log.duration_human})" if log.duration

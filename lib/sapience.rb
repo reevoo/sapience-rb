@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "sapience/version"
 require "sapience/ansi_colors"
 require "sapience/core_ext/hash"

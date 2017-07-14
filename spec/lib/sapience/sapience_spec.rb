@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 describe Sapience do
@@ -19,7 +20,7 @@ describe Sapience do
 
     context "unknown class" do
       let(:appender) { :statsd }
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       specify do
         expect { add_appender }.to raise_error(Sapience::UnknownClass, /Could not find/)
@@ -28,7 +29,7 @@ describe Sapience do
 
     context "unknown appender" do
       let(:appender) { :logger }
-      let(:options) { Hash.new }
+      let(:options) { {} }
 
       specify do
         expect { add_appender }.to raise_error(NotImplementedError, /Unknown appender/)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "sapience"
 require "sapience/extensions/action_controller/live" if defined?(ActionController::Live)
 require "sapience/extensions/action_controller/log_subscriber"
@@ -22,7 +23,7 @@ module Sapience
       initializer :initialize_logger, group: :all, before: :bootstrap_hook do
         Sapience.configure
 
-        [:active_record, :action_controller, :action_mailer, :action_view].each do |name|
+        %i[active_record action_controller action_mailer action_view].each do |name|
           ActiveSupport.on_load(name) { include Sapience::Loggable }
         end
         ActiveSupport.on_load(:action_cable) { self.logger = Sapience["ActionCable"] }
@@ -48,7 +49,7 @@ module Sapience
 
         # Replace the Raven logger
         # Raven::Configuration.logger = Sapience[Raven::Configuration] if defined?(Raven::Configuration)
-        Raven.send(:include) { Sapience::Loggable }
+        Raven.send(:include, Sapience::Loggable)
 
         # Replace the Sneakers logger
         Sneakers.configure(log: Sapience[Sneakers]) if defined?(Sneakers)

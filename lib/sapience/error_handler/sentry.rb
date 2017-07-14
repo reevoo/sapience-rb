@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 begin
   require "sentry-raven"
 rescue LoadError
@@ -9,11 +10,10 @@ end
 # Example:
 #   Sapience.add_appender(:stream, {io: STDOUT, formatter: :color})
 #
-# rubocop:disable Style/ClassAndModuleChildren
 module Sapience
   class ErrorHandler
     class Sentry < Sapience::ErrorHandler
-      VALIDATION_MESSAGE = "DSN is not valid, please add appender with :dsn key or set SENTRY_DSN".freeze
+      VALIDATION_MESSAGE = "DSN is not valid, please add appender with :dsn key or set SENTRY_DSN"
       URI_REGEXP = URI::DEFAULT_PARSER.regexp[:ABS_URI]
       #
       #   level: [:trace | :debug | :info | :warn | :error | :fatal]
@@ -52,7 +52,7 @@ module Sapience
       def tags_context(options = {})
         Raven.tags_context(options)
       end
-      alias_method :tags=, :tags_context
+      alias tags= tags_context
 
       def configured?
         @configured == true
@@ -118,7 +118,6 @@ module Sapience
       def sentry_dsn
         (@sentry_dsn || ENV["SENTRY_DSN"]).to_s
       end
-
 
       # Sapience logger
       def sentry_logger

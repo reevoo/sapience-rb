@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "action_cable/engine"
 require "sapience/extensions/action_cable/tagged_logger_proxy"

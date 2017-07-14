@@ -13,7 +13,7 @@ describe Sapience::ConfigLoader do
       shared_examples "loading default configuration" do
         it "uses the default configuration" do
           expect(load_from_file).to eq(
-          "default"    => {
+          "default" => {
             "log_executor" => "single_thread_executor",
             "filter_parameters" => %w(password password_confirmation),
             "log_level" => "info",
@@ -22,7 +22,7 @@ describe Sapience::ConfigLoader do
                 "io" => "STDOUT",
                 "formatter" => "color",
               },
-            }],
+            },],
           },
           "development" => {
             "log_level" => "debug",
@@ -31,7 +31,7 @@ describe Sapience::ConfigLoader do
                 "file_name" => "log/development.log",
                 "formatter" => "color",
               },
-            }],
+            },],
           },
           "production"  => {
             "log_level" => "warn",
@@ -40,7 +40,7 @@ describe Sapience::ConfigLoader do
                 "file_name" => "log/production.log",
                 "formatter" => "json",
               },
-            }],
+            },],
           },
           "test"        => {
             "log_level" => "warn",
@@ -50,8 +50,9 @@ describe Sapience::ConfigLoader do
                 "file_name" => "log/test.log",
                 "formatter" => "color",
               },
-            }],
-          })
+            },],
+          },
+)
         end
       end
 
@@ -72,7 +73,7 @@ describe Sapience::ConfigLoader do
              "  appenders:",
              "    - stream:",
              "        io: STDOUT",
-             "        formatter: json"])
+             "        formatter: json",])
         end
 
         it "uses the default configuration" do

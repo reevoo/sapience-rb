@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 require_relative "../../../../spec/support/file_helper"
 
 class TestWorker
-  QUEUE_NAME  = :sneakers_queue
-  ROUTING_KEY  = :sneakers_routing_key
+  QUEUE_NAME = :sneakers_queue
+  ROUTING_KEY = :sneakers_routing_key
   VERIFICATION_FILE = Rails.root.join("tmp/test_worker.verified")
 
   include Sneakers::Worker

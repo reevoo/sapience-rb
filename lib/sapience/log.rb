@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # Log Struct
   #
@@ -48,13 +49,13 @@ module Sapience
   Log = Struct.new(:level, :thread_name, :name, :message, :payload, :time, :duration, :tags, :level_index, :exception, :metric, :backtrace, :metric_amount) do
     MAX_EXCEPTIONS_TO_UNWRAP = 5
     MILLISECONDS_IN_SECOND =   1_000
-    MILLISECONDS_IN_MINUTE =  60_000
+    MILLISECONDS_IN_MINUTE = 60_000
     MILLISECONDS_IN_HOUR = 3_600_000
     MILLISECONDS_IN_DAY = 86_400_000
 
     # Returns [String] the exception backtrace including all of the child / caused by exceptions
     def backtrace_to_s
-      trace = ""
+      trace = +""
       each_exception do |exception, i|
         if i == 0
           trace << (exception.backtrace || []).join("\n")
@@ -80,7 +81,7 @@ module Sapience
       minutes, ms = ms.divmod(MILLISECONDS_IN_MINUTE)
       seconds, ms = ms.divmod(MILLISECONDS_IN_SECOND)
 
-      str = ""
+      str = +""
       str << "#{days}d" if days > 0
       str << " #{hours}h" if hours > 0
       str << " #{minutes}m" if minutes > 0
@@ -126,7 +127,7 @@ module Sapience
     def file_name_and_line(short_name = false) # rubocop:disable CyclomaticComplexity
       return unless backtrace || (exception && exception.backtrace)
       stack = backtrace || exception.backtrace
-      extract_file_and_line(stack, short_name) if stack && stack.size > 0
+      extract_file_and_line(stack, short_name) if stack && !stack.empty?
     end
 
     # Strip the standard Rails colorizing from the logged message
@@ -173,7 +174,7 @@ module Sapience
     # Returns [Hash] representation of this log entry
     def to_h(host = Sapience.config.host, app_name = Sapience.app_name) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity, LineLength
       # Header
-      h               = {
+      h = {
         name:        name,
         pid:         $PROCESS_ID,
         thread:      thread_name,
@@ -190,7 +191,7 @@ module Sapience
       end
 
       # Tags
-      h[:tags] = tags if tags && (tags.size > 0)
+      h[:tags] = tags if tags && !tags.empty?
 
       # Duration
       if duration

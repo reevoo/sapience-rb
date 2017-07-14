@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # :nodoc:
 module Sapience
   # :nodoc:
@@ -29,12 +30,10 @@ module Sapience
       end
 
       # :nodoc:
-      def close
-      end
+      def close; end
 
       # :nodoc:
-      def reopen(_logdev = nil)
-      end
+      def reopen(_logdev = nil); end
 
       # :nodoc:
       def add(severity, message = nil, progname = nil, &block)

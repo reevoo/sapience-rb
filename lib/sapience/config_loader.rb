@@ -12,7 +12,7 @@ module Sapience
   # during a run of the sapience program, if files in several
   # directories are inspected.
   module ConfigLoader
-    SAPIENCE_FILE = "sapience.yml".freeze
+    SAPIENCE_FILE = "sapience.yml"
     SAPIENCE_HOME = File.realpath(File.join(File.dirname(__FILE__), "..", ".."))
     DEFAULT_FILE  = File.join(SAPIENCE_HOME, "config", "default.yml")
 
@@ -24,7 +24,7 @@ module Sapience
 
     def self.merge_configs(left_config = {}, right_config = {})
       left_config.each do |key, config = {}|
-        right = right_config.fetch(key) { Hash.new }
+        right = right_config.fetch(key) { {} }
         config.merge!(right)
       end
 
@@ -78,7 +78,7 @@ module Sapience
             YAML.safe_load(yaml_code, [Regexp], [], false, filename)
           end
         else
-          YAML.load(yaml_code, filename)
+          YAML.safe_load(yaml_code, filename)
         end
       end
     end

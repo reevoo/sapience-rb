@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 # require "sapience/extensions/action_controller/log_subscriber"
 require "rails"
@@ -45,7 +46,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
     }
   end
   let(:payload) { success_payload.dup }
-  let(:logger) { Sapience[described_class]  }
+  let(:logger) { Sapience[described_class] }
   let(:duration) { 1_000 }
   let(:event) do
     instance_spy(ActiveSupport::Notifications::Event, transaction_id: request_id, payload: payload, duration: duration)
