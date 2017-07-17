@@ -1,3 +1,7 @@
+## v2.5.1
+
+- Fix RuboCop auto-correct changes
+
 ## v2.5.0
 
 - Bump Ruby to version 2.3.4
