@@ -111,7 +111,7 @@ module Sapience
       if level_index <= index
         measure_internal(level, index, message, params, &block)
       else
-        block&.call(params)
+        yield params if block
       end
     end
 
