@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Stream appender
 #
 #   Writes log messages to a file or open IO stream
@@ -5,7 +6,7 @@
 module Sapience
   module Appender
     class Stream < Sapience::Subscriber
-      VALIDATION_MESSAGE = "stream is not writable".freeze
+      VALIDATION_MESSAGE = "stream is not writable"
       # Create a Stream Logger appender instance.
       #
       # Parameters
@@ -58,7 +59,6 @@ module Sapience
       #
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
-      # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
       def initialize(options = {}, &block)
         unless options[:io] || options[:file_name]
           fail ArgumentError, "missing mandatory argument :file_name or :io"
@@ -115,7 +115,7 @@ module Sapience
         # Since only one appender thread will be writing to the file at a time
         # it is not necessary to protect access to the file with a semaphore
         # Allow this logger to filter out log levels lower than it's own
-        @log.write(formatter.call(log, self) << "\n")
+        @log.write(+formatter.call(log, self) << "\n")
         true
       end
 

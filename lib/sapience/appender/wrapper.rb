@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Send log messages to any standard Ruby logging class.
 #
 #  Forwards logging call to loggers such as Logger, log4r, etc.

@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 require "concurrent"
 
 # rubocop:disable ClassVars
 module Sapience
   # Logger stores the class name to be used for all log messages so that every
   # log message written by this instance will include the class name
-  class Logger < Base # rubocop:disable ClassLength, ClassVars
+  class Logger < Base
     include Sapience::Concerns::Compatibility
 
     # Flush all queued log entries disk, database, etc.
@@ -85,7 +86,7 @@ module Sapience
 
     # Separate appender thread responsible for reading log messages and
     # calling the appenders in it's thread
-    # rubocop:disable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
+    # rubocop:disable LineLength
     def self.appender_thread
       @@appender_thread
     end
@@ -132,16 +133,18 @@ module Sapience
     def log(log, message = nil, progname = nil, &block)
       # Compatibility with ::Logger
       return add(log, message, progname, &block) unless log.is_a?(Sapience::Log)
-      @@appender_thread << lambda do
-        Sapience.appenders.each do |appender|
-          next unless appender.valid?
-          begin
-            appender.log(log)
-          rescue StandardError => exc
-            $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
+      if @@appender_thread
+        @@appender_thread << lambda do
+          Sapience.appenders.each do |appender|
+            next unless appender.valid?
+            begin
+              appender.log(log)
+            rescue StandardError => exc
+              $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
+            end
           end
         end
-      end if @@appender_thread
+      end
     end
     # rubocop:enable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
 

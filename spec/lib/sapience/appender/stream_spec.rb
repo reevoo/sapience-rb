@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "stringio"
 
@@ -103,7 +104,7 @@ describe Sapience::Appender::Stream do
   describe "custom formatter" do
     let(:appender) do
       Sapience::Appender::Stream.new(io: io) do |log|
-        if log.tags and (log.tags.size > 0)
+        if log.tags and !log.tags.empty?
           tags = (log.tags.collect { |tag| "[#{tag}]" }.join(" ") + " ")
         end
         message = log.message.to_s

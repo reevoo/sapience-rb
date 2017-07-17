@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "simplecov"
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
@@ -14,7 +15,7 @@ require_relative "support/file_helper"
 require_relative "support/config_helper"
 require_relative "support/rspec_prof"
 
-TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'.freeze
+TS_REGEX ||= '\d+-\d+-\d+ \d+:\d+:\d+.\d+'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

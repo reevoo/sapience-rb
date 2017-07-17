@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # Formatting & colors used by optional color formatter
   module AnsiColors
@@ -21,7 +22,7 @@ module Sapience
       warn:  BOLD,
       error: RED,
       fatal: RED,
-    }
+    }.freeze
   end
 
 end

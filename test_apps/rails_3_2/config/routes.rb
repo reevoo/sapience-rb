@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Rails32::Application.routes.draw do
   resources :lists
   root to: "lists#index"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   class ErrorHandler
     class Silent < Sapience::ErrorHandler
@@ -24,7 +25,7 @@ module Sapience
       def capture(_options: {})
         nil
       end
-      alias_method :capture!, :capture
+      alias capture! capture
 
       def user_context(_options = {})
         nil

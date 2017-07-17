@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   # rubocop:disable ClassLength
   class Base
@@ -75,7 +76,7 @@ module Sapience
     end
 
     # :nodoc:
-    alias_method :with_tags, :tagged
+    alias with_tags tagged
 
     # :nodoc:
     def tags
@@ -86,7 +87,7 @@ module Sapience
     def push_tags(*tags)
       Sapience.push_tags(*tags)
     end
-    alias_method :tags=, :push_tags
+    alias tags= push_tags
 
     # :nodoc:
     def pop_tags(quantity = 1)
@@ -268,7 +269,7 @@ module Sapience
           return false if duration <= min_duration
           log.duration = duration
         end
-        log.payload = payload if payload.size > 0
+        log.payload = payload unless payload.empty?
       end
       self.log(log) if include_message?(log)
     end
@@ -280,7 +281,7 @@ module Sapience
       merged_tags = tags.dup
       if payload.is_a?(Hash)
         payload_tags = payload.delete(:tags) || []
-        merged_tags.concat(payload_tags) if payload_tags.size > 0
+        merged_tags.concat(payload_tags) unless payload_tags.empty?
       end
       merged_tags.uniq
     end
@@ -297,6 +298,7 @@ module Sapience
     # Measure the supplied block and log the message
     # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
     def measure_internal(level, index, message, params)
+      params.dup
       start     = Time.now
       exception = nil
       begin

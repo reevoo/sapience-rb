@@ -4,14 +4,14 @@ source "https://rubygems.org"
 
 gem "grape", "0.17.0"
 gem "puma", "~> 3.0"
-gem "sapience", :path => "../../.."
+gem "sapience", path: "../../.."
 gem "sentry-raven"
 gem "dogstatsd-ruby"
 gem "activesupport"
 
 group :development, :test do
-  gem "byebug", :platform => :mri
-  gem "pry-byebug", :platform => :mri
+  gem "byebug", platform: :mri
+  gem "pry-byebug", platform: :mri
   gem "rspec"
   gem "racksh"
   gem "appraisal"

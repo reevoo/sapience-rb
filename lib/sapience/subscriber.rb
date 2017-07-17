@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Abstract Subscriber
 #
 #   Abstract base class for appender and metrics subscribers.
@@ -97,7 +98,7 @@ module Sapience
       @formatter  = extract_formatter(options.delete(:formatter), &block)
       @app_name   = options.delete(:app_name)
       @host       = options.delete(:host)
-      fail(ArgumentError, "Unknown options: #{options.inspect}") if options.size > 0
+      fail(ArgumentError, "Unknown options: #{options.inspect}") unless options.empty?
 
       # Subscribers don't take a class name, so use this class name if an subscriber
       # is logged to directly
@@ -122,17 +123,16 @@ module Sapience
     # - Otherwise an instance of the default formatter is returned.
     # rubocop:disable CyclomaticComplexity, AbcSize, PerceivedComplexity
     def extract_formatter(formatter, &block)
-      case
-      when formatter.is_a?(Symbol) || formatter.is_a?(String)
+      if formatter.is_a?(Symbol) || formatter.is_a?(String)
         Sapience.constantize_symbol(formatter, "Sapience::Formatters").new
-      when formatter.is_a?(Hash) && formatter.size > 0
+      elsif formatter.is_a?(Hash) && !formatter.empty?
         fmt, options = formatter.first
         Sapience.constantize_symbol(fmt.to_sym, "Sapience::Formatters").new(options)
-      when formatter.respond_to?(:call)
+      elsif formatter.respond_to?(:call)
         formatter
-      when block
+      elsif block
         block
-      when respond_to?(:call)
+      elsif respond_to?(:call)
         self
       else
         default_formatter

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 appraise "grape-0.17.0" do
   gem "grape", "0.17.0"
 end

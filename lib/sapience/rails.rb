@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "sapience/rails/railtie"
 require "sapience/rails/engine"
 

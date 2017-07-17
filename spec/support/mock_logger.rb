@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Looks like a standard Ruby Logger or Rails Logger
 # Except that it stores the last logged entry in the instance variable: message
 class MockLogger

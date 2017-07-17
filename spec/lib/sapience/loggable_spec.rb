@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "stringio"
 
@@ -16,7 +17,7 @@ describe LoggableIncluded do
     it { is_expected.to respond_to(:logger) }
     it { is_expected.to respond_to(:logger=) }
     specify do
-      expect { subject.logger = logger  }
+      expect { subject.logger = logger }
         .to change { subject.logger }
         .to logger
     end
@@ -96,7 +97,7 @@ describe Sapience::Loggable do
       @io = StringIO.new
       @appender = Sapience::Appender::Stream.new(io: @io)
       @mock_logger = MockLogger.new
-      @appender = Sapience.add_appender(:wrapper, logger: (@mock_logger))
+      @appender = Sapience.add_appender(:wrapper, logger: @mock_logger)
       @hash = { session_id: "HSSKLEU@JDK767", tracking_number: 12_345 }
       @hash_str = @hash.inspect.sub("{", "\\{").sub("}", "\\}")
       @thread_name = Thread.current.name

@@ -1,33 +1,34 @@
+# frozen_string_literal: true
 source "https://rubygems.org"
 
 
-gem "rails", "4.2.6"
 gem "pg", "~> 0.15"
+gem "rails", "4.2.6"
 
+gem "active_model_serializers"
+gem "dogstatsd-ruby"
 gem "sapience", path: "../..", require: "sapience/rails"
 gem "sentry-raven"
-gem "dogstatsd-ruby"
-gem "active_model_serializers"
-gem "sneakers"
 gem "slim-rails"
+gem "sneakers"
 
 
 group :test, :development do
-  gem "rspec-rails"
-  gem "factory_girl_rails"
-  gem "test-unit"
   gem "byebug", platform: :mri
+  gem "factory_girl_rails"
   gem "pry-byebug", platform: :mri
+  gem "rspec-rails"
+  gem "test-unit"
 end
 
 group :test do
+  gem "fuubar"
   gem "rspec-its"
   gem "simplecov"
   gem "simplecov-json"
-  gem "fuubar"
 end
 
 group :development do
-  gem "web-console", "~> 2.0"
   gem "spring"
+  gem "web-console", "~> 2.0"
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ConfigHelper
   def force_config(options = {})
     options.each do |key, _val|

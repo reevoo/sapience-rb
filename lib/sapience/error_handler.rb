@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sapience
   class ErrorHandler
     extend Sapience::Descendants

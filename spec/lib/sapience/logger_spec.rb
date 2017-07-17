@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 # rubocop:disable LineLength
@@ -136,7 +137,7 @@ describe Sapience::Logger do
     end
   end
 
-  [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter|
+  [nil, /\ALogger/, ->(l) { (l.message =~ /\AExclude/).nil? }].each do |filter| # rubocop:disable Performance/StartWith
     describe "filter: #{filter.class.name}" do
       force_config(default_level: :trace, backtrace_level: nil)
       before do
@@ -219,9 +220,7 @@ describe Sapience::Logger do
             end
 
             it "logs payload and message from block" do
-              logger.send(level) do
-                { message: "Hello world", tracking_number: "123456", even: 2, more: "data" }
-              end
+              logger.send(level, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
 
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
@@ -236,24 +235,24 @@ describe Sapience::Logger do
             end
 
             it "logs duration" do
-              logger.send(level, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              duration_match = "\\(123\\.5ms\\)"
+              duration_match = "\\(123\\.4ms\\)"
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
 
             it "does not log when below min_duration" do
-              logger.send(level, min_duration: 200, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, min_duration: 200, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               expect(mock_logger.message).to(be_nil)
             end
 
             it "logs duration" do
               metric_name = "/my/custom/metric"
-              logger.send(level, metric: metric_name, duration: 123.45, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+              logger.send(level, metric: metric_name, duration: 123.4, message: "Hello world", tracking_number: "123456", even: 2, more: "data")
               hash = { tracking_number: "123456", even: 2, more: "data" }
               hash_str = hash.inspect.sub("{", "\\{").sub("}", "\\}")
-              duration_match = "\\(123\\.5ms\\)"
+              duration_match = "\\(123\\.4ms\\)"
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] #{duration_match} LoggerTest -- Hello world -- #{hash_str}/)
             end
           end
@@ -308,7 +307,7 @@ describe Sapience::Logger do
         Logger::Severity.constants.each do |level|
           it "log Ruby logger #{level} info" do
             logger.level = Logger::Severity.const_get(level)
-            if (level.to_s == "UNKNOWN")
+            if level.to_s == "UNKNOWN"
               expect(logger.send(:level_index)).to(eq((Logger::Severity.const_get("ERROR") + 1)))
             else
               expect(logger.send(:level_index)).to(eq((Logger::Severity.const_get(level) + 1)))
@@ -327,33 +326,30 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with payload" do
-              expect(logger.send("measure_#{level}".to_sym, "hello world", payload: (@hash)) do
+              expect(logger.send("measure_#{level}".to_sym, "hello world", payload: @hash) do
                 "result"
-              end,
-              ).to(eq("result"))
+              end).to(eq("result"))
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "not log #{level} info when block is faster than :min_duration" do
               expect(logger.send("measure_#{level}".to_sym, "hello world", min_duration: 500) do
                 "result"
-              end,
-              ).to(eq("result"))
+              end).to(eq("result"))
               expect(mock_logger.message).to(be_nil)
             end
 
             it "log #{level} info when block duration exceeds :min_duration" do
-              expect(logger.send("measure_#{level}".to_sym, "hello world", min_duration: 200, payload: (@hash)) do
+              expect(logger.send("measure_#{level}".to_sym, "hello world", min_duration: 200, payload: @hash) do
                 sleep(0.5)
                 "result"
-              end,
-              ).to(eq("result"))
+              end).to(eq("result"))
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "log #{level} info with an exception" do
               expect do ||
-                logger.send("measure_#{level}", "hello world", payload: (@hash)) do
+                logger.send("measure_#{level}", "hello world", payload: @hash) do
                   fail("Test")
                 end
               end
@@ -363,7 +359,7 @@ describe Sapience::Logger do
 
             it "change log #{level} info with an exception" do
               expect do
-                logger.send("measure_#{level}", "hello world", payload: (@hash), on_exception_level: :fatal) do
+                logger.send("measure_#{level}", "hello world", payload: @hash, on_exception_level: :fatal) do
                   fail("Test")
                 end
               end.to(raise_error(RuntimeError))
@@ -384,7 +380,7 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with payload" do
-              expect(logger.measure(level, "hello world", payload: (@hash)) { "result" }).to(eq("result"))
+              expect(logger.measure(level, "hello world", payload: @hash) { "result" }).to(eq("result"))
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
@@ -394,17 +390,16 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info when block duration exceeds :min_duration" do
-              expect(logger.measure(level, "hello world", min_duration: 200, payload: (@hash)) do
+              expect(logger.measure(level, "hello world", min_duration: 200, payload: @hash) do
                 sleep(0.5)
                 "result"
-              end,
-              ).to(eq("result"))
+              end).to(eq("result"))
               expect(mock_logger.message).to match(/#{TS_REGEX} #{level_char} \[\d+:#{@thread_name}\] \((\d+\.\d+)|(\d+)ms\) LoggerTest -- hello world -- #{@hash_str}/)
             end
 
             it "log #{level} info with an exception" do
               expect do ||
-                logger.measure(level, "hello world", payload: (@hash)) do
+                logger.measure(level, "hello world", payload: @hash) do
                   fail("Test")
                 end
               end
@@ -549,7 +544,7 @@ describe Sapience::Logger do
   end
 
   def function_with_return(logger)
-    logger.measure_info("hello world", payload: (@hash)) { return "Good" }
+    logger.measure_info("hello world", payload: @hash) { return "Good" }
     "Bad"
   end
 end
