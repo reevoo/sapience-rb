@@ -396,7 +396,9 @@ module Sapience
   # Remove specified number of tags from the current tag list
   def self.pop_tags(quantity = 1)
     t = Thread.current[:sapience_tags]
-    t&.pop(quantity)
+    return if t.nil?
+
+    t.pop(quantity)
   end
 
   # Silence noisy log levels by changing the default_level within the block
