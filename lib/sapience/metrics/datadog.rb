@@ -150,7 +150,7 @@ module Sapience
 
       def namespace
         ns = Sapience.namify(Sapience.app_name)
-        ns << ".#{Sapience.namify(Sapience.environment)}" if Sapience.environment
+        ns += ".#{Sapience.namify(Sapience.environment)}" if Sapience.environment
         ns
       end
 

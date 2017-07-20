@@ -1,3 +1,7 @@
+## v2.5.3
+
+- Fix issues after applying fronzen_string_literal = true. Make it compatible to Ruby 2.1 
+
 ## v2.5.2
 
 - Fix RuboCop auto-correct changes

@@ -55,12 +55,12 @@ module Sapience
 
     # Returns [String] the exception backtrace including all of the child / caused by exceptions
     def backtrace_to_s
-      trace = +""
+      trace = ""
       each_exception do |exception, i|
         if i == 0
-          trace << (exception.backtrace || []).join("\n")
+          trace += (exception.backtrace || []).join("\n")
         else
-          trace << "\nCause: #{exception.class.name}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
+          trace += "\nCause: #{exception.class.name}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
         end
       end
       trace
@@ -81,12 +81,12 @@ module Sapience
       minutes, ms = ms.divmod(MILLISECONDS_IN_MINUTE)
       seconds, ms = ms.divmod(MILLISECONDS_IN_SECOND)
 
-      str = +""
-      str << "#{days}d" if days > 0
-      str << " #{hours}h" if hours > 0
-      str << " #{minutes}m" if minutes > 0
-      str << " #{seconds}s" if seconds > 0
-      str << " #{ms}ms" if ms > 0
+      str = ""
+      str += "#{days}d" if days > 0
+      str += " #{hours}h" if hours > 0
+      str += " #{minutes}m" if minutes > 0
+      str += " #{seconds}s" if seconds > 0
+      str += " #{ms}ms" if ms > 0
 
       if days > 0 || hours > 0 || minutes > 0
         str.strip
