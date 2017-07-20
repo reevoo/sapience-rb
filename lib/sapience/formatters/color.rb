@@ -28,38 +28,39 @@ module Sapience
         colors      = Sapience::AnsiColors
         level_color = colors::LEVEL_MAP[log.level]
 
-        message = time_format.nil? ? +"" : +"#{format_time(log.time)} "
+
+        message = time_format.nil? ? "" : "#{format_time(log.time)} "
 
         # Header with date, time, log level and process info
-        message << "#{level_color}#{log.level_to_s}#{colors::CLEAR} [#{log.process_info}]"
+        message += "#{level_color}#{log.level_to_s}#{colors::CLEAR} [#{log.process_info}]"
 
         # Tags
-        message << " " << log.tags.collect { |tag| "[#{level_color}#{tag}#{colors::CLEAR}]" }.join(" ") if log.tags && !log.tags.empty? # rubocop:disable LineLength
+        message += " " + log.tags.collect { |tag| "[#{level_color}#{tag}#{colors::CLEAR}]" }.join(" ") if log.tags && !log.tags.empty? # rubocop:disable LineLength
 
         # Duration
-        message << " (#{colors::BOLD}#{log.duration_human}#{colors::CLEAR})" if log.duration
+        message += " (#{colors::BOLD}#{log.duration_human}#{colors::CLEAR})" if log.duration
 
         # Class / app name
-        message << " #{level_color}#{log.name}#{colors::CLEAR}"
+        message += " #{level_color}#{log.name}#{colors::CLEAR}"
 
         # Log message
-        message << " -- #{log.message}" if log.message
+        message += " -- #{log.message}" if log.message
 
         # Payload: Colorize the payload if the AwesomePrint gem is loaded
         if log.payload?
           payload = log.payload
-          message << " -- " <<
-            if defined?(AwesomePrint) && payload.respond_to?(:ai)
-              payload.ai(@ai_options) rescue payload.inspect # rubocop:disable RescueModifier
-            else
-              payload.inspect
-            end
+          message += " -- "
+          message += if defined?(AwesomePrint) && payload.respond_to?(:ai)
+                       payload.ai(@ai_options) rescue payload.inspect # rubocop:disable RescueModifier
+                     else
+                       payload.inspect
+                     end
         end
 
         # Exceptions
         if log.exception
-          message << " -- Exception: #{colors::BOLD}#{log.exception.class}: #{log.exception.message}#{colors::CLEAR}\n"
-          message << log.backtrace_to_s
+          message += " -- Exception: #{colors::BOLD}#{log.exception.class}: #{log.exception.message}#{colors::CLEAR}\n"
+          message += log.backtrace_to_s
         end
         message
       end

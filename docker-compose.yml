@@ -55,6 +55,7 @@ services:
   rails32:
     extends:
       service: base
+    image: ruby:2.1
     working_dir: /usr/src/app/test_apps/rails_3_2
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec
