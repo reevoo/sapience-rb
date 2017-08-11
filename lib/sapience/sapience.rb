@@ -91,7 +91,6 @@ module Sapience
     @@appenders = Concurrent::Array.new
   end
 
-  # TODO: Default to SAPIENCE_ENV (if present it should be returned first)
   def self.environment
     @@environment ||=
       ENV.fetch(SAPIENCE_ENV) do
