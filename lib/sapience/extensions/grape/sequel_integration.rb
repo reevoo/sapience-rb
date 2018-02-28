@@ -3,7 +3,7 @@ module Sapience
   module Extensions
     module Grape
       module SequelIntegration
-        def self.included
+        def self.included(_)
           if defined?(Sequel)
             Sequel::Database.class_eval do
               alias_method :original_log_duration, :log_duration
