@@ -2,6 +2,7 @@
 require "grape/middleware/base"
 require_relative "../request_format_helper"
 require_relative "../active_record_integration"
+require_relative "../sequel_integration"
 
 module Sapience
   module Extensions
@@ -10,6 +11,7 @@ module Sapience
         class Logging < ::Grape::Middleware::Base
           include RequestFormatHelper
           include ActiveRecordIntegration
+          include SequelIntegration
           
           def initialize(app, options = {})
             super
