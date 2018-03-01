@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+source "https://rubygems.org"
+
+
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem "grape"
+gem "pg"
+gem "sequel"
+# Use Puma as the app server
+gem "puma", "~> 3.0"
+
+# Use Capistrano for deployment
+# gem 'capistrano-rails', group: :development
+gem "activesupport"
+gem "dogstatsd-ruby"
+gem "sapience", path: "../.."
+gem "sentry-raven"
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "byebug", platform: :mri
+  # gem "pry-nav", platform: :mri
+  gem "appraisal"
+  gem "pry-byebug", platform: :mri
+  gem "racksh"
+  gem "rspec"
+end
+
+group :test do
+  gem "fuubar"
+  gem "rspec-its"
+  gem "simplecov"
+  gem "simplecov-json"
+end

@@ -9,6 +9,7 @@ services:
 
   postgres:
     image: postgres:latest
+    command: createdb -O sapience tests
     environment:
       POSTGRES_USER: sapience
       POSTGRES_PASSWORD: tests
@@ -107,4 +108,19 @@ services:
     command: bundle exec rspec
     environment:
       APP_NAME: grape_app
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+  grape-sequel:
+    extends:
+      service: base
+    working_dir: /usr/src/app/test_apps/grape_sequel
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rspec
+    depends_on:
+      - postgres
+    environment:
+      APP_NAME: grape_sapience_app
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sapience
+      POSTGRES_PASSWORD: tests
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
