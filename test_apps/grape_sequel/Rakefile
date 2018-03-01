@@ -11,5 +11,5 @@ task default: %i(migrate spec)
 
 task :migrate do
   Sequel.extension :migration
-  Sequel::Migrator.run(Aslan::DB, "db/migrations")
+  Sequel::Migrator.run(Ping.db, "db/migrations")
 end

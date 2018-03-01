@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 require "rack/test"
+require "json"
 
 describe Ping::API do
   include Rack::Test::Methods
@@ -12,43 +13,35 @@ describe Ping::API do
   context "GET /api/posts" do
     let(:logger) { Grape::API.logger }
 
-    specify do
-      get "/api/posts", {}, "CONTENT-TYPE" => "application/json"
-      expect(last_response.body).to match(/PONG/)
+    before(:all) do
+      Ping.db[:posts].insert(title: "Foo", body: "Foo body")
     end
 
-    # describe "ActiveSupport::Notifications" do
-    #   let(:metrics) { Sapience.metrics }
-    #   let(:tags) { %w(method:get format:json path:/api/ping status:200) }
-    #   before do
-    #     Sapience.configure { |c| c.app_name = "grape" }
-    #   end
-    #   specify do
-    #     expect(metrics).to receive(:increment).with("grape.request", tags: tags)
-    #     expect(metrics).to receive(:timing).with("grape.request.time", kind_of(Float), tags: tags)
-    #     get "/api/ping", {}, "CONTENT-TYPE" => "application/json"
-    #   end
-    # end
+    after(:all) do
+      Ping.db[:posts].truncate
+    end
+
+    specify do
+      get "/api/posts", {}, "CONTENT-TYPE" => "application/json"
+      json = JSON.parse(last_response.body)
+      expect(json["posts"].is_a?(Array)).to eq(true)
+      expect(json["posts"][0]).to include({ "title" => "Foo", "body" => "Foo body" })
+    end
 
     it "logs 200" do
-      expect(logger).to receive(:info).with(
-        method:       "GET",
-        request_path: "/api/posts",
-        format:       "json",
-        status:       200,
-        class_name:   "Ping::API",
-        action:       "index",
-        host:         "example.org",
-        ip:           "127.0.0.1",
-        ua:           nil,
-        tags:         [],
-        params:       {},
-        runtimes:     a_hash_including(
-                        total: kind_of(Float),
-                        view:  kind_of(Float),
-                        db:    kind_of(Float),
-                      ),
-      )
+      expect(logger).to receive(:info) do |info|
+        expect(info[:method]).to eq("GET")
+        expect(info[:request_path]).to eq("/api/posts")
+        expect(info[:status]).to eq(200)
+        expect(info[:class_name]).to eq("Ping::API")
+        expect(info[:action]).to eq("index")
+        expect(info[:host]).to eq("example.org")
+        expect(info[:ip]).to eq("127.0.0.1")
+        expect(info[:ua]).to be_nil
+        expect(info[:runtimes][:db]).to be > 0
+        expect(info[:runtimes][:view]).to be > 0
+        expect(info[:runtimes][:total]).to eq(info[:runtimes][:db] + info[:runtimes][:view])
+      end
 
       get "/api/posts", {}, "CONTENT-TYPE" => "application/json"
     end

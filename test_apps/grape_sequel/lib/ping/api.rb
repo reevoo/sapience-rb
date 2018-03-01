@@ -18,7 +18,7 @@ module Ping
 
     desc "Returns posts."
     get :posts do
-      { posts: Ping::DB[:posts] }
+      { posts: Ping.db[:posts].to_a }
     end
 
     get :err do

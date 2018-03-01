@@ -10,12 +10,12 @@ module Sapience
       module Middleware
         class Logging < ::Grape::Middleware::Base
           include RequestFormatHelper
-          include ActiveRecordIntegration
-          include SequelIntegration
-          
+
           def initialize(app, options = {})
             super
             @logger = @options[:logger]
+            ActiveRecordIntegration.plug_in
+            SequelIntegration.plug_in
           end
 
           protected
