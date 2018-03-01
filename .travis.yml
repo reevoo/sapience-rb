@@ -26,6 +26,7 @@ script:
   - docker-compose run rails42
   - docker-compose run rails50
   - docker-compose run grape
+  - docker-compose down -v
   - docker-compose run grape-sequel
 
 after_success:
