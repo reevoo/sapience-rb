@@ -7,7 +7,7 @@ require_relative "lib/ping/db"
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec)
 
-task default: [:migrate, :spec]
+task default: %i(migrate spec)
 
 task :migrate do
   Sequel.extension :migration
