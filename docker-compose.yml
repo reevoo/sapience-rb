@@ -1,7 +1,4 @@
 version: '2'
-volumes:
-  gems:
-    driver: local
 
 services:
   rabbitmq:
@@ -34,8 +31,6 @@ services:
       # Mount our app code directory (".") into our app containers at the
       # "/usr/src/app" folder:
       - .:/usr/src/app
-      # Mount the 'gems' volume on the folder that stores bundled gems:
-      - gems:/usr/local/bundle
 
 
 
