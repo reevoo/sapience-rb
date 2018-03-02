@@ -25,7 +25,7 @@ describe Ping::API do
       get "/api/posts", {}, "CONTENT-TYPE" => "application/json"
       json = JSON.parse(last_response.body)
       expect(json["posts"].is_a?(Array)).to eq(true)
-      expect(json["posts"][0]).to include({ "title" => "Foo", "body" => "Foo body" })
+      expect(json["posts"][0]).to include("title" => "Foo", "body" => "Foo body")
     end
 
     it "logs 200" do
