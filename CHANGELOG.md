@@ -1,6 +1,10 @@
+## v2.5.4
+
+- Add compatibility fix for concurrent-ruby library logger which expect `call` method to be defined
+
 ## v2.5.3
 
-- Fix issues after applying fronzen_string_literal = true. Make it compatible to Ruby 2.1 
+- Fix issues after applying fronzen_string_literal = true. Make it compatible to Ruby 2.1
 
 ## v2.5.2
 
@@ -21,7 +25,7 @@
 
 ## v2.3.5
 
-- Set Sapience.config.app_name when APP_NAME environment variable is set 
+- Set Sapience.config.app_name when APP_NAME environment variable is set
 
 ## v2.3.3
 
@@ -39,8 +43,8 @@
 
 ## v2.2.3
 
-- Set immediate_executor by default to avoid Errno::EIO error for multithreaded processes. 
-  This could happen when orphaned process (whose parent has died) attempts to get stdio from parent process, 
+- Set immediate_executor by default to avoid Errno::EIO error for multithreaded processes.
+  This could happen when orphaned process (whose parent has died) attempts to get stdio from parent process,
   or when stream is closed.
 
 ## v2.2.1
@@ -107,7 +111,7 @@
 
 ## v1.0.10
 
-- Automatically add default `datadog` appender when calling `Sapience.metrics` 
+- Automatically add default `datadog` appender when calling `Sapience.metrics`
 
 ## v1.0.9
 

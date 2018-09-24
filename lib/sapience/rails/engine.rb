@@ -13,6 +13,7 @@ require "sapience/extensions/active_job/notifications" if defined?(ActiveJob)
 require "sapience/extensions/rails/rack/logger"
 require "sapience/extensions/rails/rack/logger_info_as_debug"
 require "sapience/extensions/action_view/log_subscriber"
+require "sapience/loggers/concurrent"
 
 module Sapience
   module Rails
@@ -58,7 +59,7 @@ module Sapience
         Bugsnag.configure { |config| config.logger = Sapience[Bugsnag] } if defined?(Bugsnag)
 
         # Set the logger for concurrent-ruby
-        Concurrent.global_logger = Sapience[Concurrent] if defined?(Concurrent)
+        Concurrent.global_logger = Sapience::Loggers::Concurrent.new if defined?(Concurrent)
       end
 
       # Before any initializers run, but after the gems have been loaded
