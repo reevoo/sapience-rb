@@ -38,9 +38,7 @@ module Sapience
           metrics.batch do
             metrics.increment metric_name, tags: tags
             metrics.timing("#{metric_name}.time", event.duration, tags: tags)
-            if payload[:db_runtime]
-              metrics.timing("#{metric_name}.time.db", payload[:db_runtime].round(10), tags: tags)
-            end
+            metrics.timing("#{metric_name}.time.db", payload[:db_runtime].round(10), tags: tags) if payload[:db_runtime]
 
 
 

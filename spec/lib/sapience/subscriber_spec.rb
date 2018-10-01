@@ -37,7 +37,7 @@ describe Sapience::Subscriber do
     end
 
     context "when formatter respond call" do
-      let(:formatter) { ->() { puts "hey ho" } }
+      let(:formatter) { -> { puts "hey ho" } }
       its(:formatter) { is_expected.to eq(formatter) }
     end
 

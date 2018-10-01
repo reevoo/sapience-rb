@@ -69,9 +69,7 @@ module Sapience
   end
 
   def self.default_options(options = {})
-    unless environment =~ /default|rspec/
-      warn "No configuration for environment #{environment}. Using 'default'"
-    end
+    warn "No configuration for environment #{environment}. Using 'default'" unless environment =~ /default|rspec/
     options[DEFAULT_ENV]
   end
 
@@ -236,7 +234,7 @@ module Sapience
   end
 
   def self.known_appenders
-    @_known_appenders ||= Sapience::Subscriber.descendants
+    @known_appenders ||= Sapience::Subscriber.descendants
   end
 
   # Examples:
@@ -466,7 +464,7 @@ module Sapience
   end
 
   def self.root
-    @_root ||= Gem::Specification.find_by_name("sapience").gem_dir
+    @root ||= Gem::Specification.find_by_name("sapience").gem_dir
   end
 
   def self.app_name_builder
@@ -475,3 +473,4 @@ module Sapience
       ENV[APP_NAME]
   end
 end
+# rubocop:enable ClassVars

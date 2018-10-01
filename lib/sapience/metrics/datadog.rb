@@ -28,7 +28,6 @@ module Sapience
       #   tags: [String]
       #     Example:
       #       tag1:true
-      # rubocop:disable CyclomaticComplexity, PerceivedComplexity
 
       def initialize(opts = {})
         options = opts.dup
@@ -39,7 +38,7 @@ module Sapience
       end
 
       def provider
-        @_provider ||= ::Datadog::Statsd.new(@uri.host, @uri.port, dog_options)
+        @provider ||= ::Datadog::Statsd.new(@uri.host, @uri.port, dog_options)
       end
 
       def valid?
@@ -119,6 +118,8 @@ module Sapience
       # @example Create an Event with a custom aggregation_key
       #   Sapience.metrics.event('article-published', "article #123", {aggregation_key: 'custom_aggregation_key')
 
+
+      # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def event(title, text = "", opts = {})
         return false unless valid?
         fail ArgumentError "Title must be provided" unless title
@@ -135,6 +136,7 @@ module Sapience
         title = "#{namespace_prefix}.#{title}" if namespaced_keys.include?(:title)
         provider.event(title, text, opts)
       end
+      # rubocop:enable CyclomaticComplexity, PerceivedComplexity
 
       def success(module_name, action, opts = {})
         increment("success", add_tags(module_name, action, opts))

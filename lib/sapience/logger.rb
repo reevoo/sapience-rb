@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "concurrent"
 
-# rubocop:disable ClassVars
+# rubocop:disable ClassVars, Style/SafeNavigation
 module Sapience
   # Logger stores the class name to be used for all log messages so that every
   # log message written by this instance will include the class name
@@ -86,7 +86,6 @@ module Sapience
 
     # Separate appender thread responsible for reading log messages and
     # calling the appenders in it's thread
-    # rubocop:disable LineLength
     def self.appender_thread
       @@appender_thread
     end
@@ -146,10 +145,10 @@ module Sapience
         end
       end
     end
-    # rubocop:enable BlockNesting, AssignmentInCondition, PerceivedComplexity, CyclomaticComplexity, AbcSize, LineLength, RescueException
 
     def flush
       self.class.flush
     end
   end
 end
+# rubocop:enable ClassVars, Style/SafeNavigation

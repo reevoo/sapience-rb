@@ -29,14 +29,14 @@ describe Sapience::Log do
 
   describe "#duration_human" do
     context "when duration equals a day" do
-      let(:duration) { Sapience::MILLISECONDS_IN_DAY } #
+      let(:duration) { Sapience::MILLISECONDS_IN_DAY }
       its(:duration_human) do
         is_expected.to eq("1d")
       end
     end
 
     context "when duration equals two days" do
-      let(:duration) { Sapience::MILLISECONDS_IN_DAY * 2 } #
+      let(:duration) { Sapience::MILLISECONDS_IN_DAY * 2 }
       its(:duration_human) do
         is_expected.to eq("2d")
       end
@@ -276,7 +276,7 @@ describe Sapience::Log do
       let(:exception) do
         begin
           fail exception_message_one
-        rescue => ex
+        rescue StandardError => ex
           ex
         end
       end

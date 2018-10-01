@@ -29,7 +29,7 @@ module Sapience
             error = catch(:error) do
               begin
                 @app_response = @app.call(@env)
-              rescue => e
+              rescue StandardError => e
                 after_exception(e)
                 raise e
               end
@@ -55,8 +55,8 @@ module Sapience
             @logger.info(parameters)
           end
 
-          def after_exception(e)
-            Sapience.push_tags(e.class.name, e.message)
+          def after_exception(exc)
+            Sapience.push_tags(exc.class.name, exc.message)
             @status = 500
             after
           end

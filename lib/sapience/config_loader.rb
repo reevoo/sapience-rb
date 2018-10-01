@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 require "yaml"
@@ -62,9 +61,7 @@ module Sapience
 
         hash = yaml_safe_load(yaml_code, absolute_path) || {}
 
-        unless hash.is_a?(Hash)
-          fail(TypeError, "Malformed configuration in #{absolute_path}")
-        end
+        fail(TypeError, "Malformed configuration in #{absolute_path}") unless hash.is_a?(Hash)
 
         hash
       end

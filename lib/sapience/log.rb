@@ -125,7 +125,7 @@ module Sapience
     # Returns [String, String] the file_name and line_number from the backtrace supplied
     # in either the backtrace or exception
     def file_name_and_line(short_name = false) # rubocop:disable CyclomaticComplexity
-      return unless backtrace || (exception && exception.backtrace)
+      return unless backtrace || (exception && exception.backtrace) # rubocop: disable Style/SafeNavigation
       stack = backtrace || exception.backtrace
       extract_file_and_line(stack, short_name) if stack && !stack.empty?
     end
@@ -168,7 +168,7 @@ module Sapience
     # Ruby MRI supports micro seconds
     # DEPRECATED
     def formatted_time
-      format("#{time.strftime("%Y-%m-%d %H:%M:%S")}.%06d", time.usec)
+      format("#{time.strftime("%Y-%m-%d %H:%M:%S")}.%06d", time.usec) # rubocop: disable Style/FormatStringToken
     end
 
     # Returns [Hash] representation of this log entry

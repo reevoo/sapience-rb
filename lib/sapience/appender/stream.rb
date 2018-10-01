@@ -60,9 +60,7 @@ module Sapience
       #    logger =  Sapience['test']
       #    logger.info 'Hello World'
       def initialize(options = {}, &block)
-        unless options[:io] || options[:file_name]
-          fail ArgumentError, "missing mandatory argument :file_name or :io"
-        end
+        fail ArgumentError, "missing mandatory argument :file_name or :io" unless options[:io] || options[:file_name]
 
         opts = options.dup
         if (io = opts.delete(:io))
@@ -75,7 +73,6 @@ module Sapience
         # Set the log level and formatter if supplied
         super(opts, &block)
       end
-      # rubocop:enable AbcSize, CyclomaticComplexity, PerceivedComplexity
 
       # After forking an active process call #reopen to re-open
       # open the file handles etc to resources
@@ -87,7 +84,7 @@ module Sapience
         return unless @file_name
         ensure_folder_exist
 
-        @log      = open(@file_name, (::File::WRONLY | ::File::APPEND | ::File::CREAT))
+        @log      = File.open(@file_name, (::File::WRONLY | ::File::APPEND | ::File::CREAT))
         # Force all log entries to write immediately without buffering
         # Allows multiple processes to write to the same log file simultaneously
         @log.sync = true

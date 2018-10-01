@@ -147,7 +147,7 @@ describe Sapience::ErrorHandler::Sentry do
         subject.capture!(options) do
           fail exception
         end
-      rescue # rubocop:disable Lint/HandleExceptions
+      rescue StandardError # rubocop:disable Lint/HandleExceptions
       end
     end
 
@@ -165,7 +165,7 @@ describe Sapience::ErrorHandler::Sentry do
           subject.capture!(options) do
             fail exception
           end
-        rescue # rubocop:disable Lint/HandleExceptions
+        rescue StandardError # rubocop:disable Lint/HandleExceptions
         end
       end
     end
