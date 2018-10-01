@@ -72,6 +72,10 @@ module Sapience
         require "sapience/extensions/active_job/logging" if defined?(ActiveJob)
         # Replace the Bugsnag logger
         Bugsnag.configure { |config| config.logger = Sapience[Bugsnag] } if defined?(Bugsnag)
+
+        # Make rails less noisy
+        Silencer.remove_log_subscriptions if Sapience.config.silent_rails
+
         Sapience::Extensions::ActionController::LogSubscriber.attach_to :action_controller
         # Sapience::Extensions::ActiveSupport::MailerLogSubscriber.attach_to :action_mailer
         Sapience::Extensions::ActiveRecord::Notifications.use if defined?(ActiveRecord)
