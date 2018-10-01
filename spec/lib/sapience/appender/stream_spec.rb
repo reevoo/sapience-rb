@@ -72,9 +72,7 @@ describe Sapience::Appender::Stream do
       end
       expect(io.string).to match(/#{TS_REGEX} D \[\d+:#{@thread_name} stream_spec.rb:\d+\] Sapience::Appender::Stream -- Exception: StandardError: SecondError\n/)
 
-      if Exception.instance_methods.include?(:cause)
-        expect(io.string).to match(/^Cause: StandardError: FirstError\n/)
-      end
+      expect(io.string).to match(/^Cause: StandardError: FirstError\n/) if Exception.instance_methods.include?(:cause)
     end
 
     it "logs exception with empty backtrace" do
@@ -104,9 +102,7 @@ describe Sapience::Appender::Stream do
   describe "custom formatter" do
     let(:appender) do
       Sapience::Appender::Stream.new(io: io) do |log|
-        if log.tags and !log.tags.empty?
-          tags = (log.tags.collect { |tag| "[#{tag}]" }.join(" ") + " ")
-        end
+        tags = (log.tags.collect { |tag| "[#{tag}]" }.join(" ") + " ") if log.tags and !log.tags.empty?
         message = log.message.to_s
         ((message << " -- ") << log.payload.inspect) if log.payload
 

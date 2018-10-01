@@ -348,7 +348,7 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with an exception" do
-              expect do ||
+              expect do
                 logger.send("measure_#{level}", "hello world", payload: @hash) do
                   fail("Test")
                 end
@@ -398,7 +398,7 @@ describe Sapience::Logger do
             end
 
             it "log #{level} info with an exception" do
-              expect do ||
+              expect do
                 logger.measure(level, "hello world", payload: @hash) do
                   fail("Test")
                 end

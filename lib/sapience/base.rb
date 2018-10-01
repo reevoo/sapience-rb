@@ -237,7 +237,7 @@ module Sapience
           message = message.nil? ? result : "#{message} -- #{result}"
         elsif message.nil? && result.is_a?(Hash)
           message = result
-        elsif payload && payload.respond_to?(:merge)
+        elsif payload && payload.respond_to?(:merge) # rubocop: disable Style/SafeNavigation
           payload.merge(result)
         else
           payload = result

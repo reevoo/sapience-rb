@@ -377,10 +377,8 @@ describe Sapience::Metrics::Datadog do
         expect(statsd)
           .to receive(:increment).with(
             "success",
-
             foo: "bar",
             tags: %w(module:custom_module_name action:custom_action),
-
           )
         subject.success(module_name, action, hash)
       end

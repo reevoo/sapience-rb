@@ -5,7 +5,7 @@ class MockLogger
   attr_accessor :message
 
   Logger::Severity.constants.each do |level|
-    class_eval <<-EOT, __FILE__, __LINE__
+    class_eval <<-LOGMETHODS, __FILE__, __LINE__ + 1
         def #{level.downcase}(message = nil, progname = nil)
           if message
             self.message = message
@@ -20,7 +20,7 @@ class MockLogger
         def #{level}?
           @true
         end
-    EOT
+    LOGMETHODS
   end
 
   def flush

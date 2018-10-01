@@ -2,16 +2,16 @@
 
 source "https://rubygems.org"
 
-gem "grape", "0.17.0"
-gem "puma", "~> 3.0"
 gem "activesupport"
 gem "dogstatsd-ruby"
+gem "grape", "0.17.0"
+gem "puma", "~> 3.0"
 gem "sapience", path: "../../.."
 gem "sentry-raven"
 
 group :development, :test do
-  gem "byebug", platform: :mri
   gem "appraisal"
+  gem "byebug", platform: :mri
   gem "pry-byebug", platform: :mri
   gem "racksh"
   gem "rspec"

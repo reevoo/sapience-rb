@@ -68,4 +68,5 @@ class LogFactory
       metric_amount,
     )
   end
+  # rubocop:enable ParameterLists, LineLength
 end

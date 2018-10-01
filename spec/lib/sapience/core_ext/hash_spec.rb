@@ -28,13 +28,11 @@ describe Hash do
       expect { subject.deep_symbolize_keyz! }
         .to change { subject }
         .to(
-
             one: {
               two: [
                 three: "val",
               ],
             },
-
         )
     end
   end

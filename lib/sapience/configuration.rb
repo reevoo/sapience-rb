@@ -118,4 +118,5 @@ module Sapience
       fail InvalidLogExecutor, "#{log_executor} is unsupported. Use (#{SUPPORTED_EXECUTORS.join(", ")})"
     end
   end
+  # rubocop:enable ClassVars
 end

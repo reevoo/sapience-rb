@@ -27,5 +27,5 @@ module Sapience
       end
     end
   end
-  # rubocop:enable TrivialAccessors
+
 end

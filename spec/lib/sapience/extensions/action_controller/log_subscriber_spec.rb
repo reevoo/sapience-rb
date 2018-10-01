@@ -98,7 +98,7 @@ describe Sapience::Extensions::ActionController::LogSubscriber do
       let(:exception) do
         begin
           fail SapienceError, "Error in sapience"
-        rescue => e
+        rescue StandardError => e
           e
         end
       end
