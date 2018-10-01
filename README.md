@@ -115,6 +115,8 @@ how to configure the library according to your needs.
 
 The sapience configuration can be controlled by either a "sapience.yml" file, or a block of ruby code. Note that if you provide both, the block of ruby code will take precedence.
 
+For a list of available configuration options look at class `Sapience::Configuration`
+
 #### Configuration by sapience.yml file
 
 Add a `config/sapience.yml` file to your application. The config file contains sections for different environments.
@@ -163,6 +165,7 @@ staging:
         
 production:
   log_level: info
+  silent_rails: true # make rails logging less noisy
   error_handler:
     sentry:
       dsn: <%= ENV['SENTRY_DSN'] %>
@@ -182,6 +185,7 @@ Sapience.configure(force: true) do |config|
   config.app_name = "My Application"
   config.default_level   = :info
   config.backtrace_level = :error
+  config.silent_rails = true # make rails logging less noisy
   config.filter_parameters = %w(password password_confirmation)
   config.appenders       = [
       { stream: { io: STDOUT, formatter: :color } },

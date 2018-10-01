@@ -1,3 +1,7 @@
+## v2.6.0
+
+- Add ability to reduce noise from default rails log subscribers with config option `silent_rails`
+
 ## v2.5.4
 
 - Add compatibility fix for concurrent-ruby library logger which expect `call` method to be defined

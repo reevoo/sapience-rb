@@ -7,7 +7,8 @@ module Sapience
   class Configuration
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
-    attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters, :metrics, :error_handler
+    attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters,
+      :metrics, :error_handler, :silent_rails
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
@@ -19,6 +20,7 @@ module Sapience
       metrics:           { datadog: { url: Sapience::DEFAULT_STATSD_URL } },
       error_handler:     { silent: {} },
       filter_parameters: %w(password password_confirmation),
+      silent_rails:      false,
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
@@ -37,6 +39,7 @@ module Sapience
       self.filter_parameters = @options[:filter_parameters]
       self.metrics           = @options[:metrics]
       self.error_handler     = @options[:error_handler]
+      self.silent_rails      = @options[:silent_rails]
     end
 
     # Sets the global default log level
