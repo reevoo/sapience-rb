@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 require "grape/middleware/base"
 require_relative "../request_format_helper"
+require_relative "../active_record_integration"
+require_relative "../sequel_integration"
 
 module Sapience
   module Extensions
@@ -9,16 +11,11 @@ module Sapience
         class Logging < ::Grape::Middleware::Base
           include RequestFormatHelper
 
-          if defined?(ActiveRecord)
-            ActiveSupport::Notifications.subscribe("sql.active_record") do |*args|
-              event = ActiveSupport::Notifications::Event.new(*args)
-              Grape::Timings.append_db_runtime(event)
-            end
-          end
-
           def initialize(app, options = {})
             super
             @logger = @options[:logger]
+            ActiveRecordIntegration.plug_in
+            SequelIntegration.plug_in
           end
 
           protected
