@@ -212,5 +212,17 @@ describe Sapience::ErrorHandler::Sentry do
         end
       end
     end
+
+    context "when param 'options' is nil" do
+      let(:options) { nil }
+
+      it "passes options to Raven under key 'extra'" do
+        expect(Raven).to receive(:capture_type).with(exception, {})
+
+        subject.capture(options) do
+          fail exception
+        end
+      end
+    end
   end
 end
