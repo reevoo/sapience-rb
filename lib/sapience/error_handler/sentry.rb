@@ -107,7 +107,11 @@ module Sapience
         return false unless valid?
         configure_sentry
 
-        options = payload[:extra] ? payload : { extra: payload }
+        options = if payload.present?
+                    payload[:extra] ? payload : { extra: payload }
+                  else
+                    {}
+                  end
 
         Raven.capture_type(data, options) if @configured
         true
