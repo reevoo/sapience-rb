@@ -172,7 +172,7 @@ module Sapience
     end
 
     # Returns [Hash] representation of this log entry
-    def to_h(host = Sapience.config.host, app_name = Sapience.app_name) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity, LineLength
+    def to_h(host = Sapience.config.host, app_name = Sapience.app_name, environment = Sapience.environment) # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity, LineLength
       # Header
       h = {
         name:        name,
@@ -181,6 +181,7 @@ module Sapience
         time:        time,
         level:       level,
         level_index: level_index,
+        environment: environment,
       }
       h[:host]     = host if host
       h[:app_name] = app_name if app_name

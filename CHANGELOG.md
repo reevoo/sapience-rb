@@ -1,3 +1,6 @@
+## v2.6.3
+- Include current environment in log entries
+
 ## v2.6.2
 - Bugfix: clear tags after pushing log to processing queue 
 

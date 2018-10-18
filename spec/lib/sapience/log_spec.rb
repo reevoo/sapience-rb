@@ -7,6 +7,10 @@ describe Sapience::Log do
 
   subject { log }
 
+  before do
+    Sapience.configure
+  end
+
   describe "#duration_to_s" do
     its(:duration_to_s) do
       is_expected.to eq("#{duration}.0ms")
@@ -186,6 +190,7 @@ describe Sapience::Log do
         tags: tags,
         thread: thread_name,
         time: a_kind_of(Time),
+        environment: Sapience.environment,
       }
     end
 
