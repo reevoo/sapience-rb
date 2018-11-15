@@ -273,10 +273,6 @@ describe Sapience::Logger do
               logger.info("Hello world")
               expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] \[First Level\] \[tags\] \[Second Level\] LoggerTest -- Hello world/)
             end
-
-            expect(logger.tags.count).to(eq(2))
-            expect(logger.tags.first).to(eq("First Level"))
-            expect(logger.tags.last).to(eq("tags"))
           end
         end
       end

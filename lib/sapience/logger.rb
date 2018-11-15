@@ -142,6 +142,7 @@ module Sapience
               $stderr.write("Appender thread: Failed to log to appender: #{appender.inspect}\n #{exc.inspect}")
             end
           end
+          Sapience.clear_tags!
         end
       end
     end

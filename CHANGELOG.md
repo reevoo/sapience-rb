@@ -1,3 +1,9 @@
+## v2.6.2
+- Bugfix: clear tags after pushing log to processing queue 
+
+## v2.6.1
+- Bugfix: Fix sentry logging when payload is nil
+
 ## v2.6.0
 
 - Add ability to reduce noise from default rails log subscribers with config option `silent_rails`
