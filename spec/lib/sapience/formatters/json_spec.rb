@@ -40,6 +40,7 @@ describe Sapience::Formatters::Json do
         tags: tags,
         thread: thread_name,
         timestamp: a_kind_of(String),
+        environment: Sapience.environment,
     )
     end
   end
