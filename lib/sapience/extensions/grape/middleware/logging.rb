@@ -55,14 +55,14 @@ module Sapience
             @logger.info(parameters)
           end
 
-          def after_exception(exc)
-            Sapience.push_tags(exc.class.name, exc.message)
+          def after_exception(exc) # rubocop:disable Lint/UnusedMethodArgument
+            # Sapience.push_tags(exc.class.name, exc.message)
             @status = 500
             after
           end
 
           def after_failure(error)
-            Sapience.push_tags(error[:message])
+            # Sapience.push_tags(error[:message])
             @status = error[:status]
             after
           end
