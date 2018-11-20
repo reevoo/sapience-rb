@@ -65,7 +65,7 @@ describe Ping::API do
           host:         "example.org",
           ip:           "127.0.0.1",
           ua:           nil,
-          tags:         ["{:error=>\"No route found\", :status=>404}"],
+          tags:         [],
           params:       {},
           runtimes:     a_hash_including(
                           total: kind_of(Float),
@@ -90,7 +90,7 @@ describe Ping::API do
             host:         "example.org",
             ip:           "127.0.0.1",
             ua:           nil,
-            tags:         ["RuntimeError", "it failed!"],
+            tags:         [],
             params:       {},
             runtimes:     a_hash_including(
                 total: kind_of(Float),
