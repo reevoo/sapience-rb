@@ -1,3 +1,6 @@
+## v2.6.4
+- Bugfix: don't auto-add tags for every application level exception
+
 ## v2.6.3
 - Include current environment in log entries
 
