@@ -1,3 +1,6 @@
+## v2.8.0
+- Silence rails rack logger for rails 3 by setting `silent_rack: true` in sapience.yml
+
 ## v2.7.0
 - Add ability to stop generating metrics for ActiveRecord::Notification with config option `silent_active_record`
 

@@ -8,7 +8,7 @@ module Sapience
     attr_reader :default_level, :backtrace_level, :backtrace_level_index
     attr_writer :host
     attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters,
-      :metrics, :error_handler, :silent_active_record, :silent_rails
+      :metrics, :error_handler, :silent_active_record, :silent_rails, :silent_rack
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
@@ -22,6 +22,7 @@ module Sapience
       filter_parameters: %w(password password_confirmation),
       silent_active_record: false,
       silent_rails:      false,
+      silent_rack:       false,
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
@@ -30,7 +31,7 @@ module Sapience
       @options = DEFAULT.merge(options.dup.deep_symbolize_keyz!)
       @options[:log_executor] &&= @options[:log_executor].to_sym
       validate_log_executor!(@options[:log_executor])
-      self.default_level = @options[:log_level].to_sym
+      self.default_level     = @options[:log_level].to_sym
       self.backtrace_level   = @options[:log_level].to_sym
       self.host              = @options[:host]
       self.app_name          = @options[:app_name]
@@ -41,7 +42,8 @@ module Sapience
       self.metrics           = @options[:metrics]
       self.error_handler     = @options[:error_handler]
       self.silent_active_record = @options[:silent_active_record]
-      self.silent_rails = @options[:silent_rails]
+      self.silent_rails      = @options[:silent_rails]
+      self.silent_rack       = @options[:silent_rack]
     end
 
     # Sets the global default log level

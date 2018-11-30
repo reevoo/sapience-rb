@@ -1,6 +1,19 @@
 # frozen_string_literal: true
-# Drop rack Started message to debug level message
+require "rails/rack/logger"
+
+# For rails > 3, drop rack Started message to debug level message
+# For rails == 3, patch the logger to remove the log lines
+# that say: 'Started GET / for 192.168.2.1...'
 class Rails::Rack::Logger # rubocop:disable ClassAndModuleChildren
+
+  if Rails::VERSION::MAJOR == 3 && ::Sapience.config.silent_rack
+    def call_app(*args)
+      env = args.last
+      @app.call(env)
+    ensure
+      ActiveSupport::LogSubscriber.flush_all!
+    end
+  end
 
   private
 
