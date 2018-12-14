@@ -1,3 +1,6 @@
+## v2.7.0
+- Add ability to stop generating metrics for ActiveRecord::Notification with config option `silent_active_record`
+
 ## v2.6.4
 - Bugfix: don't auto-add tags for every application level exception
 

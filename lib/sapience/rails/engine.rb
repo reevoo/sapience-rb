@@ -78,7 +78,9 @@ module Sapience
 
         Sapience::Extensions::ActionController::LogSubscriber.attach_to :action_controller
         # Sapience::Extensions::ActiveSupport::MailerLogSubscriber.attach_to :action_mailer
-        Sapience::Extensions::ActiveRecord::Notifications.use if defined?(ActiveRecord)
+        if defined?(ActiveRecord) && !Sapience.config.silent_active_record
+          Sapience::Extensions::ActiveRecord::Notifications.use
+        end
         Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
         # Sapience::Extensions::ActiveJob::LogSubscriber.attach_to :active_job
         Sapience::Extensions::ActionController::Notifications.use
