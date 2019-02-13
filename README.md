@@ -166,6 +166,7 @@ staging:
 production:
   log_level: info
   silent_rails: true # make rails logging less noisy
+  silent_rack: true # stop rack from logging "Request Started..." messages
   error_handler:
     sentry:
       dsn: <%= ENV['SENTRY_DSN'] %>
@@ -186,6 +187,7 @@ Sapience.configure(force: true) do |config|
   config.default_level   = :info
   config.backtrace_level = :error
   config.silent_rails = true # make rails logging less noisy
+  config.silent_rack = true # silence rack logging
   config.filter_parameters = %w(password password_confirmation)
   config.appenders       = [
       { stream: { io: STDOUT, formatter: :color } },
