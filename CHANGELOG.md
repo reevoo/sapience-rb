@@ -1,3 +1,6 @@
+## v2.9.0
+- Sapience will return more parameters in logs created by Rails::Rack::Logger
+
 ## v2.8.0
 - Silence rails rack logger for rails 3 by setting `silent_rack: true` in sapience.yml
 
