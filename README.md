@@ -22,6 +22,33 @@ Add the gem:
 gem "sapience", require: "sapience/rails"
 ```
 
+### Sinatra
+Add the gem:
+
+```ruby
+gem "sapience", require: "sapience/sinatra"
+```
+
+In your Base API class
+
+```ruby
+require "sapience/grape"
+
+module Aslan
+  module API
+    class Base < Sinatra::Base
+      use Sapience::Extensions::Sinatra::Middleware::Logging, logger: Sapience[self]
+
+      get "/ping" do
+        { ping: "PONG" }
+      end
+    end
+  end
+end
+
+```
+
+
 ### Grape
 Add the gem:
 
@@ -49,11 +76,11 @@ end
 
 ```
 
-Also make sure you only use "rescue_from" when you want to return a 500 status. For any other status "dont" use 
+Also make sure you only use "rescue_from" when you want to return a 500 status. For any other status "dont" use
 "rescue_from".
 
-For example if you have some authentication code that raises an exception when the user is not authenticated, 
-dont use "rescue_from" to catch this exception and change the status to 403 within the rescue_from, handle this 
+For example if you have some authentication code that raises an exception when the user is not authenticated,
+dont use "rescue_from" to catch this exception and change the status to 403 within the rescue_from, handle this
 exception instead on the "before" block, or alternatively within your endpoint, like below:
 
 
@@ -67,10 +94,10 @@ before do
 end
 ```
 
-Likewise, for capturing any other exception for which you want to return a code other than 500, capture your 
-exception in the "before" block or within your endpoint, but make sure "rescue_from" is "only" used for 500 
-status, as grape will call rescue_from once is gone through all the middleware, so if you change the status 
-in a rescue_from, Sapience would not be able to log it correctly. So the below is ok because the rescue_from 
+Likewise, for capturing any other exception for which you want to return a code other than 500, capture your
+exception in the "before" block or within your endpoint, but make sure "rescue_from" is "only" used for 500
+status, as grape will call rescue_from once is gone through all the middleware, so if you change the status
+in a rescue_from, Sapience would not be able to log it correctly. So the below is ok because the rescue_from
 is using status 500:
 
 ```ruby
@@ -79,7 +106,7 @@ rescue_from :all do |e|
 end
 ```
 
-**Note**: if you already have got your grape applications sprinkled with calls to API.logger, and you do 
+**Note**: if you already have got your grape applications sprinkled with calls to API.logger, and you do
 not want to have to replace all those calls to Sapience.logger manually, then just re-assign your logger
 after including the Sapience middleware, like below:
 
@@ -89,7 +116,7 @@ API.logger = Sapience.logger
 ```
 
 
-**Note**: If you're using the rackup command to run your server in development, pass the -q flag to silence the default 
+**Note**: If you're using the rackup command to run your server in development, pass the -q flag to silence the default
 rack logger so you don't get double logging.
 
 ### Standalone
@@ -149,7 +176,7 @@ development:
     - stream:
         file_name: log/development.log
         formatter: color
-        
+
 staging:
   log_level: info
   error_handler:
@@ -162,7 +189,7 @@ staging:
     - stream:
         io: STDOUT
         formatter: json
-        
+
 production:
   log_level: info
   silent_rails: true # make rails logging less noisy
