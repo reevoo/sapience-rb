@@ -19,6 +19,16 @@ APP_NAME=grape_app bundle exec appraisal rspec
 [ $? -ne 0 ] && exit $?
 popd
 
+pushd test_apps/sinatra
+bundle update
+[ $? -ne 0 ] && exit $?
+bundle exec appraisal update
+[ $? -ne 0 ] && exit $?
+APP_NAME=sinatra_app bundle exec appraisal rspec
+[ $? -ne 0 ] && exit $?
+popd
+
+
 projects=(rails_3_2 rails_4_2 rails_5_0)
 for project in ${projects[@]}
 do

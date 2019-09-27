@@ -108,3 +108,13 @@ services:
     environment:
       APP_NAME: grape_app
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+  sinatra:
+    extends:
+      service: base
+    working_dir: /usr/src/app/test_apps/sinatra
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rspec
+    environment:
+      APP_NAME: sinatra_app
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

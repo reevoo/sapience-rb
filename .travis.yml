@@ -27,6 +27,7 @@ script:
   - docker-compose run rails42
   - docker-compose run rails50
   - docker-compose run grape
+  - docker-compose run sinatra
 
 after_success:
   - chown -R $(whoami) coverage
