@@ -1,3 +1,12 @@
+## v2.10
+- Fix spec for Ruby 2.4.1
+- Bump version to 2.10 in order to properly highlight more significant change
+- Add missing Changelog entry
+
+## v2.9.1
+- Add support for sinatra applications by including `Sapience::Extensions::Sinatra::Middleware::Logging` middleware
+- Bump Ruby version to 2.4.1
+
 ## v2.9.0
 - Sapience will return more parameters in logs created by Rails::Rack::Logger
 
@@ -14,7 +23,7 @@
 - Include current environment in log entries
 
 ## v2.6.2
-- Bugfix: clear tags after pushing log to processing queue 
+- Bugfix: clear tags after pushing log to processing queue
 
 ## v2.6.1
 - Bugfix: Fix sentry logging when payload is nil
