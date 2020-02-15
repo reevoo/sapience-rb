@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler", "~> 1"
   spec.add_development_dependency "codeclimate-test-reporter"
+  spec.add_development_dependency "ddtrace", "~> 0.29"
   spec.add_development_dependency "dogstatsd-ruby", "~> 2.0"
   spec.add_development_dependency "fuubar"
   spec.add_development_dependency "gem-release"

@@ -15,7 +15,13 @@ module Sapience
         h = super(log, logger)
         h.delete(:time)
         h[:timestamp] = format_time(log.time)
-        h.to_json
+        to_json(h)
+      end
+
+      private
+
+      def to_json(hash)
+        hash.to_json
       end
     end
   end

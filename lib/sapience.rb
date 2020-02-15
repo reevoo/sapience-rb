@@ -21,6 +21,7 @@ require "sapience/formatters/raw"
 require "sapience/formatters/default"
 require "sapience/formatters/color"
 require "sapience/formatters/json"
+require "sapience/formatters/datadog"
 
 require "sapience/config_loader"
 require "sapience/configuration"
