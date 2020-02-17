@@ -8,13 +8,13 @@ services:
       RABBITMQ_DEFAULT_PASS: tests
 
   postgres:
-    image: postgres:latest
+    image: postgres:9
     environment:
       POSTGRES_USER: sapience
       POSTGRES_PASSWORD: tests
 
   base:
-    image: ruby:2.3
+    image: ruby:2.4
     cpu_shares: 4
     # Specify the directory from where all commands sent to the container will be
     # issued to where the code is mounted:
@@ -32,7 +32,13 @@ services:
       # "/usr/src/app" folder:
       - .:/usr/src/app
 
-
+  reevoocop:
+    extends:
+      service: base
+    entrypoint: /usr/src/app/dev-entrypoint.sh
+    command: bundle exec rake reevoocop
+    environment:
+      PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
   rspec:
     extends:
@@ -46,11 +52,10 @@ services:
       PATH: /usr/src/app/bin:/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 
-
   rails32:
     extends:
       service: base
-    image: ruby:2.1
+    image: ruby:2.3
     working_dir: /usr/src/app/test_apps/rails_3_2
     entrypoint: /usr/src/app/dev-entrypoint.sh
     command: bundle exec rspec

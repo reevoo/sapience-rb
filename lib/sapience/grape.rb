@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "sapience"
 require "sapience/extensions/grape/timings"
+require "grape"
 require "sapience/extensions/grape/middleware/logging"
 require "sapience/extensions/grape/notifications"
 
