@@ -83,7 +83,7 @@ module Sapience
         end
         Sapience::Extensions::ActionView::LogSubscriber.attach_to :action_view
         # Sapience::Extensions::ActiveJob::LogSubscriber.attach_to :active_job
-        Sapience::Extensions::ActionController::Notifications.use
+        Sapience::Extensions::ActionController::Notifications.use if Sapience.config.rails_ac_metrics
         Sapience::Extensions::ActiveJob::Notifications.use if defined?(ActiveJob)
       end
     end
