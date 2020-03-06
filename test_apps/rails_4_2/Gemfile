@@ -29,6 +29,6 @@ group :test do
 end
 
 group :development do
-  gem "spring"
+  gem "spring", "2.0.2"
   gem "web-console", "~> 2.0"
 end
