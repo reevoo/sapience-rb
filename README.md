@@ -249,6 +249,34 @@ For further details about "app_name", "filter_parameters", "appenders", "metrics
 - [logger](docs/logger.md)
 
 
+### Log hooks
+*Log hooks* allow us to modify the log object **Sapience::Log** just before it is added to the appender. A 'log hook' can be an object that responds to #call. Multiple hooks can be used.
+The following examples show how to use hooks to:
+
+  * inject Datadog APM tracing data in every log event.
+  * modify the logs event's **message** field.
+
+```ruby
+my_logger = Sapience.logger
+
+# inject Datadog tracing info in payload hash
+my_logger.log_hooks << ->(log) do
+  trace_data = { 
+    dd: { 
+      span_id:  ::Datadog.tracer.active_correlation.span_id.to_s, 
+      trace_id: ::Datadog.tracer.active_correlation.trace_id.to_s 
+    }
+  }
+  log.payload? ? log.payload.merge!(trace_data) : log.payload = trace_data
+end
+
+# append number of times a GC occurred since process started in field 'message'
+my_logger.log_hooks << ->(log) do
+  log.message = "#{log.message} = GC count: #{GC.count}"
+end
+```
+
+
 ## Running the tests
 
 You need to create the test postgres db, by running the command below:

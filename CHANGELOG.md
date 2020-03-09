@@ -1,3 +1,6 @@
+## v2.12
+- feature: 'log hooks', a mechanism for modifying the log event just before it is added to the appender
+
 ## v2.11
 - Add config option to enable/disable metrics from ActionController
 
