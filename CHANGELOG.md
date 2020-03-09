@@ -1,3 +1,6 @@
+## v2.11
+- Add config option to enable/disable metrics from ActionController
+
 ## v2.10
 - Fix spec for Ruby 2.4.1
 - Bump version to 2.10 in order to properly highlight more significant change

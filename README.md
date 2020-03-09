@@ -22,6 +22,15 @@ Add the gem:
 gem "sapience", require: "sapience/rails"
 ```
 
+The rails integration has the following configuration options:
+
+| Option                | Description | Values    | Default |
+| --------------------- | ---------- | ------     | ----- |
+| silent_rails          | less noisy rails logs       | `boolean`  | `true` |
+| silent_rack           | suppress "Request Started..." log message from rack | `boolean`  | `true` |
+| silent_active_record  | emit metrics from ActiveRecord    | `boolean`  | `true` |
+| rails_ac_metrics      | emit metrics from ActionController | `boolean`  | `true` |
+
 ### Sinatra
 Add the gem:
 
@@ -156,6 +165,10 @@ Or if you, like us, have many projects that use the same configuration you can c
 default:
   app_name: My Application
   log_level: debug
+  silent_active_record: true
+  silent_rails: true
+  silent_rack: true
+  rails_ac_metrics: true
   appenders:
     - stream:
         io: STDOUT
