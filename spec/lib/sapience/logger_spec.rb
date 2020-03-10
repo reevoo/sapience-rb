@@ -259,6 +259,45 @@ describe Sapience::Logger do
         end
       end
 
+      describe "log hooks" do
+        let(:extra_payload) { { foo: :bar } }
+        let(:overridden_message) { "hey, ho, let's go!" }
+
+        class APMTracer
+          def self.trace_data
+            {
+              dd: {
+                trace_id: "XXX",
+                span_id: "YYY",
+              },
+            }
+          end
+        end
+
+        before do
+          logger.log_hooks << lambda do |log|
+            log.message = overridden_message
+          end
+
+          logger.log_hooks << lambda do |log|
+            log.payload? ? log.payload.merge!(extra_payload) : log.payload = extra_payload
+          end
+
+          logger.log_hooks << lambda do |log|
+            trace_data = APMTracer.trace_data
+            log.payload? ? log.payload.merge!(trace_data) : log.payload = trace_data
+          end
+        end
+
+        it "'log hooks' change the Log object" do
+          logger.info(message: "Hello world", tracking_number: "123456", even: 2, more: "data")
+          hash = { tracking_number: "123456", even: 2, more: "data" }
+          hash_str = hash.merge(extra_payload).merge(APMTracer.trace_data).inspect.sub("{", "\\{").sub("}", "\\}")
+
+          expect(mock_logger.message).to match(/#{TS_REGEX} I \[\d+:#{@thread_name}\] LoggerTest -- #{overridden_message} -- #{hash_str}/)
+        end
+      end
+
       describe "#tagged" do
         it "add tags to log entries" do
           logger.tagged("12345", "DJHSFK") do

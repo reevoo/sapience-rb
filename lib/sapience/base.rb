@@ -3,7 +3,7 @@ module Sapience
   # rubocop:disable ClassLength
   class Base
     # Class name to be logged
-    attr_accessor :name, :filter
+    attr_accessor :name, :filter, :log_hooks
     include Sapience::LogMethods
 
     # Set the logging level for this logger
@@ -174,7 +174,7 @@ module Sapience
     #    Proc: Only include log messages where the supplied Proc returns true
     #          The Proc must return true or false
     # rubocop:disable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
-    def initialize(klass, level = nil, filter = nil)
+    def initialize(klass, level = nil, filter = nil, log_hooks = [])
       # Support filtering all messages to this logger using a Regular Expression
       # or Proc
       fail ArgumentError, ":filter must be a Regexp or Proc" unless filter.nil? || filter.is_a?(Regexp) || filter.is_a?(Proc)
@@ -183,6 +183,7 @@ module Sapience
       @name   = klass if klass.is_a?(String)
       @name ||= klass.name if klass.respond_to?(:name)
       @name ||= klass.class.name
+      @log_hooks = log_hooks
 
       if level.nil?
         # Allow the global default level to determine this loggers log level
@@ -271,6 +272,9 @@ module Sapience
         end
         log.payload = payload unless payload.empty?
       end
+
+      log_hooks.each { |h| h.call(log) }
+
       self.log(log) if include_message?(log)
     end
     # rubocop:enable AbcSize, PerceivedComplexity, CyclomaticComplexity, LineLength
