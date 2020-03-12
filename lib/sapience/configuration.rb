@@ -9,7 +9,7 @@ module Sapience
     attr_writer :host
     attr_accessor :app_name, :ap_options, :appenders, :log_executor, :filter_parameters,
       :metrics, :error_handler, :silent_active_record, :silent_rails, :silent_rack,
-      :rails_ac_metrics
+      :rails_ac_metrics, :grape_metrics
 
     SUPPORTED_EXECUTORS = %i(single_thread_executor immediate_executor).freeze
     DEFAULT = {
@@ -25,6 +25,7 @@ module Sapience
       silent_rails:      false,
       silent_rack:       false,
       rails_ac_metrics:  true,
+      grape_metrics:     true,
     }.freeze
 
     # Initial default Level for all new instances of Sapience::Logger
@@ -46,7 +47,8 @@ module Sapience
       self.silent_active_record = @options[:silent_active_record]
       self.silent_rails      = @options[:silent_rails]
       self.silent_rack       = @options[:silent_rack]
-      self.rails_ac_metrics = @options[:rails_ac_metrics]
+      self.rails_ac_metrics  = @options[:rails_ac_metrics]
+      self.grape_metrics     = @options[:grape_metrics]
     end
 
     # Sets the global default log level
