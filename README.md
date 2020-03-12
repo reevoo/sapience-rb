@@ -128,6 +128,13 @@ API.logger = Sapience.logger
 **Note**: If you're using the rackup command to run your server in development, pass the -q flag to silence the default
 rack logger so you don't get double logging.
 
+
+The grape integration has the following configuration options:
+
+| Option                | Description | Values    | Default |
+| --------------------- | ---------- | ------     | ----- |
+| grape_metrics         | emit metrics from grape | `boolean`  | `true` |
+
 ### Standalone
 Add the gem:
 
