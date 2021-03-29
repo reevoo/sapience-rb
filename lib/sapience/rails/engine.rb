@@ -42,11 +42,13 @@ module Sapience
         # Replace the Sidekiq logger
         Sidekiq::Logging.logger     = Sapience[Sidekiq] if defined?(Sidekiq)
 
-        # Replace the Sequel logger
-        Sequel::Database.logger     = Sapience[Sequel] if defined?(Sequel::Database)
-
         # Replace the Sidetiq logger
         Sidetiq.logger              = Sapience[Sidetiq] if defined?(Sidetiq)
+
+        # Replace the Sequel logger
+        if defined?(Sequel::Database) && Sequel::Database.respond_to?(:logger=)
+          Sequel::Database.logger = Sapience[Sequel]
+        end
 
         # Replace the Raven logger
         # Raven::Configuration.logger = Sapience[Raven::Configuration] if defined?(Raven::Configuration)
