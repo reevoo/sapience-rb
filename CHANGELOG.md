@@ -1,3 +1,7 @@
+## v2.15
+- The Formatter can now be configured to exclude selected log fields.
+  Currently only the Json formatter implements this.
+
 ## v2.13
 - Add config option to enable/disable metrics from grape
 

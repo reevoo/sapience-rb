@@ -13,9 +13,25 @@ module Sapience
       # Returns log messages in JSON format
       def call(log, logger)
         h = super(log, logger)
-        h.delete(:time)
-        h[:timestamp] = format_time(log.time)
-        h.to_json
+        prepare(h, log).to_json
+      end
+
+      private
+
+      def prepare(log_hash, log)
+        set_timestamp(log_hash, log)
+        remove_fields(log_hash)
+        log_hash
+      end
+
+      def set_timestamp(log_hash, log)
+        log_hash.delete(:time)
+        log_hash[:timestamp] = format_time(log.time)
+        log_hash
+      end
+
+      def remove_fields(log_hash)
+        log_hash.delete_if { |k, _v| exclude_fields.include?(k.to_sym) } if exclude_fields.any?
       end
     end
   end
