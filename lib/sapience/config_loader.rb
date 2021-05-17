@@ -70,12 +70,13 @@ module Sapience
         if YAML.respond_to?(:safe_load) # Ruby 2.1+
           if defined?(SafeYAML) && SafeYAML.respond_to?(:load)
             SafeYAML.load(yaml_code, filename,
-              whitelisted_tags: %w(!ruby/regexp))
+              whitelisted_tags: %w(!ruby/regexp),
+              aliases: true)
           else
-            YAML.safe_load(yaml_code, [Regexp], [], false, filename)
+            YAML.safe_load(yaml_code, [Regexp], [], true, filename)
           end
         else
-          YAML.safe_load(yaml_code, filename)
+          YAML.safe_load(yaml_code, filename, aliases: true)
         end
       end
     end
