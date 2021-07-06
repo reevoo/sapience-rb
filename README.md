@@ -286,13 +286,32 @@ end
 
 ## Running the tests
 
-You need to create the test postgres db, by running the command below:
+You can run all of them with the following command:
 
-`createdb rails_app_test`
+`docker-compose up`
 
-Then you can run them with the following command:
+To run particular tests use the following commands:
 
-`bin/tests`
+Reevoocop:
+`docker-compose up reevoocop`
+
+Rspec:
+`docker-compose up rspec`
+
+Rspec with Rails 3.2:
+`docker-compose up rails32`
+
+Rspec with Rails 4.2:
+`docker-compose up rails42`
+
+Rspec with Rails 5.0:
+`docker-compose up rails50`
+
+Rspec with Grape:
+`docker-compose up grape`
+
+Rspec with Sinatra:
+`docker-compose up sinatra`
 
 ## Environment variables
 
