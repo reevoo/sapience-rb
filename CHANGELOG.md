@@ -1,3 +1,10 @@
+## v3.0
+- Updating gem dependencies:
+  - bundler -> 1.17.3
+  - dogstatsd -> 5.2.0
+  - rspec -> 3.10.0
+  - sentry-raven -> 3.1.2
+
 ## v2.15
 - The Formatter can now be configured to exclude selected log fields.
   Currently only the Json formatter implements this.
