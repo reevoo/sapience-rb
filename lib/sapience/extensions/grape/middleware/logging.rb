@@ -49,7 +49,7 @@ module Sapience
             stop_time
 
             builder = InfoBuilder.new(
-              env: env, start_time: start_time, stop_time: stop_time, status: @status
+              env: env, start_time: start_time, stop_time: stop_time, status: @status,
             )
             @logger.info(builder.params)
           end
