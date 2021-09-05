@@ -20,7 +20,8 @@ module Ping
     end
 
     get :err do
-      fail "it failed!"
+      nil.no_method
+      # the goal here is to raise a realistic 500 error, in this case NoMethodError
     end
   end
 end

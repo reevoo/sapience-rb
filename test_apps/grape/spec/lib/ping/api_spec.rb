@@ -99,7 +99,9 @@ describe Ping::API do
             ),
         )
 
-        expect { get "/api/err", {}, "CONTENT-TYPE" => "application/json" }.to raise_error
+        expect do
+          get "/api/err", {}, "CONTENT-TYPE" => "application/json"
+        end.to raise_error(NoMethodError)
       end
     end
   end
