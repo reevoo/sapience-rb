@@ -78,6 +78,31 @@ describe Ping::API do
       end
     end
 
+    context "when raising a custom not_found exception" do
+      it "logs 404" do
+        expect(logger).to receive(:info).with(
+          method:       "GET",
+          request_path: "/api/not-found",
+          format:       "json",
+          status:       404,
+          class_name:   "Ping::API",
+          action:       "index",
+          host:         "example.org",
+          ip:           "127.0.0.1",
+          ua:           nil,
+          tags:         [],
+          params:       {},
+          runtimes:     a_hash_including(
+                          total: kind_of(Float),
+                          view:  kind_of(Float),
+                          db:    kind_of(Float),
+                        ),
+        )
+
+        get "/api/not-found", {}, "CONTENT-TYPE" => "application/json"
+      end
+    end
+
     context "500 in endpoint" do
       it "logs 500" do
         expect(logger).to receive(:info).with(

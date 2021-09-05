@@ -4,6 +4,8 @@ require "grape/api"
 require "sapience/grape"
 require "active_support/notifications"
 
+class PageNotFound < RuntimeError; end
+
 module Ping
   class API < ::Grape::API
     format :json
@@ -17,6 +19,10 @@ module Ping
     desc "Returns pong."
     get :ping do
       { ping: "PONG" }
+    end
+
+    get 'not-found' do
+      fail PageNotFound
     end
 
     get :err do
