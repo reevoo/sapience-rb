@@ -2,6 +2,8 @@
 require "grape/middleware/base"
 require_relative "info_builder"
 
+require "pry"
+
 module Sapience
   module Extensions
     module Grape
@@ -25,20 +27,14 @@ module Sapience
           def call!(env)
             @env = env
             before
-            error = catch(:error) do
-              begin
-                @app_response = @app.call(@env)
-              rescue StandardError => e
-                after_exception(e)
-                raise e
-              end
-              nil
-            end
-            if error
-              after_failure(error)
-              throw(:error, error)
+            begin
+              @app_response = @app.call(@env)
+            rescue StandardError => e
+              @status = 500
+              raise e
             else
-              @status, = *@app_response
+              @status = @app_response.first
+            ensure
               after
             end
             @app_response
@@ -56,16 +52,6 @@ module Sapience
               env: env, start_time: start_time, stop_time: stop_time, status: @status
             )
             @logger.info(builder.params)
-          end
-
-          def after_exception(exc) # rubocop:disable Lint/UnusedMethodArgument
-            @status = 500
-            after
-          end
-
-          def after_failure(error)
-            @status = error[:status]
-            after
           end
 
           private
