@@ -2,8 +2,6 @@
 require "grape/middleware/base"
 require_relative "info_builder"
 
-require "pry"
-
 module Sapience
   module Extensions
     module Grape
@@ -27,17 +25,42 @@ module Sapience
           def call!(env)
             @env = env
             before
+
+            handle_raise do
+              error = catch(:error) do
+                @app_response = @app.call(@env)
+                nil # no error thrown
+              end
+              if error
+                @status = error[:status]
+                throw(:error, error)
+              end
+            end
+            @app_response
+          end
+
+          def handle_raise
             begin
-              @app_response = @app.call(@env)
+              yield
             rescue StandardError => e
-              @status = 500
-              raise e
+              if e.is_a? PageNotFound
+                @status = 404
+                throw :error, error_hash
+              else
+                @status = 500
+                raise e
+              end
             else
               @status = @app_response.first
             ensure
               after
             end
-            @app_response
+          end
+
+          def error_hash
+            {:message=>
+              {:error=>"No route found", :status=>404}, :status=>404, :headers => {}
+            }
           end
 
           def before
