@@ -8,11 +8,12 @@ module Sapience
         class InfoBuilder
           include RequestFormatHelper
 
-          def initialize(env:, start_time:, stop_time:, status:)
+          def initialize(env:, start_time:, stop_time:, status:, error:)
             @env = env
             @start_time = start_time
             @stop_time = stop_time
             @status = status
+            @error = error || {}
           end
 
           def params # rubocop:disable AbcSize
@@ -21,6 +22,7 @@ module Sapience
               request_path: request.path,
               format: request_format(request.env),
               status: @status,
+              message: @error.dig(:message, :error),
               class_name: @env["api.endpoint"].options[:for].to_s,
               action: "index",
               host: request.host,
