@@ -33,6 +33,7 @@ module Sapience
               end
               if error
                 @status = error[:status]
+                @error = error
                 throw(:error, error)
               end
             end
@@ -44,10 +45,10 @@ module Sapience
               yield
             rescue StandardError => e
               if e.class.name =~ %r{NotFound}
-                @status = 404
-                throw :error, error_hash
+                @error = build_error(e, 404)
+                throw :error, @error
               else
-                @status = 500
+                @error = build_error(e, 500)
                 raise e
               end
             else
@@ -57,9 +58,13 @@ module Sapience
             end
           end
 
-          def error_hash
-            {:message=>
-              {:error=>"No route found", :status=>404}, :status=>404, :headers => {}
+          def build_error(e, code)
+            @status = code
+            {
+              message: {
+                error: "#{e.class.name} - #{e.message}", status: code},
+              status: code,
+              headers: {}
             }
           end
 
@@ -72,7 +77,7 @@ module Sapience
             stop_time
 
             builder = InfoBuilder.new(
-              env: env, start_time: start_time, stop_time: stop_time, status: @status,
+              env: env, start_time: start_time, stop_time: stop_time, status: @status, error: @error,
             )
             @logger.info(builder.params)
           end

@@ -23,8 +23,8 @@ module Ping
       { ping: "PONG" }
     end
 
-    get 'not-found' do
-      fail PageNotFound
+    get "not-found" do
+      fail PageNotFound, "Customer experience not enabled"
     end
 
     get :err do
