@@ -1,18 +1,19 @@
 ---
 default:
-  filter_parameters:
-    - password
-    - password_confirmation
-  log_executor: single_thread_executor
-  log_level: info
+  log_level: debug
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
   appenders:
     - stream:
         io: STDOUT
-        formatter: color
+        formatter: json
 
 test:
   log_level: warn
-  log_executor: immediate_executor
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
   appenders:
     - stream:
         file_name: log/test.log
@@ -20,14 +21,56 @@ test:
 
 development:
   log_level: debug
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
   appenders:
+    - stream:
+        io: STDOUT
+        formatter: color
     - stream:
         file_name: log/development.log
         formatter: color
 
 production:
-  log_level: warn
+  log_level: info
+  silent_rails: true
+  silent_rack: true
+  silent_active_record: true
+  rails_ac_metrics: false
+  grape_metrics: false
+  error_handler:
+    sentry:
+      dsn: <%= ENV['SENTRY_DSN'] %>
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
   appenders:
     - stream:
-        file_name: log/production.log
+        io: STDOUT
         formatter: json
+
+staging:
+  log_level: info
+  silent_rails: true
+  silent_rack: true
+  silent_active_record: true
+  rails_ac_metrics: false
+  grape_metrics: false
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: json
+
+ci:
+  log_level: warn
+  metrics:
+    datadog:
+      url: <%= ENV.fetch("STATSD_URL", "udp://localhost:8125") %>
+  appenders:
+    - stream:
+        io: STDOUT
+        formatter: color
