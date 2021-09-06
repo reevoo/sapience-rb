@@ -43,7 +43,6 @@ module Sapience
             begin
               yield
             rescue StandardError => e
-              binding.pry
               if e.class.name =~ %r{NotFound}
                 @status = 404
                 throw :error, error_hash
