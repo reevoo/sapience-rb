@@ -12,6 +12,8 @@ module Ping
     use Sapience::Extensions::Grape::Middleware::Logging, logger: Grape::API.logger
     prefix :api
 
+    # This block is required in all apps that use Sapience.
+    # Logging middleware is never called if we dont have a catch-all route.
     route :any, "*path" do
       error!({ error: "No route found", status: 404 }, 404)
     end
