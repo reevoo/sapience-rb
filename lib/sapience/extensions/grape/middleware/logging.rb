@@ -69,33 +69,13 @@ module Sapience
           end
 
           def before
-            reset_db_runtime
-            start_time
+            @log_builder = InfoBuilder.start
           end
 
           def after
-            stop_time
-
-            builder = InfoBuilder.new(
-              env: env, start_time: start_time, stop_time: stop_time, status: @status, error: @error,
-            )
-            @logger.info(builder.params)
+            @log_builder.stop(env: env, status: @status, error: @error)
+            @logger.info(@log_builder.params)
           end
-
-          private
-
-          def reset_db_runtime
-            Grape::Timings.reset_db_runtime
-          end
-
-          def start_time
-            @start_time ||= Time.now
-          end
-
-          def stop_time
-            @stop_time ||= Time.now
-          end
-
         end
       end
     end
