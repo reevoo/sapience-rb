@@ -27,14 +27,13 @@ module Sapience
             before
 
             handle_raise do
-              error = catch(:error) do
+              @error = catch(:error) do
                 @app_response = @app.call(@env)
                 nil # no error thrown
               end
-              if error
-                @status = error[:status]
-                @error = error
-                throw(:error, error)
+              if @error
+                @status = @error[:status]
+                throw(:error, @error)
               end
             end
             @app_response
