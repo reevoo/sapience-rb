@@ -8,10 +8,13 @@ module Sapience
         class InfoBuilder
           include RequestFormatHelper
 
-          def initialize(env:, start_time:, stop_time:, status:, error:)
+          def self.start
+            new
+          end
+
+          def stop(env:, status:, error:)
+            stop_time
             @env = env
-            @start_time = start_time
-            @stop_time = stop_time
             @status = status
             @error = error || {}
           end
@@ -51,7 +54,7 @@ module Sapience
           end
 
           def total_runtime
-            ((@stop_time - @start_time) * 1000).round(3)
+            ((stop_time - start_time) * 1000).round(3)
           end
 
           def view_runtime
@@ -60,6 +63,23 @@ module Sapience
 
           def db_runtime
             Grape::Timings.db_runtime.round(3)
+          end
+
+          def initialize
+            reset_db_runtime
+            start_time
+          end
+
+          def reset_db_runtime
+            Grape::Timings.reset_db_runtime
+          end
+
+          def start_time
+            @start_time ||= Time.now
+          end
+
+          def stop_time
+            @stop_time ||= Time.now
           end
         end
       end
