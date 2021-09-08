@@ -31,8 +31,6 @@ module Sapience
               host: request.host,
               ip: (request.env["HTTP_X_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]),
               ua: request.env["HTTP_USER_AGENT"],
-              # route: "test_controller#index",
-              # message: "Completed #index",
               tags: Sapience.tags,
               params: request.params,
               runtimes: runtimes,
